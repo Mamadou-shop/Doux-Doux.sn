@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8" />
+    <title>Mon Panier | Doux-Doux</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+    <header class="top-header">
+        <div class="logo" onclick="window.location.href='index.html'" style="cursor:pointer;">Doux-Doux</div>
+        <nav class="header-links">
+            <a href="index.html">Accueil</a>
+            <a href="cart.html">Panier 🛒</a>
+        </nav>
+    </header>
+
+    <main class="cart-page">
+        <h1>Mon panier</h1>
+        <div id="cartItems">Chargement du panier...</div>
+
+        <div class="checkout-box">
+            <h2>Finaliser la commande</h2>
+            <label>Adresse de livraison complète</label>
+            <textarea id="shippingAddress" placeholder="Ex: Dakar, Grand Yoff, Rue 4..." required></textarea>
+
+            <label>Moyen de paiement</label>
+            <select id="paymentProvider">
+                <option value="wave">Wave</option>
+                <option value="orange_money">Orange Money</option>
+                <option value="stripe">Carte Bancaire (Visa/Mastercard)</option>
+            </select>
+
+            <div id="phoneField">
+                <label>Numéro de téléphone (Mobile Money)</label>
+                <input type="tel" id="paymentPhone" placeholder="Ex: 770000000" />
+            </div>
+
+            <button onclick="checkout()">Commander et payer</button>
+        </div>
+    </main>
+    <script src="script.js"></script>
+</body>
+</html>

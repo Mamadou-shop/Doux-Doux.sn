@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doux-Doux.sn - Connexion</title>
+    <!-- Connexion au fichier CSS global -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="auth-page">
+        <!-- LE LOGO DOUX-DOUX CENTRÉ EN HAUT -->
+        <div class="auth-logo">
+            <a href="index.html">Doux-Doux<span>.sn</span></a>
+            <!-- S'il s'agit d'une image plus tard, tu mettras : <img src="ton-logo.png" alt="Doux-Doux"> -->
+        </div>
+
+        <!-- LA BOÎTE DE CONNEXION STYLE AMAZON -->
+        <div class="auth-box">
+            <h1>S'identifier</h1>
+            
+            <form id="loginForm" onsubmit="loginUser(event)">
+                <label for="loginEmail">Adresse e-mail</label>
+                <input type="email" id="loginEmail" required>
+
+                <label for="loginPassword">Mot de passe</label>
+                <input type="password" id="loginPassword" required>
+
+                <button type="submit">Continuer</button>
+            </form>
+
+            <p class="auth-terms">
+                En continuant, vous acceptez les <a href="#">conditions d'utilisation et de vente</a> de Doux-Doux.sn.
+            </p>
+
+            <div class="auth-help">
+                <a href="#">Vous avez besoin d'aide ?</a>
+            </div>
+        </div>
+
+        <!-- SECTION DU BAS : CRÉER UN COMPTE -->
+        <div class="auth-new-customer">
+            <h5>Nouveau chez Doux-Doux ?</h5>
+            <a href="register.html" class="btn-create-account">Créer votre compte Doux-Doux</a>
+        </div>
+    </div>
+
+</body>
+</html>
