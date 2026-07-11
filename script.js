@@ -100,15 +100,8 @@ async function filtrerProduits(categorie) {
                 <span class="category-tag">${categorieProduit}</span>
                 <h3 class="product-title">${nomProduit}</h3>
                 <p class="product-price"><strong>${Number(prixProduit).toLocaleString()} FCFA</strong></p>
-              < !--  <div class="payment-buttons" style="margin-top: 10px; display: flex; flex-direction: column; gap: 5px;">
-                    <button class="btn-add-cart" onclick="event.stopPropagation(); ajouterAuPanier('${nomProduit.replace(/'/g, "\\'")}', ${prixProduit})" style="width: 100%;">
-                      Ajouter au panier
-                    </button>
-                    <div style="display: flex; gap: 5px;">
-                        <button class="btn-pay btn-wave" onclick="event.stopPropagation(); ouvrirPaiementDirect('${nomProduit.replace(/'/g, "\\'")}', ${prixProduit})" style="flex: 1;">Wave</button>
-                        <button class="btn-pay btn-om" onclick="event.stopPropagation(); ouvrirPaiementDirect('${nomProduit.replace(/'/g, "\\'")}', ${prixProduit})" style="flex: 1;">OM</button>
-                    </div>
-                </div>-->
+             
+                </div>
             </div>`;
             
         grille.appendChild(carte);
