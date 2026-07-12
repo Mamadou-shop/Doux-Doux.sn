@@ -28,18 +28,20 @@ async function fetchProductsFromBackend() {
 // 3. FONCTIONS D'AFFICHAGE ET FILTRAGE INTERCONNECTÉ
 // ==========================================
 async function filtrerProduits(categorie) {
-    const grille = document.getElementById("productGrid"); 
-    if (!grille) return;
+    const grille = document.getElementById("productGrid");
+    const grilleVenteFlash = document.getElementById("venteFlashGrid");
+    const grilleHaul = document.getElementById("haulGrid");
 
-    grille.innerHTML = "<p style='grid-column: 1/-1; text-align: center;'>Chargement du catalogue Doux-Doux...</p>"; 
+    if (grille) grille.innerHTML = "<p style='grid-column: 1/-1; text-align: center;'>Chargement du catalogue Doux-Doux...</p>";
+    if (grilleVenteFlash) grilleVenteFlash.innerHTML = "";
+    if (grilleHaul) grilleHaul.innerHTML = "";
 
     const catalogueBackend = await fetchProductsFromBackend();
 
     if (catalogueBackend.length === 0) {
-        grille.innerHTML = "<p style='color: red; grid-column: 1/-1; text-align: center;'>Impossible de charger les produits. Vérifiez le serveur backend.</p>";
+        if (grille) grille.innerHTML = "<p style='color: red; grid-column: 1/-1; text-align: center;'>Impossible de charger les produits</p>";
         return;
     }
-
     grille.innerHTML = ""; 
 
     const titreSection = document.getElementById('section-title');
@@ -104,7 +106,15 @@ async function filtrerProduits(categorie) {
                 </div>
             </div>`;
             
-        grille.appendChild(carte);
+       // Tri dynamique et envoi dans la bonne section
+        if (categorieProduit === "Vente Flash") {
+            if (grilleVenteFlash) grilleVenteFlash.appendChild(carte);
+        } else if (categorieProduit === "Haul") {
+            if (grilleHaul) grilleHaul.appendChild(carte);
+        } else {
+            // Reste du catalogue général
+            if (grille) grille.appendChild(carte);
+        }
     });
 }
 
