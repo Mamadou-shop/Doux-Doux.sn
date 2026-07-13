@@ -419,29 +419,36 @@ async function finaliserEtEnvoyerCommande(methodePaiement) {
         methode: methodePaiement
     };
 
-    try {
-        // Envoi asynchrone vers ton infrastructure backend Node/Airtable
-        const response = await fetch(`${API_URL}/orders`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(detailCommande)
-        });
-
-        if (response.ok) {
-            alert(`Félicitations ${nom} ! Votre commande a été enregistrée via ${methodePaiement}. Notre service client vous contacte sous peu.`);
-            if (!modeAchatDirect) viderLePanierComplete();
-            closePayment();
-        } else {
-            alert("Erreur de sauvegarde sur le serveur. Redirection vers le support WhatsApp...");
-            // Fallback direct WhatsApp si ton serveur local n'est pas démarré
-            const texteWhatsApp = encodeURIComponent(`Bonjour Doux-Doux.sn !\nJe souhaite commander : ${articleLabel}\nNom : ${nom}\nTél : ${telephone}\nAdresse : ${region}, ${departement}, ${commune}\nPaiement choisi : ${methodePaiement}\nTotal : ${totalFacture} FCFA`);
-            window.open(`https://wa.me/221770000000?text=${texteWhatsApp}`, '_blank');
-        }
-    } catch (err) {
-        // Redirection résiliente
-        const texteWhatsApp = encodeURIComponent(`Bonjour Doux-Doux.sn !\nJe souhaite commander : ${articleLabel}\nNom : ${nom}\nTél : ${telephone}\nAdresse : ${region}, ${departement}, ${commune}\nPaiement choisi : ${methodePaiement}\nTotal : ${totalFacture} FCFA`);
-        window.open(`https://wa.me/221770000000?text=${texteWhatsApp}`, '_blank');
+// --- DÉCLENCHEMENT DU PAIEMENT DIRECT (MODE PRODUITS.CSV) ---
+    if (methodePaiement === 'Wave') {
+        // Redirection immédiate vers ton lien de paiement Wave
+        window.location.href = "https://pay.wave.com/m/M_sn_oPpmOm67pxb4/c/sn/";
+        return;
+    } else if (methodePaiement === 'Orange Money') {
+        // Déclenchement du code USSD Orange Money Sénégal (#144#)
+        window.location.href = "tel:#144#";
+        return;
     }
+    
+    
+     // --- MODE SANS BACKEND : ENVOI WHATSAPP + REDIRECTION PAIEMENT ---
+    
+    // 1. Préparation du message WhatsApp avec les détails de la commande
+    const texteWhatsApp = encodeURIComponent(`Bonjour Doux-Doux.sn ! Je souhaite commander :\n\n• Articles : ${articleLabel}\n• Total : ${totalFacture} F CFA\n• Mode de paiement : ${methodePaiement}\n\n👉 Infos de livraison :\n- Nom : ${nomClient}\n- Tél : ${telephoneClient}\n- Localisation : ${adresseLivraison}`);
+    const lienWhatsApp = `https://wa.me/221777226359?text=${texteWhatsApp}`; // ⚠️ Mets ton vrai numéro ici
+
+    // 2. Déclenchement du paiement et ouverture de WhatsApp
+    if (methodePaiement === 'Wave') {
+        window.open(lienWhatsApp, '_blank');
+        window.location.href = "https://pay.wave.com/m/M_sn_oPpmOm67pxb4/c/sn/";
+    } else if (methodePaiement === 'Orange Money') {
+        window.open(lienWhatsApp, '_blank');
+        window.location.href = "tel:#144#";
+    } else {
+        window.location.href = lienWhatsApp;
+    }
+    
+    if (typeof closePayment === "function") closePayment();
 }
 
 // ==========================================
