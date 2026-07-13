@@ -205,6 +205,43 @@ body {
     margin-top: 20px;
 }
 
+/* ---- 5.1 DÉFILEMENT HORIZONTAL (VENTE FLASH / HAUL) ---- */
+.horizontal-scroll-section {
+    display: flex !important;
+    overflow-x: auto !important;
+    white-space: nowrap !important;
+    gap: 15px;
+    padding: 10px 5px;
+    scrollbar-width: none; /* Cache la barre sur Firefox */
+}
+
+.horizontal-scroll-section::-webkit-scrollbar {
+    display: none; /* Cache la barre sur Chrome/Safari */
+}
+
+/* Ajustement des cartes pour les rendre compactes et élégantes */
+.horizontal-scroll-section .product-card {
+    flex: 0 0 150px !important; /* Largeur idéale et fixe sur mobile */
+    max-width: 150px;
+    border-radius: 12px !important; /* Coins plus arrondis modernes */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+/* Hauteur fixe pour l'image pour casser l'effet "carte trop longue" */
+.horizontal-scroll-section .product-image {
+    height: 140px !important;
+}
+
+/* Couleurs captivantes */
+.horizontal-scroll-section .category-tag {
+    color: #ff4757 !important; /* Rouge flash attirant */
+}
+
+.horizontal-scroll-section .product-price {
+    color: #2ed573 !important; /* Vert e-commerce accrocheur */
+}
+
+
 .product-card {
     background: white;
     border-radius: 4px;
