@@ -886,3 +886,110 @@ footer {
         box-sizing: border-box;
     }
 }
+
+
+
+
+/* --- COMPACTAGE ET COULEUR DES CASES DU CATALOGUE (SUR MOBILE) --- */
+@media (max-width: 768px) {
+    /* Grille du catalogue : 2 colonnes bien alignées sur mobile */
+    #productGrid, .product-grid {
+        display: grid !important;
+        grid-template-columns: repeat(2, 1fr) !important; /* Force 2 colonnes compactes */
+        gap: 10px !important;
+        padding: 10px !important;
+    }
+
+    /* La fiche produit du catalogue */
+    .product-card {
+        background: #ffffff !important;
+        border-radius: 8px !important;
+        padding: 8px !important;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.04) !important;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 230px !important; /* Hauteur maximale fixe pour éviter les cases trop longues */
+        box-sizing: border-box;
+    }
+
+    /* Le conteneur de l'image (la case de couleur douce) */
+    .product-card .product-image-container, 
+    .product-card .image-wrapper,
+    .product-card picture,
+    .product-card .img-container {
+        width: 100% !important;
+        height: 120px !important; /* Hauteur compacte pour l'image */
+        border-radius: 6px !important;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 6px !important;
+        /* Fond de couleur pastel douce de base */
+        background-color: #f5f6f8 !important; 
+    }
+
+    /* L'image elle-même à l'intérieur */
+    .product-card img, 
+    .product-card .product-image {
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: contain !important; /* Pour que l'image du produit ne soit pas déformée */
+        mix-blend-mode: multiply; /* Fusionne le fond blanc de l'image avec le fond pastel */
+    }
+
+    /* Titre du produit (Nom) */
+    .product-card h3,
+    .product-card .product-title {
+        font-size: 11px !important; /* Texte compact */
+        font-weight: 600 !important;
+        color: #222 !important;
+        margin: 2px 0 !important;
+        line-height: 1.2;
+        display: -webkit-box;
+        -webkit-line-clamp: 2; /* Coupe le texte proprement sur 2 lignes max */
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    /* Prix de l'article */
+    .product-card .product-price,
+    .product-card .price {
+        font-size: 12px !important;
+        font-weight: bold !important;
+        color: #ff4757 !important; /* Rouge/corail pour le prix */
+        margin-top: auto !important; /* Aligne le prix vers le bas */
+    }
+
+    /* Bouton d'ajout au panier (s'il y en a un sur la carte) */
+    .product-card .add-to-cart-btn,
+    .product-card button {
+        font-size: 10px !important;
+        padding: 5px !important;
+        margin-top: 4px !important;
+        height: auto !important;
+    }
+}
+
+/* --- VARIATION DE COULEURS PASTEL ALÉATOIRES POUR LES FONDS D'IMAGES ---
+   Pour donner un look "catalogue coloré" et dynamique, chaque case aura un fond unique ! */
+#productGrid .product-card:nth-child(4n+1) .product-image-container,
+#productGrid .product-card:nth-child(4n+1) img {
+    background-color: #fef08a !important; /* Fond Jaune très doux */
+}
+
+#productGrid .product-card:nth-child(4n+2) .product-image-container,
+#productGrid .product-card:nth-child(4n+2) img {
+    background-color: #e0f2fe !important; /* Fond Bleu ciel doux */
+}
+
+#productGrid .product-card:nth-child(4n+3) .product-image-container,
+#productGrid .product-card:nth-child(4n+3) img {
+    background-color: #fce7f3 !important; /* Fond Rose pastel */
+}
+
+#productGrid .product-card:nth-child(4n+4) .product-image-container,
+#productGrid .product-card:nth-child(4n+4) img {
+    background-color: #f0fdf4 !important; /* Fond Vert menthe doux */
+}
