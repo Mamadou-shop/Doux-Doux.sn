@@ -850,3 +850,39 @@ footer {
         scroll-snap-align: start;
     }
 }
+
+
+
+/* --- COMPORTEMENT SUR ORDINATEUR (Grille classique) --- */
+.amazon-grid-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+/* --- COMPORTEMENT SUR MOBILE (Défilement horizontal) --- */
+@media (max-width: 768px) {
+    .amazon-grid-cards.horizontal-scroll-section {
+        display: flex !important; /* On force le mode ligne */
+        overflow-x: auto !important; /* On active le défilement horizontal */
+        scroll-snap-type: x mandatory;
+        gap: 15px;
+        padding: 10px 5px 20px 5px;
+        margin-bottom: 20px;
+        
+        /* Cache la barre de défilement pour un effet plus propre */
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .amazon-grid-cards.horizontal-scroll-section::-webkit-scrollbar {
+        display: none;
+    }
+
+    /* Taille de chaque carte sur mobile */
+    .amazon-grid-cards.horizontal-scroll-section .style-card {
+        flex: 0 0 75% !important; /* Chaque carte prend 75% de la largeur de l'écran */
+        scroll-snap-align: start;
+        box-sizing: border-box;
+    }
+}
