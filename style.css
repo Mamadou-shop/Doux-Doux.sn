@@ -832,3 +832,21 @@ footer {
     from { opacity: 0; transform: scale(0.95); }
     to { opacity: 1; transform: scale(1); }
 }
+
+
+
+/* --- CORRECTION POUR LES BLOCS D'ACCUEIL SUR MOBILE --- */
+@media (max-width: 768px) {
+    #main-amazon-cards.horizontal-scroll-section {
+        display: flex !important; /* Force le mode ligne au lieu de grille */
+        overflow-x: auto !important; /* Active le défilement horizontal */
+        scroll-snap-type: x mandatory;
+        gap: 15px;
+        padding-bottom: 10px;
+    }
+
+    #main-amazon-cards.horizontal-scroll-section .style-card {
+        flex: 0 0 85% !important; /* Chaque bloc prendra 85% de la largeur de l'écran */
+        scroll-snap-align: start;
+    }
+}
