@@ -119,26 +119,28 @@
             </div>
         </div>
 
-        <!-- 2. VERSION POUR TÉLÉPHONE UNIQUEMENT (Logo + Se connecter + Panier sur une seule ligne) -->
-        <div class="header-top-row hide-on-desktop">
-            <!-- Logo à gauche -->
-            <div class="nav-logo-mobile">
-                <a href="#" onclick="filtrerProduits('Toutes')" style="color: white; text-decoration: none; font-weight: bold; font-size: 20px;">Doux-Doux<span style="color: #f08804;">.sn</span></a>
-            </div>
-            
-            <!-- Actions de droite alignées -->
-            <div class="header-mobile-actions">
-                <!-- Bouton "Se connecter" juste à côté du panier -->
-                <a href="login.html" class="nav-connect-link-mobile">
-                    <i class="fas fa-user"></i> Se connecter
-                </a>
-                <!-- Panier mobile (il garde la même fonction et l'id du compteur) -->
-                <div class="cart-container-top-mobile" onclick="toggleCartSidebar()">
-                    <i class="fas fa-shopping-cart"></i>
-                    <span class="cart-badge-count">0</span>
+       <!-- 2. VERSION POUR TÉLÉPHONE (Trois traits à gauche, Logo au milieu, Actions à droite) -->
+            <div class="header-top-row hide-on-desktop">
+                <div class="header-mobile-left">
+                    <!-- Les trois traits (Menu Burger) alignés à gauche -->
+                    <div class="mobile-menu-trigger" onclick="toggleSidebar()" style="cursor: pointer; color: #ffffff; font-size: 20px; margin-right: 12px;">
+                        <i class="fas fa-bars"></i>
+                    </div>
+                    <!-- Logo légèrement redimensionné -->
+                    <h1 class="brand-logo-mobile">Doux-Doux<span class="sn-accent">.sn</span></h1>
+                </div>
+                
+                <!-- Actions à droite -->
+                <div class="header-mobile-actions">
+                    <a href="login.html" class="nav-connect-link-mobile">
+                        <i class="fas fa-user"></i> Se connecter
+                    </a>
+                    <div class="cart-container-top-mobile" onclick="toggleCartSidebar()">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="cart-badge-count">0</span>
+                    </div>
                 </div>
             </div>
-        </div>
 
         <!-- La sous-barre (Menu trois traits + liens) reste identique pour l'instant -->
         <div class="nav-sub">
