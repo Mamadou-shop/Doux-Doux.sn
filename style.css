@@ -970,6 +970,42 @@ footer {
         margin-top: 4px !important;
         height: auto !important;
     }
+
+
+    @media (max-width: 768px) {
+    /* Aligne les trois traits et le logo horizontalement à gauche */
+    .header-mobile-left {
+        display: flex;
+        align-items: center;
+    }
+
+    /* Redimensionnement du logo uniquement sur mobile */
+    .brand-logo-mobile {
+        font-size: 18px !important; /* Plus petit pour laisser de la place */
+        font-weight: bold;
+        color: #ffffff;
+        margin: 0;
+    }
+
+    /* Style du badge rouge du panier mobile */
+    .cart-container-top-mobile {
+        position: relative;
+    }
+
+    .cart-container-top-mobile .cart-badge-count {
+        position: absolute;
+        top: -8px;
+        right: -10px;
+        background-color: #f08804; /* Orange ou rouge selon ta charte */
+        color: #000000;
+        font-size: 10px;
+        font-weight: bold;
+        border-radius: 50%;
+        padding: 1px 5px;
+        min-width: 15px;
+        text-align: center;
+    }
+}
 }
 
 /* --- VARIATION DE COULEURS PASTEL ALÉATOIRES POUR LES FONDS D'IMAGES ---
