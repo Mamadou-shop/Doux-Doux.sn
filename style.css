@@ -993,3 +993,81 @@ footer {
 #productGrid .product-card:nth-child(4n+4) img {
     background-color: #f0fdf4 !important; /* Fond Vert menthe doux */
 }
+
+
+
+/* ================= GESTION DES AFFICHAGES MOBILE / DESKTOP ================= */
+
+/* Par défaut (sur Ordinateur) : On cache la version mobile */
+.hide-on-desktop {
+    display: none !important;
+}
+
+/* Style de la ligne sur ordinateur */
+.header-top-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 30px;
+    background-color: #131921;
+}
+
+.header-desktop-actions {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.header-desktop-actions a {
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+
+/* ================= VERSION TÉLÉPHONE PORTABLE (Uniquement) ================= */
+@media (max-width: 768px) {
+    /* On cache les éléments d'ordinateur sur téléphone */
+    .hide-on-mobile {
+        display: none !important;
+    }
+
+    /* On affiche la version mobile */
+    .hide-on-desktop {
+        display: flex !important;
+    }
+
+    /* Ajustement de la ligne de l'en-tête sur mobile */
+    .header-top-row {
+        padding: 10px 15px !important;
+    }
+
+    /* Alignement horizontal parfait des actions de droite */
+    .header-mobile-actions {
+        display: flex !important;
+        align-items: center;
+        gap: 15px; /* Espace entre "Se connecter" et le "Panier" */
+    }
+
+    /* Style compact "Se connecter" sur téléphone */
+    .nav-connect-link-mobile {
+        color: #ffffff;
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+    /* Panier compact sur téléphone */
+    .cart-container-top-mobile {
+        position: relative;
+        cursor: pointer;
+    }
+
+    .cart-container-top-mobile i {
+        font-size: 22px;
+        color: #ffffff;
+    }
+}
