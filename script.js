@@ -231,8 +231,15 @@ function toggleCartSidebar() {
 
 function ajouterAuPanier(titre, prix) {
     panier.push({ titre: titre, prix: Number(prix) });
+    // Met à jour le compteur classique (ordinateur)
     const compteur = document.getElementById('cartCount');
     if (compteur) compteur.innerText = panier.length;
+
+    // Met à jour TOUS les badges de panier trouvés sur la page (y compris sur mobile)
+    const tousLesCompteurs = document.querySelectorAll('.cart-badge-count');
+    tousLesCompteurs.forEach(badge => {
+        badge.innerText = panier.length;
+    });
     
     // Notification discrète et rafraîchissement automatique du panier latéral s'il est ouvert
     renderCartSidebar();
