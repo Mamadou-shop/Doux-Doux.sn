@@ -1007,6 +1007,16 @@ footer {
     }
 }
 }
+@media (max-width: 768px) {
+    /* Cache la barre contenant le bouton "Toutes" sur téléphone */
+    .nav-bottom, .subnav {
+        display: none !important;
+    }
+}
+
+
+
+
 
 /* --- VARIATION DE COULEURS PASTEL ALÉATOIRES POUR LES FONDS D'IMAGES ---
    Pour donner un look "catalogue coloré" et dynamique, chaque case aura un fond unique ! */
@@ -1110,13 +1120,6 @@ footer {
 
 
 
-
-@media (max-width: 768px) {
-    /* Cache la barre contenant le bouton "Toutes" sur téléphone */
-    .nav-bottom, .subnav {
-        display: none !important;
-    }
-}
 
 
 
