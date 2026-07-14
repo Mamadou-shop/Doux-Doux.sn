@@ -1007,12 +1007,7 @@ footer {
     }
 }
 }
-@media (max-width: 768px) {
-    /* Cache la barre contenant le bouton "Toutes" sur téléphone */
-    .nav-bottom, .subnav {
-        display: none !important;
-    }
-}
+
 
 
 
@@ -1119,6 +1114,13 @@ footer {
 
 
 
+
+@media (max-width: 768px) {
+    /* Cache la barre contenant le bouton "Toutes" sur téléphone */
+    .nav-bottom, .subnav {
+        display: none !important;
+    }
+}
 
 
 
