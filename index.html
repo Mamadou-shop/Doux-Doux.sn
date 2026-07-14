@@ -70,10 +70,11 @@
             </button>
         </div>
     </div>
-
-    <!-- EN-TÊTE (HEADER NAV) -->
-    <header>
-        <div class="nav-main">
+    
+     <!-- EN-TÊTE (HEADER NAV) -->
+<header>
+        <!-- 1. VERSION POUR ORDINATEUR (Reste identique à ton design actuel, masqué sur téléphone) -->
+        <div class="nav-main hide-on-mobile">
             <div class="nav-left">
                 <div class="nav-logo">
                     <a href="#" onclick="filtrerProduits('Toutes')">Doux-Doux<span>.sn</span></a>
@@ -118,6 +119,28 @@
             </div>
         </div>
 
+        <!-- 2. VERSION POUR TÉLÉPHONE UNIQUEMENT (Logo + Se connecter + Panier sur une seule ligne) -->
+        <div class="header-top-row hide-on-desktop">
+            <!-- Logo à gauche -->
+            <div class="nav-logo-mobile">
+                <a href="#" onclick="filtrerProduits('Toutes')" style="color: white; text-decoration: none; font-weight: bold; font-size: 20px;">Doux-Doux<span style="color: #f08804;">.sn</span></a>
+            </div>
+            
+            <!-- Actions de droite alignées -->
+            <div class="header-mobile-actions">
+                <!-- Bouton "Se connecter" juste à côté du panier -->
+                <a href="login.html" class="nav-connect-link-mobile">
+                    <i class="fas fa-user"></i> Se connecter
+                </a>
+                <!-- Panier mobile (il garde la même fonction et l'id du compteur) -->
+                <div class="cart-container-top-mobile" onclick="toggleCartSidebar()">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-badge-count-mobile" id="cartCountMobile">0</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- La sous-barre (Menu trois traits + liens) reste identique pour l'instant -->
         <div class="nav-sub">
             <div class="nav-sub-left" onclick="openNav()">
                 <i class="fas fa-bars"></i>
