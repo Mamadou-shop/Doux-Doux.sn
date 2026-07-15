@@ -1208,10 +1208,10 @@ footer {
 
 
 
-    /* --- BANDE DE PRODUITS HORIZONTALE --- */
+/* --- BANDE DE PRODUITS HORIZONTALE --- */
 .horizontal-scroll-section {
     background-color: #ffffff;
-    max-width: 100%; /* S'aligne parfaitement avec la largeur de ton conteneur de 1400px */
+    max-width: 100%;
     margin: 20px auto;
     padding: 20px;
     border-radius: 8px;
@@ -1225,18 +1225,16 @@ footer {
     color: #111;
 }
 
-/* Le conteneur qui permet le défilement */
 .scroll-container {
     display: flex;
     gap: 15px;
-    overflow-x: auto;       /* Active le scroll horizontal */
-    overflow-y: hidden;     /* Cache le débordement vertical */
+    overflow-x: auto;
+    overflow-y: hidden;
     scroll-behavior: smooth;
-    padding-bottom: 10px;   /* Espace pour la barre de défilement */
-    -webkit-overflow-scrolling: touch; /* Rend le défilement hyper fluide sur iPhone/Safari */
+    padding-bottom: 10px;
+    -webkit-overflow-scrolling: touch;
 }
 
-/* Personnalisation de la barre de défilement (Scrollbar fine) */
 .scroll-container::-webkit-scrollbar {
     height: 6px;
 }
@@ -1250,9 +1248,8 @@ footer {
     background-color: #f1f1f1;
 }
 
-/* Style de chaque produit dans la bande */
 .scroll-item {
-    flex: 0 0 160px; /* Force chaque produit à garder une largeur fixe de 160px sans rétrécir */
+    flex: 0 0 160px;
     background: #fafafa;
     padding: 10px;
     border-radius: 6px;
@@ -1261,13 +1258,13 @@ footer {
 }
 
 .scroll-item:hover {
-    transform: translateY(-3px); /* Petit effet de survol sympa */
+    transform: translateY(-3px);
 }
 
 .scroll-item img {
     width: 100%;
     height: 120px;
-    object-fit: contain; /* S'assure que l'image du produit ne soit pas déformée */
+    object-fit: contain;
     margin-bottom: 8px;
 }
 
@@ -1277,13 +1274,29 @@ footer {
     margin: 5px 0;
     white-space: nowrap;
     overflow: hidden;
-    text-overflow: ellipsis; /* Coupe le texte trop long avec "..." */
+    text-overflow: ellipsis;
 }
 
 .scroll-item .product-price {
     font-size: 14px;
     font-weight: bold;
     color: #f08804;
-} 
-    
+}
 
+/* ================= RESPONSIVE : ADAPTATION SUR MOBILE & TABLETTE ================= */
+
+@media (max-width: 1024px) {
+    .amazon-grid-cards {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 15px !important;
+        padding: 0 15px;
+    }
+}
+
+@media (max-width: 576px) {
+    .amazon-grid-cards {
+        grid-template-columns: 1fr !important;
+        gap: 15px !important;
+        padding: 0 15px;
+    }
+}
