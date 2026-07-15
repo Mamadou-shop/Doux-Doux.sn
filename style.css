@@ -1126,3 +1126,82 @@ footer {
 
 
 
+    /* ================= HARMONISATION DES 4 CARTES DU HAUT ================= */
+
+/* Grille principale des 4 blocs du haut */
+.amazon-grid-cards {
+    display: grid !important;
+    grid-template-columns: repeat(4, 1fr) !important; /* Force les 4 colonnes */
+    gap: 20px !important;                             /* Même espace que le catalogue */
+    max-width: 1400px;
+    margin: 20px auto 30px auto;
+    padding: 0 20px;
+    box-sizing: border-box;
+}
+
+/* Application du style des cartes du catalogue sur les cartes du haut */
+.amazon-grid-cards .style-card.product-card {
+    background-color: #ffffff !important;
+    border: 1px solid #e7e7e7 !important;
+    border-radius: 8px !important;
+    padding: 20px !important;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05) !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+    height: 100% !important; /* Pour qu'elles fassent toutes exactement la même hauteur */
+    box-sizing: border-box !important;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Effet au survol identique à tes meilleures cartes */
+.amazon-grid-cards .style-card.product-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Ajustement des titres à l'intérieur des cartes */
+.amazon-grid-cards .style-card.product-card h3 {
+    font-size: 18px !important;
+    font-weight: bold !important;
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: #111111;
+}
+
+/* Ajustement du bouton "Voir plus" / "Découvrir" en bas de chaque carte */
+.amazon-grid-cards .style-card.product-card a {
+    color: #007185 !important; /* Couleur bleu Amazon / Doux-Doux */
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    margin-top: auto; /* Aligne le lien tout en bas de la carte */
+}
+
+.amazon-grid-cards .style-card.product-card a:hover {
+    color: #c45500 !important; /* Orange au survol */
+    text-decoration: underline;
+}
+
+
+/* ================= RESPONSIVE : ADAPTATION SUR MOBILE & TABLETTE ================= */
+
+@media (max-width: 1024px) {
+    /* Sur tablette : on passe à 2 colonnes pour éviter que ce soit trop serré */
+    .amazon-grid-cards {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 15px !important;
+        padding: 0 15px;
+    }
+}
+
+@media (max-width: 576px) {
+    /* Sur téléphone portable : 1 seule grande carte par ligne */
+    .amazon-grid-cards {
+        grid-template-columns: 1fr !important;
+        gap: 15px !important;
+        padding: 0 15px;
+    }
+}
+
+
