@@ -1205,3 +1205,84 @@ footer {
 }
 
 
+
+
+
+    /* --- BANDE DE PRODUITS HORIZONTALE --- */
+.horizontal-scroll-section {
+    background-color: #ffffff;
+    max-width: 100%; /* S'aligne parfaitement avec la largeur de ton conteneur de 1400px */
+    margin: 20px auto;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.horizontal-scroll-section .section-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: #111;
+}
+
+/* Le conteneur qui permet le défilement */
+.scroll-container {
+    display: flex;
+    gap: 15px;
+    overflow-x: auto;       /* Active le scroll horizontal */
+    overflow-y: hidden;     /* Cache le débordement vertical */
+    scroll-behavior: smooth;
+    padding-bottom: 10px;   /* Espace pour la barre de défilement */
+    -webkit-overflow-scrolling: touch; /* Rend le défilement hyper fluide sur iPhone/Safari */
+}
+
+/* Personnalisation de la barre de défilement (Scrollbar fine) */
+.scroll-container::-webkit-scrollbar {
+    height: 6px;
+}
+
+.scroll-container::-webkit-scrollbar-thumb {
+    background-color: #cccccc;
+    border-radius: 10px;
+}
+
+.scroll-container::-webkit-scrollbar-track {
+    background-color: #f1f1f1;
+}
+
+/* Style de chaque produit dans la bande */
+.scroll-item {
+    flex: 0 0 160px; /* Force chaque produit à garder une largeur fixe de 160px sans rétrécir */
+    background: #fafafa;
+    padding: 10px;
+    border-radius: 6px;
+    text-align: center;
+    transition: transform 0.2s ease;
+}
+
+.scroll-item:hover {
+    transform: translateY(-3px); /* Petit effet de survol sympa */
+}
+
+.scroll-item img {
+    width: 100%;
+    height: 120px;
+    object-fit: contain; /* S'assure que l'image du produit ne soit pas déformée */
+    margin-bottom: 8px;
+}
+
+.scroll-item .product-name {
+    font-size: 13px;
+    color: #333;
+    margin: 5px 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; /* Coupe le texte trop long avec "..." */
+}
+
+.scroll-item .product-price {
+    font-size: 14px;
+    font-weight: bold;
+    color: #f08804;
+}
+
