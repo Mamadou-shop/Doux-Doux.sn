@@ -38,7 +38,7 @@ async function filtrerProduits(categorie) {
 
     const catalogue = await fetchProductsFromBackend();
 
-    if (catalogue.length === 0) {
+    if (!catalogue || catalogue.length === 0) {
         if (grille) grille.innerHTML = "<p style='color: red; grid-column: 1/-1; text-align: center;'>Impossible de charger les produits. Vérifiez le serveur backend.</p>";
         return;
     }
@@ -78,7 +78,10 @@ async function filtrerProduits(categorie) {
             return cat === cible || cat.includes(cible) || cible.includes(cat) || tag === cible || (p.tags && p.tags.includes(cible));
         });
 
-    let compteurGrilleGenerale = 0;
+    // --- VARIABLES POUR LA STRUCTURATION EN BLOCS DE 4 ---
+    let blockActuel = null;
+    let compteurDansBlock = 0;
+    let indexBlockGlobal = 0;
 
     produitsAffiches.forEach(p => {
         const imageBrute = p.imageUrl || p.image || 'https://via.placeholder.com/400x400?text=Doux-Doux';
@@ -91,6 +94,7 @@ async function filtrerProduits(categorie) {
         const categorieProduit = p.category || p.cat || 'Général';
         const uniqueId = p._id || p.id;
 
+        // Création de la carte produit
         const carte = document.createElement('div');
         carte.className = "product-card";
         carte.setAttribute("data-name", nomProduit);
@@ -113,28 +117,71 @@ async function filtrerProduits(categorie) {
             if (grilleHaul) grilleHaul.appendChild(carte);
         } else {
             if (grille) {
-                grille.appendChild(carte);
-                compteurGrilleGenerale++;
-
-                // Injection des bannières intermédiaires dans la grille générale
-                if (compteurGrilleGenerale === 4) {
-                    const banniere1 = document.createElement('div');
-                    banniere1.className = "promo-banner-grid";
-                    banniere1.innerHTML = `<p>🇸🇳 <strong>Paiement à la livraison :</strong> Commandez en toute sécurité et payez une fois votre colis entre vos mains !</p>`;
-                    grille.appendChild(banniere1);
+                // Si on commence un nouveau bloc de 4 produits, on crée son conteneur
+                if (compteurDansBlock === 0) {
+                    blockActuel = document.createElement('div');
+                    blockActuel.className = "product-block-4";
+                    grille.appendChild(blockActuel);
                 }
 
-                if (compteurGrilleGenerale === 8) {
-                    const banniere2 = document.createElement('div');
-                    banniere2.className = "promo-banner-grid banner-blue";
-                    banniere2.innerHTML = `<p>💬 <strong>Besoin d'aide ?</strong> Des questions sur un produit ? Écrivez-nous directement sur WhatsApp !</p>`;
-                    grille.appendChild(banniere2);
+                // On ajoute le produit dans le bloc actuel
+                blockActuel.appendChild(carte);
+                compteurDansBlock++;
+
+                // Dès que le bloc contient 4 produits, on prépare l'élément intermédiaire
+                if (compteurDansBlock === 4) {
+                    compteurDansBlock = 0;
+                    indexBlockGlobal++;
+
+                    // Après le 1er bloc de 4 : On insère un produit sponsorisé cosmétique/textile
+                    if (indexBlockGlobal === 1) {
+                        const sponsorise = document.createElement('div');
+                        sponsorise.className = "sponsored-block";
+                        sponsorise.innerHTML = `
+                            <div class="sponsored-card" onclick="ouvrirDetailProduit('cosm-001')">
+                                <div class="sponsored-badge">Sponsorisé ℹ</div>
+                                <img src="https://images.weserv.nl/?url=https://images.unsplash.com/photo-1608248597279-f99d160bfcbc?q=80&w=600" alt="Huile de Baobab">
+                                <div class="sponsored-info">
+                                    <h4>Huile de Baobab Purifiante - Doux-Doux</h4>
+                                    <p class="sponsored-desc font-text">Soin naturel pressé à froid pour nourrir votre peau.</p>
+                                    <span class="sponsored-price">7 500 FCFA</span>
+                                </div>
+                            </div>`;
+                        grille.appendChild(sponsorise);
+                    } 
+                    // Après le 2ème bloc de 4 : On place la bannière de livraison aérée
+                    else if (indexBlockGlobal === 2) {
+                        const infoBlock = document.createElement('div');
+                        infoBlock.className = "info-block-separator";
+                        infoBlock.innerHTML = `
+                            <div class="info-box-delivery">
+                                <span class="delivery-icon">🇸🇳</span>
+                                <p><strong>Paiement à la livraison :</strong> Commandez en toute sécurité et payez une fois votre colis entre vos mains !</p>
+                            </div>`;
+                        grille.appendChild(infoBlock);
+                    } 
+                    // Après le 3ème bloc de 4 : On insère la bannière d'aide WhatsApp
+                    else if (indexBlockGlobal === 3) {
+                        const infoBlock2 = document.createElement('div');
+                        infoBlock2.className = "info-block-separator";
+                        infoBlock2.innerHTML = `
+                            <div class="info-box-delivery help-whatsapp">
+                                <span class="delivery-icon">💬</span>
+                                <p><strong>Besoin d'aide ?</strong> Des questions sur un produit ? Écrivez-nous directement sur WhatsApp !</p>
+                            </div>`;
+                        grille.appendChild(infoBlock2);
+                    }
+                    // Pour les blocs suivants : Juste un espacement propre
+                    else {
+                        const espaceur = document.createElement('div');
+                        espaceur.className = "block-spacer";
+                        grille.appendChild(espaceur);
+                    }
                 }
             }
         }
     });
 }
-
 // ==========================================
 // 4. INJECTION DE BANNIÈRES DE SOUS-PAGES
 // ==========================================
