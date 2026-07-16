@@ -1169,3 +1169,42 @@ footer {
         padding: 0 15px;
     }
 }
+
+
+
+
+
+/* Bannière dynamique dans la grille du catalogue */
+.promo-banner-grid {
+    grid-column: 1 / -1; /* Prend toute la largeur de la grille (desktop et mobile) */
+    background-color: #f08804; /* Orange Doux-Doux */
+    color: white;
+    text-align: center;
+    padding: 15px 20px;
+    margin: 15px 0;
+    border-radius: 6px;
+    font-size: 14px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    box-sizing: border-box;
+}
+
+.promo-banner-grid strong {
+    text-transform: uppercase;
+    font-weight: 700;
+}
+
+/* Variante Bleue pour la deuxième bannière */
+.promo-banner-grid.banner-blue {
+    background-color: #232f3e;
+    border-left: 5px solid #febd69;
+}
+
+/* Version Mobile */
+@media (max-width: 768px) {
+    .promo-banner-grid {
+        font-size: 12px;
+        padding: 10px 15px;
+        margin: 10px 0;
+        border-radius: 4px;
+    }
+}
