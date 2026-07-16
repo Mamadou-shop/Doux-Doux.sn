@@ -28,20 +28,36 @@ async function fetchProductsFromBackend() {
 // 3. FONCTIONS D'AFFICHAGE ET FILTRAGE INTERCONNECTÉ
 // ==========================================
 async function filtrerProduits(categorie) {
+   // 1. Récupération des 3 conteneurs
     const grille = document.getElementById("productGrid");
     const grilleVenteFlash = document.getElementById("venteFlashGrid");
     const grilleHaul = document.getElementById("haulGrid");
 
-    if (grille) grille.innerHTML = "<p style='grid-column: 1/-1; text-align: center;'>Chargement du catalogue Doux-Doux...</p>";
+    // 2. Message de chargement (optionnel, sur la grille principale)
+    if (grille) grille.innerHTML = "<p style='grid-column: 1/-1; text-align: center;'>Chargement...</p>";
     if (grilleVenteFlash) grilleVenteFlash.innerHTML = "";
     if (grilleHaul) grilleHaul.innerHTML = "";
 
+    // 3. Récupération des produits depuis le backend
     const catalogueBackend = await fetchProductsFromBackend();
 
     if (catalogueBackend.length === 0) {
-        if (grille) grille.innerHTML = "<p style='color: red; grid-column: 1/-1; text-align: center;'>Impossible de charger les produits</p>";
+        if (grille) grille.innerHTML = "<p style='color: red; grid-column: 1/-1; text-align: center;'>Aucun produit trouvé</p>";
         return;
     }
+
+    // 4. On vide le message de chargement pour commencer l'affichage
+    if (grille) grille.innerHTML = "";
+
+    grille.innerHTML = "<p style='grid-column: 1/-1; text-align: center;'>Chargement du catalogue Doux-Doux...</p>"; 
+
+    const catalogue = await fetchProductsFromBackend();
+
+    if (catalogue.length === 0) {
+        grille.innerHTML = "<p style='color: red; grid-column: 1/-1; text-align: center;'>Impossible de charger les produits. Vérifiez le serveur backend.</p>";
+        return;
+    }
+
     grille.innerHTML = ""; 
 
     const titreSection = document.getElementById('section-title');
@@ -69,13 +85,16 @@ async function filtrerProduits(categorie) {
     }
 
     const produitsAffiches = (categorie === 'Toutes' || categorie === 'Toutes les catégories' || categorie === 'all' || !categorie) 
-        ? catalogueBackend 
-        : catalogueBackend.filter(p => {
+        ? catalogue 
+        : catalogue.filter(p => {
             const cat = (p.category || p.cat || "").toLowerCase().trim();
             const tag = (p.tag || "").toLowerCase().trim();
             const cible = categorie.toLowerCase().trim();
             return cat === cible || cat.includes(cible) || cible.includes(cat) || tag === cible || (p.tags && p.tags.includes(cible));
         });
+
+    // Compteur pour suivre spécifiquement les éléments ajoutés au catalogue général
+    let compteurGrilleGenerale = 0;
 
     produitsAffiches.forEach(p => {
         const imageBrute = p.imageUrl || p.image || 'https://via.placeholder.com/400x400?text=Doux-Doux';
@@ -98,7 +117,7 @@ async function filtrerProduits(categorie) {
             <div class="product-image">
                 <img src="${imageAffichage}" alt="${nomProduit}">
             </div>
-           <div class="product-info">
+            <div class="product-info">
                 <span class="category-tag">${categorieProduit}</span>
                 <h3 class="product-title">${nomProduit}</h3>
                 <p class="product-price"><strong>${Number(prixProduit).toLocaleString()} FCFA</strong></p>
@@ -106,14 +125,35 @@ async function filtrerProduits(categorie) {
                 </div>
             </div>`;
             
-       // Tri dynamique et envoi dans la bonne section
+        // Tri dynamique et envoi dans la bonne section
         if (categorieProduit === "Vente Flash") {
             if (grilleVenteFlash) grilleVenteFlash.appendChild(carte);
         } else if (categorieProduit === "Haul") {
             if (grilleHaul) grilleHaul.appendChild(carte);
         } else {
             // Reste du catalogue général
-            if (grille) grille.appendChild(carte);
+            if (grille) {
+                grille.appendChild(carte);
+                compteurGrilleGenerale++;
+
+                // === INJECTION DYNAMIQUE DES BANNIÈRES INTERMÉDIAIRES ===
+                
+                // 1. Bannière après le 4ème produit (fin de la 1ère ligne de 4)
+                if (compteurGrilleGenerale === 4) {
+                    const banniere1 = document.createElement('div');
+                    banniere1.className = "promo-banner-grid";
+                    banniere1.innerHTML = `<p>🇸🇳 <strong>Paiement à la livraison :</strong> Commandez en toute sécurité et payez une fois votre colis entre vos mains !</p>`;
+                    grille.appendChild(banniere1);
+                }
+
+                // 2. Bannière après le 8ème produit (fin de la 2ème ligne de 4)
+                if (compteurGrilleGenerale === 8) {
+                    const banniere2 = document.createElement('div');
+                    banniere2.className = "promo-banner-grid banner-blue";
+                    banniere2.innerHTML = `<p>💬 <strong>Besoin d'aide ?</strong> Des questions sur un produit ? Écrivez-nous directement sur WhatsApp !</p>`;
+                    grille.appendChild(banniere2);
+                }
+            }
         }
     });
 }
@@ -240,7 +280,6 @@ function ajouterAuPanier(titre, prix) {
     tousLesCompteurs.forEach(badge => {
         badge.innerText = panier.length;
     });
-    
     // Notification discrète et rafraîchissement automatique du panier latéral s'il est ouvert
     renderCartSidebar();
     alert(`${titre} ajouté au panier ! 🛒`);
@@ -426,7 +465,7 @@ async function finaliserEtEnvoyerCommande(methodePaiement) {
         methode: methodePaiement
     };
 
-// --- DÉCLENCHEMENT DU PAIEMENT DIRECT (MODE PRODUITS.CSV) ---
+    // --- DÉCLENCHEMENT DU PAIEMENT DIRECT (MODE PRODUITS.CSV) ---
     if (methodePaiement === 'Wave') {
         // Redirection immédiate vers ton lien de paiement Wave
         window.location.href = "https://pay.wave.com/m/M_sn_oPpmOm67pxb4/c/sn/";
@@ -670,20 +709,6 @@ function ouvrirInfo(type) {
             <div style="text-align:center;">
                 <i class="fas fa-book-open" style="font-size:40px; color:#0066c0; margin-bottom:15px;"></i>
                 <h3>Guide de l'acheteur</h3>
-                <p style="font-size:13px; text-align:left; color:#4b5563;">1. Sélectionnez vos articles.\n2. Validez le panier.\n3. Payez via Wave ou Orange Money à l'arrivée.</p>
-                <button style="width:100%; background:#ffd814; border:none; padding:10px; font-weight:bold; cursor:pointer; margin-top:10px;" onclick="fermerInfo()">J'ai compris</button>
-            </div>`;
+                <p style="font-size:13px; text-align:left; color:#4b5563;">1. Sélectionnez vos articles.\n2. Validez le panier.\n3. Payez via Wave ou Orange`;
     }
-    modalBody.innerHTML = contenu;
-    modal.style.display = 'flex';
 }
-
-function fermerInfo() {
-    const modal = document.getElementById('info-modal');
-    if (modal) modal.style.display = 'none';
-}
-
-// Initialisation
-document.addEventListener('DOMContentLoaded', () => {
-    filtrerProduits('Toutes');
-});
