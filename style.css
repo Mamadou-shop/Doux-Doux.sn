@@ -1208,3 +1208,98 @@ footer {
         border-radius: 4px;
     }
 }
+
+
+
+
+
+
+#productGrid {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    background-color: #f8f9fa;
+    padding: 12px;
+}
+
+.product-block-4 {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Grille 2x2 parfaite sur mobile */
+    gap: 12px;
+    background: #ffffff;
+    padding: 12px;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+@media (min-width: 768px) {
+    .product-block-4 {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 20px;
+    }
+}
+
+.block-spacer {
+    height: 12px;
+}
+
+.sponsored-block {
+    background: #ffffff;
+    padding: 16px;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    display: flex;
+    justify-content: center;
+}
+
+.sponsored-card {
+    width: 100%;
+    position: relative;
+}
+
+.sponsored-badge {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    font-size: 11px;
+    color: #767676;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+.sponsored-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 6px;
+}
+
+.sponsored-info h4 {
+    font-size: 14px;
+    margin: 8px 0 4px 0;
+}
+
+.sponsored-price {
+    font-weight: bold;
+    color: #e44d26;
+}
+
+.info-block-separator {
+    padding: 4px 0;
+}
+
+.info-box-delivery {
+    background-color: #fff8eb;
+    border: 1px solid #fcd28d;
+    border-radius: 8px;
+    padding: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.info-box-delivery.help-whatsapp {
+    background-color: #e8f5e9;
+    border-color: #a5d6a7;
+}
