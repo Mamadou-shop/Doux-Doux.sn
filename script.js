@@ -6,7 +6,7 @@ let panier = [];
 let slideIndex = 0;
 let indexSlide = 0;
 let produitsStockesLocale = []; 
-let modeAchatDirect = false; // Permet de distinguer l'achat instantané d'un produit vs la commande du panier complet
+let modeAchatDirect = false; 
 let produitDirectEnCours = null;
 
 // ==========================================
@@ -25,40 +25,25 @@ async function fetchProductsFromBackend() {
 }
 
 // ==========================================
-// 3. FONCTIONS D'AFFICHAGE ET FILTRAGE INTERCONNECTÉ
+// 3. FONCTIONS D'AFFICHAGE ET FILTRAGE
 // ==========================================
 async function filtrerProduits(categorie) {
-   // 1. Récupération des 3 conteneurs
     const grille = document.getElementById("productGrid");
     const grilleVenteFlash = document.getElementById("venteFlashGrid");
     const grilleHaul = document.getElementById("haulGrid");
 
-    // 2. Message de chargement (optionnel, sur la grille principale)
-    if (grille) grille.innerHTML = "<p style='grid-column: 1/-1; text-align: center;'>Chargement...</p>";
+    if (grille) grille.innerHTML = "<p style='grid-column: 1/-1; text-align: center;'>Chargement du catalogue Doux-Doux...</p>";
     if (grilleVenteFlash) grilleVenteFlash.innerHTML = "";
     if (grilleHaul) grilleHaul.innerHTML = "";
-
-    // 3. Récupération des produits depuis le backend
-    const catalogueBackend = await fetchProductsFromBackend();
-
-    if (catalogueBackend.length === 0) {
-        if (grille) grille.innerHTML = "<p style='color: red; grid-column: 1/-1; text-align: center;'>Aucun produit trouvé</p>";
-        return;
-    }
-
-    // 4. On vide le message de chargement pour commencer l'affichage
-    if (grille) grille.innerHTML = "";
-
-    grille.innerHTML = "<p style='grid-column: 1/-1; text-align: center;'>Chargement du catalogue Doux-Doux...</p>"; 
 
     const catalogue = await fetchProductsFromBackend();
 
     if (catalogue.length === 0) {
-        grille.innerHTML = "<p style='color: red; grid-column: 1/-1; text-align: center;'>Impossible de charger les produits. Vérifiez le serveur backend.</p>";
+        if (grille) grille.innerHTML = "<p style='color: red; grid-column: 1/-1; text-align: center;'>Impossible de charger les produits. Vérifiez le serveur backend.</p>";
         return;
     }
 
-    grille.innerHTML = ""; 
+    if (grille) grille.innerHTML = ""; 
 
     const titreSection = document.getElementById('section-title');
     if (titreSection) {
@@ -93,7 +78,6 @@ async function filtrerProduits(categorie) {
             return cat === cible || cat.includes(cible) || cible.includes(cat) || tag === cible || (p.tags && p.tags.includes(cible));
         });
 
-    // Compteur pour suivre spécifiquement les éléments ajoutés au catalogue général
     let compteurGrilleGenerale = 0;
 
     produitsAffiches.forEach(p => {
@@ -121,24 +105,18 @@ async function filtrerProduits(categorie) {
                 <span class="category-tag">${categorieProduit}</span>
                 <h3 class="product-title">${nomProduit}</h3>
                 <p class="product-price"><strong>${Number(prixProduit).toLocaleString()} FCFA</strong></p>
-             
-                </div>
             </div>`;
             
-        // Tri dynamique et envoi dans la bonne section
         if (categorieProduit === "Vente Flash") {
             if (grilleVenteFlash) grilleVenteFlash.appendChild(carte);
         } else if (categorieProduit === "Haul") {
             if (grilleHaul) grilleHaul.appendChild(carte);
         } else {
-            // Reste du catalogue général
             if (grille) {
                 grille.appendChild(carte);
                 compteurGrilleGenerale++;
 
-                // === INJECTION DYNAMIQUE DES BANNIÈRES INTERMÉDIAIRES ===
-                
-                // 1. Bannière après le 4ème produit (fin de la 1ère ligne de 4)
+                // Injection des bannières intermédiaires dans la grille générale
                 if (compteurGrilleGenerale === 4) {
                     const banniere1 = document.createElement('div');
                     banniere1.className = "promo-banner-grid";
@@ -146,7 +124,6 @@ async function filtrerProduits(categorie) {
                     grille.appendChild(banniere1);
                 }
 
-                // 2. Bannière après le 8ème produit (fin de la 2ème ligne de 4)
                 if (compteurGrilleGenerale === 8) {
                     const banniere2 = document.createElement('div');
                     banniere2.className = "promo-banner-grid banner-blue";
@@ -159,7 +136,7 @@ async function filtrerProduits(categorie) {
 }
 
 // ==========================================
-// 4. INJECTION DE BANNIÈRES DE SOUS-PAGES THÉMATIQUES
+// 4. INJECTION DE BANNIÈRES DE SOUS-PAGES
 // ==========================================
 function gererZoneBanniereSpeciale(boutique) {
     const zone = document.getElementById('zone-banniere-speciale');
@@ -256,7 +233,7 @@ function fermerDetailProduit() {
 }
 
 // ==========================================
-// 6. PANIER LATÉRAL COULISSANT (AMAZON SLIDE CART)
+// 6. PANIER LATÉRAL COULISSANT
 // ==========================================
 function toggleCartSidebar() {
     const sidebar = document.getElementById("cartSidebar");
@@ -271,16 +248,13 @@ function toggleCartSidebar() {
 
 function ajouterAuPanier(titre, prix) {
     panier.push({ titre: titre, prix: Number(prix) });
-    // Met à jour le compteur classique (ordinateur)
     const compteur = document.getElementById('cartCount');
     if (compteur) compteur.innerText = panier.length;
 
-    // Met à jour TOUS les badges de panier trouvés sur la page (y compris sur mobile)
     const tousLesCompteurs = document.querySelectorAll('.cart-badge-count');
     tousLesCompteurs.forEach(badge => {
         badge.innerText = panier.length;
     });
-    // Notification discrète et rafraîchissement automatique du panier latéral s'il est ouvert
     renderCartSidebar();
     alert(`${titre} ajouté au panier ! 🛒`);
 }
@@ -351,13 +325,11 @@ function procederAuPaiementPanier() {
         return;
     }
     modeAchatDirect = false;
-    toggleCartSidebar(); // Ferme le panier latéral
+    toggleCartSidebar(); 
     
     const modal = document.getElementById('payment-modal');
     if (modal) {
         modal.style.display = 'flex';
-        
-        // Liste des titres résumés
         const listeTitres = panier.map(p => p.titre).join(', ');
         let totalPanier = panier.reduce((sum, item) => sum + item.prix, 0);
 
@@ -372,7 +344,7 @@ function closePayment() {
 }
 
 // ==========================================
-// 8. MOTEUR DE RECHERCHE CROISÉ SYNCHRONISÉ
+// 8. MOTEUR DE RECHERCHE
 // ==========================================
 async function searchProducts() {
     const input = document.getElementById('searchInput');
@@ -439,7 +411,7 @@ async function searchProducts() {
 }
 
 // ==========================================
-// 9. GESTION DES REQUÊTES VERS AIRTABLE / WHATSAPP BACKEND
+// 9. GESTION DES REQUÊTES / ENVOI DE COMMANDE
 // ==========================================
 async function finaliserEtEnvoyerCommande(methodePaiement) {
     const nom = document.getElementById('client-name').value.trim();
@@ -455,35 +427,12 @@ async function finaliserEtEnvoyerCommande(methodePaiement) {
 
     const articleLabel = modeAchatDirect ? produitDirectEnCours.titre : panier.map(x => x.titre).join(" + ");
     const totalFacture = modeAchatDirect ? produitDirectEnCours.prix : panier.reduce((a, b) => a + b.prix, 0);
+    const adresseLivraison = `${region}, Dept: ${departement}, Quartier: ${commune}`;
 
-    const detailCommande = {
-        nomClient: nom,
-        telephoneClient: telephone,
-        adresseLivraison: `${region}, Dept: ${departement}, Quartier: ${commune}`,
-        articles: articleLabel,
-        montantTotal: totalFacture,
-        methode: methodePaiement
-    };
+    // Préparation du message WhatsApp sécurisé
+    const texteWhatsApp = encodeURIComponent(`Bonjour Doux-Doux.sn ! Je souhaite commander :\n\n• Articles : ${articleLabel}\n• Total : ${totalFacture.toLocaleString()} F CFA\n• Mode de paiement : ${methodePaiement}\n\n👉 Infos de livraison :\n- Nom : ${nom}\n- Tél : ${telephone}\n- Localisation : ${adresseLivraison}`);
+    const lienWhatsApp = `https://wa.me/221777226359?text=${texteWhatsApp}`; 
 
-    // --- DÉCLENCHEMENT DU PAIEMENT DIRECT (MODE PRODUITS.CSV) ---
-    if (methodePaiement === 'Wave') {
-        // Redirection immédiate vers ton lien de paiement Wave
-        window.location.href = "https://pay.wave.com/m/M_sn_oPpmOm67pxb4/c/sn/";
-        return;
-    } else if (methodePaiement === 'Orange Money') {
-        // Déclenchement du code USSD Orange Money Sénégal (#144#)
-        window.location.href = "tel:#144#";
-        return;
-    }
-    
-    
-     // --- MODE SANS BACKEND : ENVOI WHATSAPP + REDIRECTION PAIEMENT ---
-    
-    // 1. Préparation du message WhatsApp avec les détails de la commande
-    const texteWhatsApp = encodeURIComponent(`Bonjour Doux-Doux.sn ! Je souhaite commander :\n\n• Articles : ${articleLabel}\n• Total : ${totalFacture} F CFA\n• Mode de paiement : ${methodePaiement}\n\n👉 Infos de livraison :\n- Nom : ${nomClient}\n- Tél : ${telephoneClient}\n- Localisation : ${adresseLivraison}`);
-    const lienWhatsApp = `https://wa.me/221777226359?text=${texteWhatsApp}`; // ⚠️ Mets ton vrai numéro ici
-
-    // 2. Déclenchement du paiement et ouverture de WhatsApp
     if (methodePaiement === 'Wave') {
         window.open(lienWhatsApp, '_blank');
         window.location.href = "https://pay.wave.com/m/M_sn_oPpmOm67pxb4/c/sn/";
@@ -621,7 +570,7 @@ function chargerCommunes() {
 }
 
 // ==========================================
-// 11. SLIDERS D'ACCUEIL SECURISÉS
+// 11. SLIDERS D'ACCUEIL
 // ==========================================
 function moveSlide(n) {
     const slidesContainer = document.querySelector('.slides');
@@ -661,7 +610,7 @@ function slidePrecedente() {
 setInterval(() => { slideSuivante(); }, 5000);
 
 // ==========================================
-// 12. MENUS BURGER ET INFORMATIONS SUPPORT
+// 12. MENUS BURGER ET CONFIGURATION MODALES
 // ==========================================
 function openNav() {
     const nav = document.getElementById("mySidenav");
@@ -709,6 +658,22 @@ function ouvrirInfo(type) {
             <div style="text-align:center;">
                 <i class="fas fa-book-open" style="font-size:40px; color:#0066c0; margin-bottom:15px;"></i>
                 <h3>Guide de l'acheteur</h3>
-                <p style="font-size:13px; text-align:left; color:#4b5563;">1. Sélectionnez vos articles.\n2. Validez le panier.\n3. Payez via Wave ou Orange`;
+                <p style="font-size:13px; text-align:left; color:#4b5563;">1. Sélectionnez vos articles.\n2. Validez le panier.\n3. Payez via Wave ou Orange Money.</p>
+            </div>`;
     }
+    modalBody.innerHTML = contenu;
+    modal.style.display = "flex";
 }
+
+function fermerInfo() {
+    const modal = document.getElementById('info-modal');
+    if (modal) modal.style.display = "none";
+}
+
+// ==========================================
+// 13. ÉCOUTEURS D'ÉVÉNEMENTS INITIALISATION
+// ==========================================
+document.addEventListener("DOMContentLoaded", () => {
+    // Lancement automatique du catalogue au chargement
+    filtrerProduits("Toutes");
+});
