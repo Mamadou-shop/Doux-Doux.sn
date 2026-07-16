@@ -144,7 +144,7 @@ async function filtrerProduits(categorie) {
                                 <div class="sponsored-info">
                                     <h4>Huile de Baobab Purifiante - Doux-Doux</h4>
                                     <p class="sponsored-desc font-text">Soin naturel pressé à froid pour nourrir votre peau.</p>
-                                    <span class="sponsored-price">7 500 FCFA</span>
+                                    <span class="sponsored-price"></span>
                                 </div>
                             </div>`;
                         grille.appendChild(sponsorise);
