@@ -1214,92 +1214,190 @@ footer {
 
 
 
+/* ==========================================================
+   1. VERSION MOBILE (Par défaut - Téléphones)
+   ========================================================== */
+
+/* Conteneur principal qui accueille les blocs et les pubs */
 #productGrid {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    background-color: #f8f9fa;
-    padding: 12px;
-}
-
-.product-block-4 {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr); /* Grille 2x2 parfaite sur mobile */
-    gap: 12px;
-    background: #ffffff;
-    padding: 12px;
-    border-radius: 8px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-}
-
-@media (min-width: 768px) {
-    .product-block-4 {
-        grid-template-columns: repeat(4, 1fr);
-        gap: 20px;
-    }
-}
-
-.block-spacer {
-    height: 12px;
-}
-
-.sponsored-block {
-    background: #ffffff;
-    padding: 16px;
-    border-radius: 8px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-    display: flex;
-    justify-content: center;
-}
-
-.sponsored-card {
+    display: block; 
     width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+    background-color: #f7f7f7; 
+}
+
+/* Le fameux bloc de 4 produits : affichage en 2x2 sur mobile */
+.product-block-4 {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important; /* 2 colonnes sur mobile */
+    gap: 10px !important; /* Espace serré et propre entre les 4 cartes */
+    background: #ffffff;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    margin-bottom: 16px; /* Espace sous le bloc avant le sponsorisé/la bannière */
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Bloc contenant le produit sponsorisé */
+.sponsored-block {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 16px;
+}
+
+/* Carte sponsorisée sur mobile */
+.sponsored-card {
+    background: #ffffff;
+    padding: 12px;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
     position: relative;
+    width: 100%;
+    box-sizing: border-box;
+    text-align: left;
 }
 
 .sponsored-badge {
     position: absolute;
     top: 8px;
     right: 8px;
-    font-size: 11px;
+    font-size: 10px;
     color: #767676;
-    background: rgba(255, 255, 255, 0.9);
+    background: rgba(240, 240, 240, 0.9);
     padding: 2px 6px;
     border-radius: 4px;
 }
 
 .sponsored-card img {
     width: 100%;
-    height: 100px;
+    height: 180px; /* Hauteur adaptée aux mobiles */
     object-fit: cover;
     border-radius: 6px;
 }
 
 .sponsored-info h4 {
     font-size: 14px;
-    margin: 8px 0 4px 0;
+    margin: 10px 0 4px 0;
+    color: #111;
+}
+
+.sponsored-desc {
+    font-size: 12px;
+    color: #565959;
+    margin-bottom: 8px;
+    line-height: 1.4;
 }
 
 .sponsored-price {
     font-weight: bold;
     color: #e44d26;
+    font-size: 15px;
 }
 
+/* Bannières d'information sur mobile */
 .info-block-separator {
-    padding: 4px 0;
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 16px;
 }
 
 .info-box-delivery {
     background-color: #fff8eb;
     border: 1px solid #fcd28d;
     border-radius: 8px;
-    padding: 14px;
+    padding: 12px;
     display: flex;
     align-items: center;
     gap: 10px;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .info-box-delivery.help-whatsapp {
     background-color: #e8f5e9;
     border-color: #a5d6a7;
+}
+
+.info-box-delivery p {
+    margin: 0;
+    font-size: 12px;
+    color: #222;
+    line-height: 1.4;
+    text-align: left;
+}
+
+.delivery-icon {
+    font-size: 20px;
+}
+
+.block-spacer {
+    display: block;
+    height: 12px;
+}
+
+
+/* ==========================================================
+   2. VERSION DESKTOP (Écrans larges - Tablettes et PC)
+   ========================================================== */
+@media (min-width: 768px) {
+    
+    #productGrid {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    /* Aligne les 4 produits sur une seule ligne horizontale sur PC */
+    .product-block-4 {
+        grid-template-columns: repeat(4, 1fr) !important; /* 4 colonnes sur PC */
+        gap: 20px !important;
+        padding: 20px;
+        margin-bottom: 24px;
+    }
+
+    /* Optimisation de la carte sponsorisée pour PC (image à gauche, texte à droite) */
+    .sponsored-card {
+        display: flex;
+        align-items: center;
+        gap: 24px;
+        padding: 20px;
+    }
+
+    .sponsored-card img {
+        width: 250px; /* Image fixe sur le côté gauche */
+        height: 160px;
+    }
+
+    .sponsored-info {
+        flex: 1; /* Le texte prend tout le reste de la largeur */
+    }
+
+    .sponsored-info h4 {
+        font-size: 18px;
+        margin-top: 0;
+    }
+
+    /* Bannières plus larges et aérées sur PC */
+    .info-box-delivery {
+        padding: 20px;
+        gap: 16px;
+        margin-bottom: 24px;
+    }
+
+    .info-box-delivery p {
+        font-size: 14px;
+    }
+
+    .delivery-icon {
+        font-size: 28px;
+    }
+
+    .block-spacer {
+        height: 24px;
+    }
 }
