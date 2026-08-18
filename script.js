@@ -78,7 +78,6 @@ async function filtrerProduits(categorie) {
             return cat === cible || cat.includes(cible) || cible.includes(cat) || tag === cible || (p.tags && p.tags.includes(cible));
         });
 
-    // --- VARIABLES POUR LA STRUCTURATION EN BLOCS DE 4 ---
     let blockActuel = null;
     let compteurDansBlock = 0;
     let indexBlockGlobal = 0;
@@ -94,7 +93,6 @@ async function filtrerProduits(categorie) {
         const categorieProduit = p.category || p.cat || 'Général';
         const uniqueId = p._id || p.id;
 
-        // Création de la carte produit
         const carte = document.createElement('div');
         carte.className = "product-card";
         carte.setAttribute("data-name", nomProduit);
@@ -117,23 +115,19 @@ async function filtrerProduits(categorie) {
             if (grilleHaul) grilleHaul.appendChild(carte);
         } else {
             if (grille) {
-                // Si on commence un nouveau bloc de 4 produits, on crée son conteneur
                 if (compteurDansBlock === 0) {
                     blockActuel = document.createElement('div');
                     blockActuel.className = "product-block-4";
                     grille.appendChild(blockActuel);
                 }
 
-                // On ajoute le produit dans le bloc actuel
                 blockActuel.appendChild(carte);
                 compteurDansBlock++;
 
-                // Dès que le bloc contient 4 produits, on prépare l'élément intermédiaire
                 if (compteurDansBlock === 4) {
                     compteurDansBlock = 0;
                     indexBlockGlobal++;
 
-                    // Après le 1er bloc de 4 : On insère un produit sponsorisé cosmétique/textile
                     if (indexBlockGlobal === 1) {
                         const sponsorise = document.createElement('div');
                         sponsorise.className = "sponsored-block";
@@ -149,7 +143,6 @@ async function filtrerProduits(categorie) {
                             </div>`;
                         grille.appendChild(sponsorise);
                     } 
-                    // Après le 2ème bloc de 4 : On place la bannière de livraison aérée
                     else if (indexBlockGlobal === 2) {
                         const infoBlock = document.createElement('div');
                         infoBlock.className = "info-block-separator";
@@ -160,7 +153,6 @@ async function filtrerProduits(categorie) {
                             </div>`;
                         grille.appendChild(infoBlock);
                     } 
-                    // Après le 3ème bloc de 4 : On insère la bannière d'aide WhatsApp
                     else if (indexBlockGlobal === 3) {
                         const infoBlock2 = document.createElement('div');
                         infoBlock2.className = "info-block-separator";
@@ -171,7 +163,6 @@ async function filtrerProduits(categorie) {
                             </div>`;
                         grille.appendChild(infoBlock2);
                     }
-                    // Pour les blocs suivants : Juste un espacement propre
                     else {
                         const espaceur = document.createElement('div');
                         espaceur.className = "block-spacer";
@@ -182,6 +173,7 @@ async function filtrerProduits(categorie) {
         }
     });
 }
+
 // ==========================================
 // 4. INJECTION DE BANNIÈRES DE SOUS-PAGES
 // ==========================================
@@ -476,7 +468,6 @@ async function finaliserEtEnvoyerCommande(methodePaiement) {
     const totalFacture = modeAchatDirect ? produitDirectEnCours.prix : panier.reduce((a, b) => a + b.prix, 0);
     const adresseLivraison = `${region}, Dept: ${departement}, Quartier: ${commune}`;
 
-    // Préparation du message WhatsApp sécurisé
     const texteWhatsApp = encodeURIComponent(`Bonjour Doux-Doux.sn ! Je souhaite commander :\n\n• Articles : ${articleLabel}\n• Total : ${totalFacture.toLocaleString()} F CFA\n• Mode de paiement : ${methodePaiement}\n\n👉 Infos de livraison :\n- Nom : ${nom}\n- Tél : ${telephone}\n- Localisation : ${adresseLivraison}`);
     const lienWhatsApp = `https://wa.me/221777226359?text=${texteWhatsApp}`; 
 
@@ -603,7 +594,7 @@ function chargerCommunes() {
     if(!commSelect) return;
     commSelect.innerHTML = '<option value="">-- Commune / Quartier --</option>';
 
-    if (dept && senegalMap[region][dept]) {
+    if (dept && senegalMap[region] && senegalMap[region][dept]) {
         commSelect.style.display = "inline-block";
         senegalMap[region][dept].forEach(commune => {
             let opt = document.createElement("option");
@@ -685,7 +676,7 @@ function ouvrirInfo(type) {
             <div style="text-align:center;">
                 <i class="fas fa-box-open" style="font-size: 40px; color: #f97316; margin-bottom: 15px;"></i>
                 <h3>Suivi des commandes & Retours</h3>
-                <p>Connectez-vous à votre espace client pour gérer vos livraisons en cours au Sénégal.</p>
+                <p style="font-size: 13px; color: #4b5563; margin-bottom: 15px;">Connectez-vous à votre espace client pour gérer vos livraisons en cours au Sénégal.</p>
                 <button style="background:#ffd814; border:1px solid #fcd200; padding:10px 20px; border-radius:4px; font-weight:bold; cursor:pointer;" onclick="window.location.href='login.html'">Accéder à mon espace</button>
             </div>`;
     } else if (type === 'vendre') {
@@ -705,9 +696,19 @@ function ouvrirInfo(type) {
             <div style="text-align:center;">
                 <i class="fas fa-book-open" style="font-size:40px; color:#0066c0; margin-bottom:15px;"></i>
                 <h3>Guide de l'acheteur</h3>
-                <p style="font-size:13px; text-align:left; color:#4b5563;">1. Sélectionnez vos articles.\n2. Validez le panier.\n3. Payez via Wave ou Orange Money.</p>
+                <p style="font-size:13px; text-align:left; color:#4b5563;">1. Sélectionnez vos articles.<br>2. Validez le panier.<br>3. Payez via Wave ou Orange Money.</p>
             </div>`;
+    } else if (type === 'aide') {
+        contenu = `
+            <div style="text-align:center;">
+                <i class="fas fa-headset" style="font-size: 40px; color: #007185; margin-bottom: 15px;"></i>
+                <h3>Besoin d'aide ?</h3>
+                <p style="font-size:13px; color:#4b5563;">Notre équipe est à votre disposition 7j/7 pour répondre à toutes vos questions concernant la livraison, les moyens de paiement et la disponibilité des stocks.</p>
+            </div>`;
+    } else {
+        contenu = `<p style="text-align:center;">Information non disponible pour le moment.</p>`;
     }
+
     modalBody.innerHTML = contenu;
     modal.style.display = "flex";
 }
@@ -718,9 +719,42 @@ function fermerInfo() {
 }
 
 // ==========================================
-// 13. ÉCOUTEURS D'ÉVÉNEMENTS INITIALISATION
+// 13. FONCTIONS UTILITAIRES ET INTERACTIONS
+// ==========================================
+function retournerEnHaut() {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
+}
+
+// ==========================================
+// 14. ÉCOUTEURS D'ÉVÉNEMENTS INITIALISATION
 // ==========================================
 document.addEventListener("DOMContentLoaded", () => {
     // Lancement automatique du catalogue au chargement
     filtrerProduits("Toutes");
+
+    // Détection de la touche 'Entrée' sur la barre de recherche
+    const inputRecherche = document.getElementById('searchInput');
+    if (inputRecherche) {
+        inputRecherche.addEventListener('keyup', (event) => {
+            if (event.key === 'Enter') {
+                searchProducts();
+            }
+        });
+    }
+
+    // Fermeture des modales lors d'un clic à l'extérieur du contenu
+    window.onclick = function(event) {
+        const modalPaiement = document.getElementById('payment-modal');
+        const modalDetail = document.getElementById('product-detail-modal');
+        const modalInfo = document.getElementById('info-modal');
+        const overlaySide = document.getElementById('side-overlay');
+
+        if (event.target === modalPaiement) closePayment();
+        if (event.target === modalDetail) fermerDetailProduit();
+        if (event.target === modalInfo) fermerInfo();
+        if (event.target === overlaySide) closeNav();
+    };
 });
