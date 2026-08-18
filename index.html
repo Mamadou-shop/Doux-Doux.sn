@@ -44,7 +44,7 @@
             <a href="#">🇸🇳 Sénégal</a>
             <a href="login.html" onclick="closeNav()">Se connecter</a>
             <a href="https://wa.me/221777226359" target="_blank" onclick="closeNav()"><i class="fab fa-whatsapp" style="color: #25D366; margin-right: 5px;"></i> Suivre ma commande</a>
-        <a href="tel:+221777226359" onclick="closeNav()"><i class="fas fa-phone-alt" style="color: #007bff; margin-right: 5px;"></i> Service client (Appel)</a>
+            <a href="tel:+221777226359" onclick="closeNav()"><i class="fas fa-phone-alt" style="color: #007bff; margin-right: 5px;"></i> Service client (Appel)</a>
         </div>
     </div>
 
@@ -75,7 +75,7 @@
 
     <!-- EN-TÊTE (HEADER NAV) -->
     <header>
-        <!-- 1. VERSION POUR ORDINATEUR (Reste identique à ton design actuel, masqué sur téléphone) -->
+        <!-- 1. VERSION POUR ORDINATEUR -->
         <div class="nav-main hide-on-mobile">
             <div class="nav-left">
                 <div class="nav-logo">
@@ -121,28 +121,28 @@
             </div>
         </div>
 
-        <!-- 2. VERSION POUR TÉLÉPHONE (Trois traits à gauche, Logo au milieu, Actions à droite) -->
-            <div class="header-top-row hide-on-desktop">
-                <div class="header-mobile-left">
-                 <div class="mobile-menu-trigger" onclick="openNav()" style="cursor: pointer; color: #ffffff; font-size: 22px; margin-right: 10px;">
-                 <i class="fas fa-bars"></i>
+        <!-- 2. VERSION POUR TÉLÉPHONE -->
+        <div class="header-top-row hide-on-desktop">
+            <div class="header-mobile-left">
+                <div class="mobile-menu-trigger" onclick="openNav()" style="cursor: pointer; color: #ffffff; font-size: 22px; margin-right: 10px;">
+                    <i class="fas fa-bars"></i>
                 </div>
                 <h1 class="brand-logo-mobile">Doux-Doux<span class="sn-accent">.sn</span></h1>
-          </div>
+            </div>
                 
-                <!-- Actions à droite -->
-                <div class="header-mobile-actions">
-                    <a href="login.html" class="nav-connect-link-mobile">
-                        <i class="fas fa-user"></i> Se connecter
-                    </a>
-                    <div class="cart-container-top-mobile" onclick="toggleCartSidebar()">
-                        <i class="fas fa-shopping-cart"></i>
-                        <span class="cart-badge-count">0</span>
-                    </div>
+            <!-- Actions à droite -->
+            <div class="header-mobile-actions">
+                <a href="login.html" class="nav-connect-link-mobile">
+                    <i class="fas fa-user"></i> Se connecter
+                </a>
+                <div class="cart-container-top-mobile" onclick="toggleCartSidebar()">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-badge-count">0</span>
                 </div>
             </div>
+        </div>
 
-        <!-- La sous-barre (Menu trois traits + liens) reste identique pour l'instant -->
+        <!-- Sous-barre de navigation -->
         <div class="nav-sub hide-on-mobile">
             <div class="nav-sub-left" onclick="openNav()">
                 <i class="fas fa-bars"></i>
@@ -160,43 +160,43 @@
         </div>
     </header>
 
-    <!-- SLIDER D'ACCUEIL PRINCIPAL -->
+    <!-- SLIDER D'ACCUEIL PRINCIPAL (3 CATÉGORIES : MODE, BEAUTÉ, ACCESSOIRES) -->
     <div id="main-hero-slider" class="slider-container" style="position: relative; width: 100%; height: 320px !important; overflow: hidden; margin-bottom: -100px; z-index: 1; background-color: #eaeded;">
-        <div class="slides" style="display: flex; width: 400%; height: 100%; transition: transform 0.5s ease-in-out;" id="sliderSlides">
-            <!-- Slide 1: Technologie -->
-            <div class="slide" style="width: 25%; height: 100% !important; position: relative;">
-                <img src="https://images.unsplash.com/photo-1531297484001-80022131f5a1?auto=format&fit=crop&w=1600&h=500&q=80" alt="Tech" style="width: 100% !important; height: 100% !important; object-fit: cover !important; object-position: center 20% !important;">
-                <div style="position: absolute; top: 40px; left: 8%; color: #0f172a; max-width: 450px; background: rgba(255,255,255,0.7); padding: 15px; border-radius: 6px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
-                    <h1 style="font-size: 30px; margin: 0 0 5px 0; font-weight: 800; color: #111827;">Le meilleur de la Tech</h1>
-                    <p style="font-size: 15px; margin: 0; color: #374151;">Équipements et accessoires dernière génération.</p>
-                </div>
-            </div>
-            <!-- Slide 2: Mode -->
-            <div class="slide" style="width: 25%; height: 100% !important; position: relative;">
+        <div class="slides" style="display: flex; width: 300%; height: 100%; transition: transform 0.5s ease-in-out;" id="sliderSlides">
+            
+            <!-- Slide 1: Mode -->
+            <div class="slide" style="width: 33.333%; height: 100% !important; position: relative;">
                 <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=1600&h=500&q=80" alt="Mode" style="width: 100% !important; height: 100% !important; object-fit: cover !important; object-position: center 30% !important;">
                 <div style="position: absolute; top: 40px; left: 8%; color: #0f172a; max-width: 450px; background: rgba(255,255,255,0.7); padding: 15px; border-radius: 6px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
                     <h1 style="font-size: 30px; margin: 0 0 5px 0; font-weight: 800; color: #111827;">Tendances Mode & Style</h1>
-                    <p style="font-size: 15px; margin: 0; color: #374151;">Renouvelez votre garde-robe.</p>
+                    <p style="font-size: 15px; margin: 0; color: #374151;">Renouvelez votre garde-robe avec nos collections.</p>
                 </div>
             </div>
-            <!-- Slide 3: Maison -->
-            <div class="slide" style="width: 25%; height: 100% !important; position: relative;">
-                <img src="https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1600&h=500&q=80" alt="Maison" style="width: 100% !important; height: 100% !important; object-fit: cover !important; object-position: center 40% !important;">
+
+            <!-- Slide 2: Beauté -->
+            <div class="slide" style="width: 33.333%; height: 100% !important; position: relative;">
+                <img src="https://images.unsplash.com/photo-1608248597279-f99d160bfcbc?auto=format&fit=crop&w=1600&h=500&q=80" alt="Beauté" style="width: 100% !important; height: 100% !important; object-fit: cover !important; object-position: center 30% !important;">
                 <div style="position: absolute; top: 40px; left: 8%; color: #0f172a; max-width: 450px; background: rgba(255,255,255,0.7); padding: 15px; border-radius: 6px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
-                    <h1 style="font-size: 30px; margin: 0 0 5px 0; font-weight: 800; color: #111827;">Pour votre intérieur</h1>
-                    <p style="font-size: 15px; margin: 0; color: #374151;">Des équipements modernes pour la maison.</p>
+                    <h1 style="font-size: 30px; margin: 0 0 5px 0; font-weight: 800; color: #111827;">Beauté & Soins</h1>
+                    <p style="font-size: 15px; margin: 0; color: #374151;">Une sélection exclusive pour votre bien-être au quotidien.</p>
                 </div>
             </div>
-            <!-- Slide 4: Épicerie -->
-            <div class="slide" style="width: 25%; height: 100% !important; position: relative;">
-                <img src="https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=1600&h=500&q=80" alt="Epicerie" style="width: 100% !important; height: 100% !important; object-fit: cover !important; object-position: center 30% !important;">
+
+            <!-- Slide 3: Accessoires -->
+            <div class="slide" style="width: 33.333%; height: 100% !important; position: relative;">
+                <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=1600&h=500&q=80" alt="Accessoires" style="width: 100% !important; height: 100% !important; object-fit: cover !important; object-position: center 30% !important;">
                 <div style="position: absolute; top: 40px; left: 8%; color: #0f172a; max-width: 450px; background: rgba(255,255,255,0.7); padding: 15px; border-radius: 6px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
-                    <h1 style="font-size: 30px; margin: 0 0 5px 0; font-weight: 800; color: #111827;">Le Marché Frais</h1>
-                    <p style="font-size: 15px; margin: 0; color: #374151;">Vos produits du quotidien livrés chez vous.</p>
+                    <h1 style="font-size: 30px; margin: 0 0 5px 0; font-weight: 800; color: #111827;">Accessoires Tendances</h1>
+                    <p style="font-size: 15px; margin: 0; color: #374151;">Montres, bijoux et compléments pour perfectionner votre look.</p>
                 </div>
             </div>
+
         </div>
+
+        <!-- Fondu dégradé style Amazon vers le bas -->
         <div style="position: absolute; bottom: 0; left: 0; width: 100%; height: 150px; background: linear-gradient(to bottom, transparent, #eaeded); pointer-events: none;"></div>
+
+        <!-- Flèches de navigation du slider -->
         <button onclick="slidePrecedente()" style="position: absolute; top: 110px; left: 20px; background: transparent; color: #111; border: none; font-size: 35px; cursor: pointer; z-index: 10; padding: 10px;"><i class="fas fa-chevron-left"></i></button>
         <button onclick="slideSuivante()" style="position: absolute; top: 110px; right: 20px; background: transparent; color: #111; border: none; font-size: 35px; cursor: pointer; z-index: 10; padding: 10px;"><i class="fas fa-chevron-right"></i></button>
     </div>
@@ -204,118 +204,112 @@
     <!-- MAIN WRAPPER CONTENANT TOUTE LA STRUCTURE AMAZON LAYOUT -->
     <div class="amazon-layout-container" style="max-width: 1400px; margin: 0 auto; padding: 0 20px 20px 20px; background-color: #eaeded; position: relative; z-index: 2;">
         
-       <div id="main-amazon-cards" class="amazon-grid-cards horizontal-scroll-section" style="max-width: 1400px; margin: 0 auto; padding: 0 20px 20px 20px; background-color: #eaeded; position: relative; z-index: 2;">
+        <div id="main-amazon-cards" class="amazon-grid-cards horizontal-scroll-section" style="max-width: 1400px; margin: 0 auto; padding: 0 20px 20px 20px; background-color: #eaeded; position: relative; z-index: 2;">
     
-    <div class="style-card product-card" style="background: #fff; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border-radius: 8px;">
-        <h3 style="font-size: 21px; margin-bottom: 15px; color: #111; font-weight: 700;">Doux-Doux Basics</h3>
-        <div style="background: #f7f8f8; height: 200px; margin-bottom: 15px; display: flex; align-items: center; justify-content: center; overflow: hidden; border-radius: 6px;">
-            <img src="https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=500&q=80" alt="T-shirts Basiques Doux-Doux" style="width: 100%; height: 100%; object-fit: cover;">
-        </div>
-        <a href="#productGrid" onclick="filtrerProduits('Doux-Doux-Basics')" style="color: #007185; text-decoration: none; font-size: 13px; font-weight: bold;">Voir plus</a>
-    </div>
+            <div class="style-card product-card" style="background: #fff; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border-radius: 8px;">
+                <h3 style="font-size: 21px; margin-bottom: 15px; color: #111; font-weight: 700;">Doux-Doux Basics</h3>
+                <div style="background: #f7f8f8; height: 200px; margin-bottom: 15px; display: flex; align-items: center; justify-content: center; overflow: hidden; border-radius: 6px;">
+                    <img src="https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=500&q=80" alt="T-shirts Basiques Doux-Doux" style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
+                <a href="#productGrid" onclick="filtrerProduits('Doux-Doux-Basics')" style="color: #007185; text-decoration: none; font-size: 13px; font-weight: bold;">Voir plus</a>
+            </div>
 
-    <div class="style-card product-card" style="background: #fff; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border-radius: 8px;">
-        <h3 style="font-size: 21px; margin-bottom: 15px; color: #111; font-weight: 700;">Doux-Doux Haul</h3>
-        <div style="background: #f7f8f8; height: 200px; margin-bottom: 15px; display: flex; align-items: center; justify-content: center; overflow: hidden; border-radius: 6px;">
-            <img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?w=500&q=80" alt="Packs Mode Doux-Doux Haul" style="width: 100%; height: 100%; object-fit: cover;">
-        </div>
-        <a href="#productGrid" onclick="filtrerProduits('Doux-Doux-Haul')" style="color: #007185; text-decoration: none; font-size: 13px; font-weight: bold;">Découvrir les packs</a>
-    </div>
+            <div class="style-card product-card" style="background: #fff; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border-radius: 8px;">
+                <h3 style="font-size: 21px; margin-bottom: 15px; color: #111; font-weight: 700;">Doux-Doux Haul</h3>
+                <div style="background: #f7f8f8; height: 200px; margin-bottom: 15px; display: flex; align-items: center; justify-content: center; overflow: hidden; border-radius: 6px;">
+                    <img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?w=500&q=80" alt="Packs Mode Doux-Doux Haul" style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
+                <a href="#productGrid" onclick="filtrerProduits('Doux-Doux-Haul')" style="color: #007185; text-decoration: none; font-size: 13px; font-weight: bold;">Découvrir les packs</a>
+            </div>
 
-    <div class="style-card product-card" style="background: #fff; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border-radius: 8px;">
-        <h3 style="font-size: 21px; margin-bottom: 15px; color: #111; font-weight: 700;">Meilleures Ventes</h3>
-        <div style="background: #f7f8f8; height: 200px; margin-bottom: 15px; display: flex; align-items: center; justify-content: center; overflow: hidden; border-radius: 6px;">
-            <img src="https://images.unsplash.com/photo-1608248597279-f99d160bfcbc?w=500&q=80" alt="Meilleures Ventes Cosmétiques" style="width: 100%; height: 100%; object-fit: cover;">
-        </div>
-        <a href="#productGrid" onclick="filtrerProduits('Meilleures-ventes')" style="color: #007185; text-decoration: none; font-size: 13px; font-weight: bold;">Explorer</a>
-    </div>
+            <div class="style-card product-card" style="background: #fff; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border-radius: 8px;">
+                <h3 style="font-size: 21px; margin-bottom: 15px; color: #111; font-weight: 700;">Meilleures Ventes</h3>
+                <div style="background: #f7f8f8; height: 200px; margin-bottom: 15px; display: flex; align-items: center; justify-content: center; overflow: hidden; border-radius: 6px;">
+                    <img src="https://images.unsplash.com/photo-1608248597279-f99d160bfcbc?w=500&q=80" alt="Meilleures Ventes Cosmétiques" style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
+                <a href="#productGrid" onclick="filtrerProduits('Meilleures-ventes')" style="color: #007185; text-decoration: none; font-size: 13px; font-weight: bold;">Explorer</a>
+            </div>
 
-    <div class="style-card product-card" style="background: #fff; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border-radius: 8px;">
-        <h3 style="font-size: 21px; margin-bottom: 15px; color: #111; font-weight: 700;">Ventes Flash ⚡</h3>
-        <div style="background: #f7f8f8; height: 200px; margin-bottom: 15px; display: flex; align-items: center; justify-content: center; overflow: hidden; border-radius: 6px;">
-            <img src="https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=500&q=80" alt="Ventes Flash Événement" style="width: 100%; height: 100%; object-fit: cover;">
+            <div class="style-card product-card" style="background: #fff; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border-radius: 8px;">
+                <h3 style="font-size: 21px; margin-bottom: 15px; color: #111; font-weight: 700;">Ventes Flash ⚡</h3>
+                <div style="background: #f7f8f8; height: 200px; margin-bottom: 15px; display: flex; align-items: center; justify-content: center; overflow: hidden; border-radius: 6px;">
+                    <img src="https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=500&q=80" alt="Ventes Flash Événement" style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
+                <a href="#productGrid" onclick="filtrerProduits('Ventes-Flash')" style="color: #007185; text-decoration: none; font-size: 13px; font-weight: bold;">Profiter des offres</a>
+            </div>
         </div>
-        <a href="#productGrid" onclick="filtrerProduits('Ventes-Flash')" style="color: #007185; text-decoration: none; font-size: 13px; font-weight: bold;">Profiter des offres</a>
-    </div>
-</div>
 
         <div class="horizontal-scroll-section">
-    <h2 class="section-title">Meilleures ventes du moment</h2>
-    
-    <div class="scroll-container">
-        <div class="scroll-item">
-            <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=200" alt="Casque Audio">
-            <p class="product-name">Casque Audio Bluetooth</p>
-            <p class="product-price"></p>
+            <h2 class="section-title">Meilleures ventes du moment</h2>
+            
+            <div class="scroll-container">
+                <div class="scroll-item">
+                    <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=200" alt="Casque Audio">
+                    <p class="product-name">Casque Audio Bluetooth</p>
+                    <p class="product-price"></p>
+                </div>
+                
+                <div class="scroll-item">
+                    <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=200" alt="Montre Connectée">
+                    <p class="product-name">Montre Smart Luxe</p>
+                    <p class="product-price"></p>
+                </div>
+
+                <div class="scroll-item">
+                    <img src="https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=200" alt="Lunettes de Soleil">
+                    <p class="product-name">Lunettes Polarisées</p>
+                    <p class="product-price"></p>
+                </div>
+
+                <div class="scroll-item">
+                    <img src="https://i.pinimg.com/736x/ee/97/0b/ee970bdeb892c70a22b83698bfce5fd1.jpg" alt="Écouteurs Pro">
+                    <p class="product-name">Écouteurs Sans Fil Pro</p>
+                    <p class="product-price"></p>
+                </div>
+                
+                <div class="scroll-item">
+                    <img src="https://i.pinimg.com/1200x/20/0f/03/200f031ddfe44c11fe37bae7353896cf.jpg" alt="Baskets Sport">
+                    <p class="product-name">Baskets Run Comfort</p>
+                    <p class="product-price"></p>
+                </div>
+
+                <div class="scroll-item">
+                    <img src="https://static.wixstatic.com/media/956e87_2d4d743577134e0d8083a1afd057f6fc~mv2.png/v1/fill/w_1000,h_1000,al_c,q_90,enc_avif,quality_auto/956e87_2d4d743577134e0d8083a1afd057f6fc~mv2.png" alt="Beauté et bien-être ">
+                    <p class="product-name">Beauté et bien-être </p>
+                    <p class="product-price"></p>
+                </div>
+
+                <div class="scroll-item">
+                    <img src="https://i.pinimg.com/736x/28/09/0f/28090f87dbc622e02c56848fcf0cd462.jpg" alt="Epicerie">
+                    <p class="product-name">Epicerie</p>
+                    <p class="product-price"></p>
+                </div>
+
+                <div class="scroll-item">
+                    <img src="https://i.pinimg.com/1200x/1b/fb/e1/1bfbe17efeafbeb1619a149299fa423e.jpg" alt="gaming">
+                    <p class="product-name">Accessoires gaming</p>
+                    <p class="product-price"></p>
+                </div>
+
+                <div class="scroll-item">
+                    <img src="https://i.pinimg.com/1200x/65/20/72/652072d3497572d6cec1285302d5ffde.jpg" alt="Bureaux">
+                    <p class="product-name">Bureaux</p>
+                    <p class="product-price"></p>
+                </div>
+
+                <div class="scroll-item">
+                    <img src="https://i.pinimg.com/736x/07/5c/7a/075c7a99e191734567ccd55e507e55da.jpg" alt="livre">
+                    <p class="product-name">Littérature et jeunesse</p>
+                    <p class="product-price"></p>
+                </div>
+
+                <div class="scroll-item">
+                    <img src="https://i.pinimg.com/1200x/42/de/5d/42de5df91cecbfbb8364459f50f4d077.jpg" alt="Luminaires">
+                    <p class="product-name">Eclairage intelligent</p>
+                    <p class="product-price"></p>
+                </div>
+            </div>
         </div>
-        
-        <div class="scroll-item">
-            <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=200" alt="Montre Connectée">
-            <p class="product-name">Montre Smart Luxe</p>
-            <p class="product-price"></p>
-        </div>
-
-        <div class="scroll-item">
-            <img src="https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=200" alt="Lunettes de Soleil">
-            <p class="product-name">Lunettes Polarisées</p>
-            <p class="product-price"></p>
-        </div>
-
-        <div class="scroll-item">
-            <img src="https://i.pinimg.com/736x/ee/97/0b/ee970bdeb892c70a22b83698bfce5fd1.jpg" alt="Écouteurs Pro">
-            <p class="product-name">Écouteurs Sans Fil Pro</p>
-            <p class="product-price"></p>
-        </div>
-        
-        <div class="scroll-item">
-            <img src="https://i.pinimg.com/1200x/20/0f/03/200f031ddfe44c11fe37bae7353896cf.jpg" alt="Baskets Sport">
-            <p class="product-name">Baskets Run Comfort</p>
-            <p class="product-price"></p>
-        </div>
-
-        <div class="scroll-item">
-            <img src="https://static.wixstatic.com/media/956e87_2d4d743577134e0d8083a1afd057f6fc~mv2.png/v1/fill/w_1000,h_1000,al_c,q_90,enc_avif,quality_auto/956e87_2d4d743577134e0d8083a1afd057f6fc~mv2.png" alt="Beauté et bien-être ">
-            <p class="product-name">Beauté et bien-être </p>
-            <p class="product-price"></p>
-        </div>
-
-          <div class="scroll-item">
-            <img src="https://i.pinimg.com/736x/28/09/0f/28090f87dbc622e02c56848fcf0cd462.jpg" alt="Epicerie">
-            <p class="product-name">Epicerie</p>
-            <p class="product-price"></p>
-        </div>
-
-         <div class="scroll-item">
-            <img src="https://i.pinimg.com/1200x/1b/fb/e1/1bfbe17efeafbeb1619a149299fa423e.jpg" alt="gaming">
-            <p class="product-name">Accessoires gaming</p>
-            <p class="product-price"></p>
-        </div>
-
-         <div class="scroll-item">
-            <img src="https://i.pinimg.com/1200x/65/20/72/652072d3497572d6cec1285302d5ffde.jpg" alt="Bureaux">
-            <p class="product-name">Bureaux</p>
-            <p class="product-price"></p>
-        </div>
-
-         <div class="scroll-item">
-            <img src="https://i.pinimg.com/736x/07/5c/7a/075c7a99e191734567ccd55e507e55da.jpg" alt="livre">
-            <p class="product-name">Littérature et jeunesse</p>
-            <p class="product-price"></p>
-        </div>
-
-         <div class="scroll-item">
-            <img src="https://i.pinimg.com/1200x/42/de/5d/42de5df91cecbfbb8364459f50f4d077.jpg" alt="Luminaires">
-            <p class="product-name">Eclairage intelligent</p>
-            <p class="product-price"></p>
-        </div>
-    </div>
-</div>
-
-
-
-<!-- ZONE COMPLÈTE D'AFFICHAGE DU CATALOGUE -->
-
-
 
         <!-- ZONE COMPLÈTE D'AFFICHAGE DU CATALOGUE -->
         <div style="background: #fff; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border-radius: 2px; margin-top: 20px;">
@@ -326,7 +320,7 @@
         </div>
     </div>
 
-    <!-- MODALE DE DÉTAIL DU PRODUIT (FICHE PRODUIT AVANCÉE AVEC VARIANTES) -->
+    <!-- MODALE DE DÉTAIL DU PRODUIT -->
     <div id="product-detail-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 4000; justify-content: center; align-items: center;">
         <div style="background: #fff; width: 90%; max-width: 900px; padding: 30px; border-radius: 4px; position: relative; box-shadow: 0 5px 15px rgba(0,0,0,0.3); display: flex; gap: 30px; max-height: 85vh; overflow-y: auto; font-family: sans-serif;">
             <button onclick="fermerDetailProduit()" style="position: absolute; top: 15px; right: 15px; background: none; border: none; font-size: 28px; cursor: pointer; color: #666;">&times;</button>
@@ -339,14 +333,13 @@
                 <div id="modal-thumbnails-container" style="display: flex; gap: 10px; justify-content: center;"></div>
             </div>
             
-            <!-- Droite : Fiche Technique & Variantes Clés -->
+            <!-- Droite : Fiche Technique -->
             <div style="flex: 1.2; display: flex; flex-direction: column; justify-content: space-between;">
                 <div>
                     <span id="modal-product-badge" style="background: #B12704; color: #fff; padding: 4px 8px; font-size: 11px; font-weight: bold; border-radius: 2px; text-transform: uppercase; display: inline-block; margin-bottom: 10px;">Best-Seller</span>
                     <h2 id="modal-product-title" style="margin: 0 0 5px 0; font-size: 22px; color: #111; font-weight: 600;">Nom complet de l'article</h2>
                     <p id="modal-product-category" style="color: #007185; font-size: 13px; margin-bottom: 10px; cursor: pointer;">Visiter la boutique</p>
                     
-                    <!-- Étoiles Amazon -->
                     <div style="color: #ffa41c; font-size: 14px; margin-bottom: 15px;">
                         <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
                         <span style="color: #007185; margin-left: 5px; font-size: 13px;">4.5 sur 5 (87 avis clients)</span>
@@ -359,7 +352,7 @@
                         <span style="font-size: 13px; color: #565959; margin-left: 5px;">sans taxes additionnelles</span>
                     </div>
 
-                    <!-- BLOC VARIANTES (TAILLES & COULEURS) -->
+                    <!-- BLOC VARIANTES -->
                     <div style="margin-bottom: 15px;">
                         <p style="font-size: 13px; font-weight: bold; margin-bottom: 5px; color: #111;">Taille : <span id="lbl-selected-size" style="font-weight: normal; color: #565959;">Standard</span></p>
                         <div style="display: flex; gap: 8px;">
@@ -386,7 +379,7 @@
         </div>
     </div>
 
-    <!-- MODALE TUNNEL DE COMMANDE ET FINALISATION (LIVRAISON LOCALE & MOBILE MONEY) -->
+    <!-- MODALE TUNNEL DE COMMANDE ET FINALISATION -->
     <div id="payment-modal" class="modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 5000; justify-content: center; align-items: center;">
         <div class="modal-content" style="font-family: sans-serif; background: #fff; width: 90%; max-width: 500px; padding: 25px; border-radius: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); position: relative;">
             <span class="close" onclick="closePayment()" style="position: absolute; top: 15px; right: 15px; font-size: 24px; cursor: pointer; color: #666;">&times;</span>
