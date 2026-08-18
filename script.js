@@ -9,6 +9,9 @@ let produitsStockesLocale = [];
 let modeAchatDirect = false; 
 let produitDirectEnCours = null;
 
+// Liste stricte des 3 catégories autorisées
+const CATEGORIES_AUTORISEES = ['mode', 'beaute', 'beauté', 'accessoires', 'accessoire'];
+
 // ==========================================
 // 2. CHARGEMENT DYNAMIQUE DEPUIS LE BACKEND
 // ==========================================
@@ -16,8 +19,14 @@ async function fetchProductsFromBackend() {
     try {
         const response = await fetch(`${API_URL}/products`);
         const products = await response.json();
-        produitsStockesLocale = products; 
-        return products;
+        
+        // Filtrage strict : Conserver uniquement Mode, Beauté et Accessoires
+        produitsStockesLocale = products.filter(p => {
+            const cat = (p.category || p.cat || p.categorie || "").toLowerCase().trim();
+            return CATEGORIES_AUTORISEES.some(autorisee => cat.includes(autorisee));
+        });
+
+        return produitsStockesLocale;
     } catch (error) {
         console.error("Erreur lors de la récupération des produits :", error);
         return []; 
@@ -29,17 +38,12 @@ async function fetchProductsFromBackend() {
 // ==========================================
 async function filtrerProduits(categorie) {
     const grille = document.getElementById("productGrid");
-    const grilleVenteFlash = document.getElementById("venteFlashGrid");
-    const grilleHaul = document.getElementById("haulGrid");
-
     if (grille) grille.innerHTML = "<p style='grid-column: 1/-1; text-align: center;'>Chargement du catalogue Doux-Doux...</p>";
-    if (grilleVenteFlash) grilleVenteFlash.innerHTML = "";
-    if (grilleHaul) grilleHaul.innerHTML = "";
 
     const catalogue = await fetchProductsFromBackend();
 
     if (!catalogue || catalogue.length === 0) {
-        if (grille) grille.innerHTML = "<p style='color: red; grid-column: 1/-1; text-align: center;'>Impossible de charger les produits. Vérifiez le serveur backend.</p>";
+        if (grille) grille.innerHTML = "<p style='color: red; grid-column: 1/-1; text-align: center;'>Impossible de charger les produits. Vérifiez la connexion backend.</p>";
         return;
     }
 
@@ -60,9 +64,6 @@ async function filtrerProduits(categorie) {
         } else if (categorie.toLowerCase().includes('accessoire')) {
             titreSection.innerText = "💼 Collection Accessoires";
             gererZoneBanniereSpeciale('accessoires');
-        } else {
-            titreSection.innerText = `Catégorie : ${categorie}`;
-            gererZoneBanniereSpeciale(null);
         }
     }
 
@@ -70,10 +71,13 @@ async function filtrerProduits(categorie) {
         ? catalogue 
         : catalogue.filter(p => {
             const cat = (p.category || p.cat || p.categorie || "").toLowerCase().trim();
-            const tag = (p.tag || "").toLowerCase().trim();
-            const cible = categorie.toLowerCase().trim();
-            return cat === cible || cat.includes(cible) || cible.includes(cat) || tag === cible || (p.tags && p.tags.includes(cible));
+            return cat.includes(categorie.toLowerCase().trim());
         });
+
+    if (produitsAffiches.length === 0) {
+        grille.innerHTML = "<p style='grid-column: 1/-1; text-align: center;'>Aucun produit disponible dans cette catégorie.</p>";
+        return;
+    }
 
     let blockActuel = null;
     let compteurDansBlock = 0;
@@ -87,7 +91,7 @@ async function filtrerProduits(categorie) {
 
         const nomProduit = p.name || p.titre || "Produit sans nom";
         const prixProduit = p.price || p.prix || 0;
-        const categorieProduit = p.category || p.cat || p.categorie || 'Général';
+        const categorieProduit = p.category || p.cat || p.categorie || 'Mode';
         const uniqueId = p._id || p.id;
 
         const carte = document.createElement('div');
@@ -177,27 +181,18 @@ function gererZoneBanniereSpeciale(boutique) {
             <div style="background: linear-gradient(135deg, #3a7bd5, #3a6073); color: white; padding: 25px; border-radius: 4px; margin-bottom: 25px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
                 <h2 style="margin: 0 0 8px 0; font-size: 24px;">👗 Boutique Mode</h2>
                 <p style="margin: 0 0 15px 0; font-size: 14px; color: #f0f4f8;">Découvrez les dernières tendances vestimentaires sélectionnées pour vous au Sénégal.</p>
-                <div style="display: flex; gap: 15px; font-size: 13px;">
-                    <span style="font-weight: bold; cursor: pointer; border-bottom: 2px solid white;" onclick="filtrerProduits('Mode')">Tout en Mode</span>
-                </div>
             </div>`;
     } else if (boutique === 'beaute') {
         zone.innerHTML = `
             <div style="background: linear-gradient(135deg, #f12711, #f5af19); color: white; padding: 25px; border-radius: 4px; margin-bottom: 25px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-                <h2 style="margin: 0 0 8px 0; font-size: 24px;">✨ Gamme Beautés & Soins</h2>
+                <h2 style="margin: 0 0 8px 0; font-size: 24px;">✨ Gamme Beauté & Soins</h2>
                 <p style="margin: 0 0 15px 0; font-size: 14px; color: #fff3e0;">Sublimez votre peau et vos cheveux avec nos produits cosmétiques d'exception.</p>
-                <div style="display: flex; gap: 15px; font-size: 13px;">
-                    <span style="font-weight: bold; cursor: pointer; border-bottom: 2px solid white;" onclick="filtrerProduits('Beautés')">Tout en Beautés</span>
-                </div>
             </div>`;
     } else if (boutique === 'accessoires') {
         zone.innerHTML = `
             <div style="background: linear-gradient(135deg, #11998e, #38ef7d); color: white; padding: 25px; border-radius: 4px; margin-bottom: 25px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
                 <h2 style="margin: 0 0 8px 0; font-size: 24px;">💼 Collection Accessoires</h2>
                 <p style="margin: 0 0 15px 0; font-size: 14px; color: #e8f5e9;">Sacs, montres et bijoux pour compléter votre style au quotidien.</p>
-                <div style="display: flex; gap: 15px; font-size: 13px;">
-                    <span style="font-weight: bold; cursor: pointer; border-bottom: 2px solid white;" onclick="filtrerProduits('Accessoires')">Tout en Accessoires</span>
-                </div>
             </div>`;
     } else {
         zone.innerHTML = "";
@@ -219,27 +214,12 @@ function ouvrirDetailProduit(id) {
     const nomProduit = produit.name || produit.titre || "Produit sans nom";
     const prixProduit = produit.price || produit.prix || 0;
     const descProduit = produit.desc || produit.description || "Aucune description disponible pour cet article Doux-Doux.";
-    const tagProduit = (produit.tag || "").toLowerCase();
 
     if (document.getElementById('modal-product-img')) document.getElementById('modal-product-img').src = imageAffichage;
     if (document.getElementById('modal-product-title')) document.getElementById('modal-product-title').innerText = nomProduit;
-    if (document.getElementById('modal-product-category')) document.getElementById('modal-product-category').innerText = `Catégorie : ${produit.category || produit.cat || produit.categorie || 'Général'}`;
+    if (document.getElementById('modal-product-category')) document.getElementById('modal-product-category').innerText = `Catégorie : ${produit.category || produit.cat || produit.categorie || 'Mode'}`;
     if (document.getElementById('modal-product-price')) document.getElementById('modal-product-price').innerText = `${Number(prixProduit).toLocaleString()} FCFA`;
     if (document.getElementById('modal-product-desc')) document.getElementById('modal-product-desc').innerText = descProduit;
-    
-    const badge = document.getElementById('modal-product-badge');
-    if (badge) {
-        if (tagProduit === 'flash' || tagProduit === 'ventes-flash') {
-            badge.innerText = "⚡ Vente Flash";
-            badge.style.background = "#e47911";
-        } else if (tagProduit === 'meilleures' || tagProduit === 'meilleures-ventes') {
-            badge.innerText = "🔥 Top Ventes";
-            badge.style.background = "#b12704";
-        } else {
-            badge.innerText = "Nouveau";
-            badge.style.background = "#007185";
-        }
-    }
 
     const btnModalPanier = document.getElementById('modal-add-to-cart-btn');
     if (btnModalPanier) {
@@ -378,7 +358,7 @@ function closePayment() {
 }
 
 // ==========================================
-// 8. MOTEUR DE RECHERCHE
+// 8. MOTEUR DE RECHERCHE RESTREINT
 // ==========================================
 async function searchProducts() {
     const input = document.getElementById('searchInput');
@@ -455,7 +435,7 @@ async function finaliserEtEnvoyerCommande(methodePaiement) {
     const commune = document.getElementById('select-commune').value;
 
     if (!nom || !telephone || !region || !departement || !commune) {
-        alert("Veuillez remplir l'intégralité des informations de livraison locale.");
+        alert("Veuillez remplir l'intégralité des informations de livraison.");
         return;
     }
 
@@ -605,23 +585,11 @@ function chargerCommunes() {
 // ==========================================
 // 11. SLIDERS D'ACCUEIL
 // ==========================================
-function moveSlide(n) {
-    const slidesContainer = document.querySelector('.slides');
-    const allSlides = document.querySelectorAll('.slide');
-    if (!slidesContainer || allSlides.length === 0) return;
-
-    slideIndex += n;
-    if (slideIndex >= allSlides.length) slideIndex = 0;
-    if (slideIndex < 0) slideIndex = allSlides.length - 1;
-
-    slidesContainer.style.transform = `translateX(${-slideIndex * 100}%)`;
-}
-
 function afficherSlide(index) {
     const slidesContainer = document.getElementById("sliderSlides");
     if (!slidesContainer) return;
     
-    const totalSlides = 4; 
+    const totalSlides = 3; 
     if (index >= totalSlides) indexSlide = 0;
     if (index < 0) indexSlide = totalSlides - 1;
     
@@ -671,8 +639,7 @@ function ouvrirInfo(type) {
             <div style="text-align:center;">
                 <i class="fas fa-box-open" style="font-size: 40px; color: #f97316; margin-bottom: 15px;"></i>
                 <h3>Suivi des commandes & Retours</h3>
-                <p style="font-size: 13px; color: #4b5563; margin-bottom: 15px;">Connectez-vous à votre espace client pour gérer vos livraisons en cours au Sénégal.</p>
-                <button style="background:#ffd814; border:1px solid #fcd200; padding:10px 20px; border-radius:4px; font-weight:bold; cursor:pointer;" onclick="window.location.href='login.html'">Accéder à mon espace</button>
+                <p style="font-size: 13px; color: #4b5563; margin-bottom: 15px;">Suivez vos livraisons en cours partout au Sénégal.</p>
             </div>`;
     } else if (type === 'vendre') {
         contenu = `
@@ -691,17 +658,17 @@ function ouvrirInfo(type) {
             <div style="text-align:center;">
                 <i class="fas fa-book-open" style="font-size:40px; color:#0066c0; margin-bottom:15px;"></i>
                 <h3>Guide de l'acheteur</h3>
-                <p style="font-size:13px; text-align:left; color:#4b5563;">1. Sélectionnez vos articles.<br>2. Validez le panier.<br>3. Payez via Wave ou Orange Money.</p>
+                <p style="font-size:13px; text-align:left; color:#4b5563;">1. Sélectionnez vos articles (Mode, Beauté, Accessoires).<br>2. Validez le panier.<br>3. Payez via Wave, Orange Money ou à la livraison.</p>
             </div>`;
     } else if (type === 'aide') {
         contenu = `
             <div style="text-align:center;">
                 <i class="fas fa-headset" style="font-size: 40px; color: #007185; margin-bottom: 15px;"></i>
                 <h3>Besoin d'aide ?</h3>
-                <p style="font-size:13px; color:#4b5563;">Notre équipe est à votre disposition 7j/7 pour répondre à toutes vos questions concernant la livraison, les moyens de paiement et la disponibilité des stocks.</p>
+                <p style="font-size:13px; color:#4b5563;">Notre équipe est à votre disposition 7j/7 pour vous assister.</p>
             </div>`;
     } else {
-        contenu = `<p style="text-align:center;">Information non disponible pour le moment.</p>`;
+        contenu = `<p style="text-align:center;">Information non disponible.</p>`;
     }
 
     modalBody.innerHTML = contenu;
@@ -724,13 +691,13 @@ function retournerEnHaut() {
 }
 
 // ==========================================
-// 14. ÉCOUTEURS D'ÉVÉNEMENTS & INITIALISATION
+// 14. INITIALISATION
 // ==========================================
 document.addEventListener("DOMContentLoaded", () => {
-    // Lancement automatique du catalogue au chargement
+    // Chargement du catalogue restreint
     filtrerProduits("Toutes");
 
-    // Détection de la touche 'Entrée' sur la barre de recherche
+    // Touche Entrée sur la recherche
     const inputRecherche = document.getElementById('searchInput');
     if (inputRecherche) {
         inputRecherche.addEventListener('keyup', (event) => {
@@ -740,7 +707,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // Fermeture des modales lors d'un clic à l'extérieur du contenu
+    // Fermeture des modales au clic extérieur
     window.onclick = function(event) {
         const modalPaiement = document.getElementById('payment-modal');
         const modalDetail = document.getElementById('product-detail-modal');
