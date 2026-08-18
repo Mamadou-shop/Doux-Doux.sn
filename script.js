@@ -51,18 +51,15 @@ async function filtrerProduits(categorie) {
         if (categorie === 'Toutes' || categorie === 'all' || !categorie) {
             titreSection.innerText = "Notre Catalogue Complet";
             gererZoneBanniereSpeciale(null);
-        } else if (categorie.toLowerCase() === 'doux-doux-basics' || categorie.toLowerCase() === 'basics') {
-            titreSection.innerText = "✨ Gamme Doux-Doux Basics";
-            gererZoneBanniereSpeciale('basics');
-        } else if (categorie.toLowerCase() === 'doux-doux-haul' || categorie.toLowerCase() === 'haul') {
-            titreSection.innerText = "📦 Collection Doux-Doux Haul";
-            gererZoneBanniereSpeciale('haul');
-        } else if (categorie.toLowerCase() === 'ventes-flash' || categorie.toLowerCase() === 'flash') {
-            titreSection.innerText = "⚡ Ventes Flash (Offres limitées)";
-            gererZoneBanniereSpeciale(null);
-        } else if (categorie.toLowerCase() === 'meilleures-ventes' || categorie.toLowerCase() === 'meilleures') {
-            titreSection.innerText = "🔥 Meilleures Ventes";
-            gererZoneBanniereSpeciale(null);
+        } else if (categorie.toLowerCase().includes('mode')) {
+            titreSection.innerText = "👗 Collection Mode";
+            gererZoneBanniereSpeciale('mode');
+        } else if (categorie.toLowerCase().includes('beaute') || categorie.toLowerCase().includes('beauté')) {
+            titreSection.innerText = "✨ Gamme Beauté & Soins";
+            gererZoneBanniereSpeciale('beaute');
+        } else if (categorie.toLowerCase().includes('accessoire')) {
+            titreSection.innerText = "💼 Collection Accessoires";
+            gererZoneBanniereSpeciale('accessoires');
         } else {
             titreSection.innerText = `Catégorie : ${categorie}`;
             gererZoneBanniereSpeciale(null);
@@ -72,7 +69,7 @@ async function filtrerProduits(categorie) {
     const produitsAffiches = (categorie === 'Toutes' || categorie === 'Toutes les catégories' || categorie === 'all' || !categorie) 
         ? catalogue 
         : catalogue.filter(p => {
-            const cat = (p.category || p.cat || "").toLowerCase().trim();
+            const cat = (p.category || p.cat || p.categorie || "").toLowerCase().trim();
             const tag = (p.tag || "").toLowerCase().trim();
             const cible = categorie.toLowerCase().trim();
             return cat === cible || cat.includes(cible) || cible.includes(cat) || tag === cible || (p.tags && p.tags.includes(cible));
@@ -90,7 +87,7 @@ async function filtrerProduits(categorie) {
 
         const nomProduit = p.name || p.titre || "Produit sans nom";
         const prixProduit = p.price || p.prix || 0;
-        const categorieProduit = p.category || p.cat || 'Général';
+        const categorieProduit = p.category || p.cat || p.categorie || 'Général';
         const uniqueId = p._id || p.id;
 
         const carte = document.createElement('div');
@@ -109,65 +106,59 @@ async function filtrerProduits(categorie) {
                 <p class="product-price"><strong>${Number(prixProduit).toLocaleString()} FCFA</strong></p>
             </div>`;
             
-        if (categorieProduit === "Vente Flash") {
-            if (grilleVenteFlash) grilleVenteFlash.appendChild(carte);
-        } else if (categorieProduit === "Haul") {
-            if (grilleHaul) grilleHaul.appendChild(carte);
-        } else {
-            if (grille) {
-                if (compteurDansBlock === 0) {
-                    blockActuel = document.createElement('div');
-                    blockActuel.className = "product-block-4";
-                    grille.appendChild(blockActuel);
+        if (grille) {
+            if (compteurDansBlock === 0) {
+                blockActuel = document.createElement('div');
+                blockActuel.className = "product-block-4";
+                grille.appendChild(blockActuel);
+            }
+
+            blockActuel.appendChild(carte);
+            compteurDansBlock++;
+
+            if (compteurDansBlock === 4) {
+                compteurDansBlock = 0;
+                indexBlockGlobal++;
+
+                if (indexBlockGlobal === 1) {
+                    const sponsorise = document.createElement('div');
+                    sponsorise.className = "sponsored-block";
+                    sponsorise.innerHTML = `
+                        <div class="sponsored-card" onclick="ouvrirDetailProduit('cosm-001')">
+                            <div class="sponsored-badge">Sponsorisé ℹ</div>
+                            <img src="https://images.weserv.nl/?url=https://images.unsplash.com/photo-1608248597279-f99d160bfcbc?q=80&w=600" alt="Huile de Baobab">
+                            <div class="sponsored-info">
+                                <h4>Huile de Baobab Purifiante - Doux-Doux</h4>
+                                <p class="sponsored-desc font-text">Soin naturel pressé à froid pour nourrir votre peau.</p>
+                                <span class="sponsored-price"></span>
+                            </div>
+                        </div>`;
+                    grille.appendChild(sponsorise);
+                } 
+                else if (indexBlockGlobal === 2) {
+                    const infoBlock = document.createElement('div');
+                    infoBlock.className = "info-block-separator";
+                    infoBlock.innerHTML = `
+                        <div class="info-box-delivery">
+                            <span class="delivery-icon">🇸🇳</span>
+                            <p><strong>Paiement à la livraison :</strong> Commandez en toute sécurité et payez une fois votre colis entre vos mains !</p>
+                        </div>`;
+                    grille.appendChild(infoBlock);
+                } 
+                else if (indexBlockGlobal === 3) {
+                    const infoBlock2 = document.createElement('div');
+                    infoBlock2.className = "info-block-separator";
+                    infoBlock2.innerHTML = `
+                        <div class="info-box-delivery help-whatsapp">
+                            <span class="delivery-icon">💬</span>
+                            <p><strong>Besoin d'aide ?</strong> Des questions sur un produit ? Écrivez-nous directement sur WhatsApp !</p>
+                        </div>`;
+                    grille.appendChild(infoBlock2);
                 }
-
-                blockActuel.appendChild(carte);
-                compteurDansBlock++;
-
-                if (compteurDansBlock === 4) {
-                    compteurDansBlock = 0;
-                    indexBlockGlobal++;
-
-                    if (indexBlockGlobal === 1) {
-                        const sponsorise = document.createElement('div');
-                        sponsorise.className = "sponsored-block";
-                        sponsorise.innerHTML = `
-                            <div class="sponsored-card" onclick="ouvrirDetailProduit('cosm-001')">
-                                <div class="sponsored-badge">Sponsorisé ℹ</div>
-                                <img src="https://images.weserv.nl/?url=https://images.unsplash.com/photo-1608248597279-f99d160bfcbc?q=80&w=600" alt="Huile de Baobab">
-                                <div class="sponsored-info">
-                                    <h4>Huile de Baobab Purifiante - Doux-Doux</h4>
-                                    <p class="sponsored-desc font-text">Soin naturel pressé à froid pour nourrir votre peau.</p>
-                                    <span class="sponsored-price"></span>
-                                </div>
-                            </div>`;
-                        grille.appendChild(sponsorise);
-                    } 
-                    else if (indexBlockGlobal === 2) {
-                        const infoBlock = document.createElement('div');
-                        infoBlock.className = "info-block-separator";
-                        infoBlock.innerHTML = `
-                            <div class="info-box-delivery">
-                                <span class="delivery-icon">🇸🇳</span>
-                                <p><strong>Paiement à la livraison :</strong> Commandez en toute sécurité et payez une fois votre colis entre vos mains !</p>
-                            </div>`;
-                        grille.appendChild(infoBlock);
-                    } 
-                    else if (indexBlockGlobal === 3) {
-                        const infoBlock2 = document.createElement('div');
-                        infoBlock2.className = "info-block-separator";
-                        infoBlock2.innerHTML = `
-                            <div class="info-box-delivery help-whatsapp">
-                                <span class="delivery-icon">💬</span>
-                                <p><strong>Besoin d'aide ?</strong> Des questions sur un produit ? Écrivez-nous directement sur WhatsApp !</p>
-                            </div>`;
-                        grille.appendChild(infoBlock2);
-                    }
-                    else {
-                        const espaceur = document.createElement('div');
-                        espaceur.className = "block-spacer";
-                        grille.appendChild(espaceur);
-                    }
+                else {
+                    const espaceur = document.createElement('div');
+                    espaceur.className = "block-spacer";
+                    grille.appendChild(espaceur);
                 }
             }
         }
@@ -181,27 +172,31 @@ function gererZoneBanniereSpeciale(boutique) {
     const zone = document.getElementById('zone-banniere-speciale');
     if (!zone) return;
 
-    if (boutique === 'basics') {
+    if (boutique === 'mode') {
         zone.innerHTML = `
             <div style="background: linear-gradient(135deg, #3a7bd5, #3a6073); color: white; padding: 25px; border-radius: 4px; margin-bottom: 25px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-                <h2 style="margin: 0 0 8px 0; font-size: 24px;">👕 Boutique Doux-Doux Basics</h2>
-                <p style="margin: 0 0 15px 0; font-size: 14px; color: #f0f4f8;">Vos vêtements essentiels de tous les jours au meilleur prix au Sénégal.</p>
+                <h2 style="margin: 0 0 8px 0; font-size: 24px;">👗 Boutique Mode</h2>
+                <p style="margin: 0 0 15px 0; font-size: 14px; color: #f0f4f8;">Découvrez les dernières tendances vestimentaires sélectionnées pour vous au Sénégal.</p>
                 <div style="display: flex; gap: 15px; font-size: 13px;">
-                    <span style="font-weight: bold; cursor: pointer; border-bottom: 2px solid white;">Tout voir</span>
-                    <span style="cursor: pointer; opacity: 0.8;" onclick="filtrerProduits('Hommes')">Hommes</span>
-                    <span style="cursor: pointer; opacity: 0.8;" onclick="filtrerProduits('Femmes')">Femmes</span>
-                    <span style="cursor: pointer; opacity: 0.8;" onclick="filtrerProduits('Enfants')">Enfants</span>
+                    <span style="font-weight: bold; cursor: pointer; border-bottom: 2px solid white;" onclick="filtrerProduits('Mode')">Tout en Mode</span>
                 </div>
             </div>`;
-    } else if (boutique === 'haul') {
+    } else if (boutique === 'beaute') {
         zone.innerHTML = `
             <div style="background: linear-gradient(135deg, #f12711, #f5af19); color: white; padding: 25px; border-radius: 4px; margin-bottom: 25px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-                <h2 style="margin: 0 0 8px 0; font-size: 24px;">📦 Doux-Doux Haul - Super Packs</h2>
-                <p style="margin: 0 0 15px 0; font-size: 14px; color: #fff3e0;">Achetez en gros volumes et faites d'immenses économies sur vos cartons de livraison.</p>
+                <h2 style="margin: 0 0 8px 0; font-size: 24px;">✨ Gamme Beautés & Soins</h2>
+                <p style="margin: 0 0 15px 0; font-size: 14px; color: #fff3e0;">Sublimez votre peau et vos cheveux avec nos produits cosmétiques d'exception.</p>
                 <div style="display: flex; gap: 15px; font-size: 13px;">
-                    <span style="font-weight: bold; cursor: pointer; border-bottom: 2px solid white;">Packs Populaires</span>
-                    <span style="cursor: pointer; opacity: 0.8;" onclick="filtrerProduits('Alimentation')">Packs Épicerie</span>
-                    <span style="cursor: pointer; opacity: 0.8;" onclick="filtrerProduits('Equipement')">Packs Maison</span>
+                    <span style="font-weight: bold; cursor: pointer; border-bottom: 2px solid white;" onclick="filtrerProduits('Beautés')">Tout en Beautés</span>
+                </div>
+            </div>`;
+    } else if (boutique === 'accessoires') {
+        zone.innerHTML = `
+            <div style="background: linear-gradient(135deg, #11998e, #38ef7d); color: white; padding: 25px; border-radius: 4px; margin-bottom: 25px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                <h2 style="margin: 0 0 8px 0; font-size: 24px;">💼 Collection Accessoires</h2>
+                <p style="margin: 0 0 15px 0; font-size: 14px; color: #e8f5e9;">Sacs, montres et bijoux pour compléter votre style au quotidien.</p>
+                <div style="display: flex; gap: 15px; font-size: 13px;">
+                    <span style="font-weight: bold; cursor: pointer; border-bottom: 2px solid white;" onclick="filtrerProduits('Accessoires')">Tout en Accessoires</span>
                 </div>
             </div>`;
     } else {
@@ -228,7 +223,7 @@ function ouvrirDetailProduit(id) {
 
     if (document.getElementById('modal-product-img')) document.getElementById('modal-product-img').src = imageAffichage;
     if (document.getElementById('modal-product-title')) document.getElementById('modal-product-title').innerText = nomProduit;
-    if (document.getElementById('modal-product-category')) document.getElementById('modal-product-category').innerText = `Catégorie : ${produit.category || produit.cat || 'Général'}`;
+    if (document.getElementById('modal-product-category')) document.getElementById('modal-product-category').innerText = `Catégorie : ${produit.category || produit.cat || produit.categorie || 'Général'}`;
     if (document.getElementById('modal-product-price')) document.getElementById('modal-product-price').innerText = `${Number(prixProduit).toLocaleString()} FCFA`;
     if (document.getElementById('modal-product-desc')) document.getElementById('modal-product-desc').innerText = descProduit;
     
@@ -669,7 +664,7 @@ function ouvrirInfo(type) {
     const modalBody = document.getElementById('info-modal-body');
     if (!modal || !modalBody) return;
     
-    let contenu = '';
+    let contenu = '';  
 
     if (type === 'commandes') {
         contenu = `
@@ -729,7 +724,7 @@ function retournerEnHaut() {
 }
 
 // ==========================================
-// 14. ÉCOUTEURS D'ÉVÉNEMENTS INITIALISATION
+// 14. ÉCOUTEURS D'ÉVÉNEMENTS & INITIALISATION
 // ==========================================
 document.addEventListener("DOMContentLoaded", () => {
     // Lancement automatique du catalogue au chargement
