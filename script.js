@@ -635,11 +635,11 @@ function moveSlide(n) {
 function afficherSlide(index) {
     const slidesContainer = document.getElementById("sliderSlides");
     if (!slidesContainer) return;
-    
-    const totalSlides = 4; 
+
+    const totalSlides = 3; // Modifié à 3 catégories
     if (index >= totalSlides) indexSlide = 0;
     if (index < 0) indexSlide = totalSlides - 1;
-    
+
     slidesContainer.style.transform = `translateX(-${indexSlide * (100 / totalSlides)}%)`;
 }
 
