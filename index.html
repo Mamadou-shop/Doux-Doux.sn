@@ -3,366 +3,222 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Doux-Doux.sn - Votre Boutique Mode, Accessoires & Beauté</title>
-    <!-- Connexion au fichier CSS -->
-    <link rel="stylesheet" href="style.css">
+    <title>Doux-Doux.sn - Mode, Beauté & Accessoires au Sénégal</title>
     <!-- FontAwesome pour les icônes -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <!-- OVERLAY POUR LE MENU BURGER LATÉRAL -->
-    <div id="side-overlay" onclick="closeNav()" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2499;"></div>
+    <!-- OVERLAY SIDEBAR -->
+    <div id="side-overlay" onclick="closeNav()"></div>
 
-    <!-- MENU LATÉRAL (SIDENAV AMAZON STYLE) -->
+    <!-- MENU SIDEBAR LATÉRAL (BURGER) -->
     <div id="mySidenav" class="sidenav">
-        <div class="sidenav-header" onclick="window.location.href='login.html'">
-            <i class="fas fa-user-circle"></i> Bonjour, Identifiez-vous
-            <span class="closebtn" onclick="event.stopPropagation(); closeNav()">&times;</span>
+        <div class="sidenav-header">
+            <i class="fas fa-user-circle"></i> Bonjour, Bienvenue
+            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
         </div>
         <div class="sidenav-content">
-            <h3>Tendances</h3>
-            <a href="#productGrid" onclick="filtrerProduits('Meilleures-ventes'); closeNav()">🔥 Meilleures ventes</a>
-            <a href="#productGrid" onclick="filtrerProduits('Nouveautes'); closeNav()">✨ Dernières Nouveautés</a>
-            <a href="#productGrid" onclick="filtrerProduits('Ventes-Flash'); closeNav()">⚡ Ventes Flash</a>
-
-            <hr style="border: 0; border-top: 1px solid #e7e7e7; margin: 10px 0;">
-            <h3>Boutiques Thématiques</h3>
-            <a href="#productGrid" onclick="filtrerProduits('Doux-Doux-Haul'); closeNav()">📦 Doux-Doux Haul</a>
-            <a href="#productGrid" onclick="filtrerProduits('Doux-Doux-Basics'); closeNav()">👕 Doux-Doux Basics</a>
-
-            <hr style="border: 0; border-top: 1px solid #e7e7e7; margin: 10px 0;">
-            <h3>Catégories Doux-Doux</h3>
-            <a href="#productGrid" onclick="filtrerProduits('Textile-Mode'); closeNav()">👗 Mode & Textile</a>
-            <a href="#productGrid" onclick="filtrerProduits('Accessoires'); closeNav()">👜 Accessoires & Bijoux</a>
-            <a href="#productGrid" onclick="filtrerProduits('Beaute-Soins'); closeNav()">✨ Beauté & Soins</a>
+            <h3>Nos Catégories</h3>
+            <a href="#productGrid" onclick="filtrerProduits('Mode'); closeNav();">👗 Mode & Vêtements</a>
+            <a href="#productGrid" onclick="filtrerProduits('Beauté'); closeNav();">✨ Beauté & Soins</a>
+            <a href="#productGrid" onclick="filtrerProduits('Accessoires'); closeNav();">💼 Accessoires & Bijoux</a>
             
-            <hr style="border: 0; border-top: 1px solid #e7e7e7; margin: 10px 0;">
-            <h3>Aide et paramètres</h3>
-            <a href="#" onclick="ouvrirInfo('commandes'); closeNav()">Votre compte</a>
-            <a href="#">🇸🇳 Sénégal</a>
-            <a href="login.html" onclick="closeNav()">Se connecter</a>
+            <hr>
+            <h3>Aide & Paramètres</h3>
+            <a href="javascript:void(0)" onclick="ouvrirInfo('commandes'); closeNav();">📦 Suivi des commandes</a>
+            <a href="javascript:void(0)" onclick="ouvrirInfo('vendre'); closeNav();">🏪 Devenir Vendeur Doux-Doux</a>
+            <a href="javascript:void(0)" onclick="ouvrirInfo('guide'); closeNav();">📖 Guide de l'acheteur</a>
+            <a href="javascript:void(0)" onclick="ouvrirInfo('aide'); closeNav();">💬 Service Client & Aide</a>
         </div>
     </div>
 
-    <!-- PANIER LATÉRAL COULISSANT (SLIDE-OUT CART STYLE AMAZON) -->
-    <div id="cartSidebar" class="cart-sidebar" style="position: fixed; top: 0; right: -400px; width: 380px; height: 100%; background: #fff; box-shadow: -5px 0 15px rgba(0,0,0,0.2); z-index: 3000; transition: right 0.3s ease; display: flex; flex-direction: column; font-family: sans-serif;">
-        <div style="background: #232f3e; color: white; padding: 20px; display: flex; justify-content: space-between; align-items: center;">
-            <h3 style="margin: 0; font-size: 18px;"><i class="fas fa-shopping-cart"></i> Votre Panier</h3>
-            <span onclick="toggleCartSidebar()" style="font-size: 24px; cursor: pointer; color: #ccc; font-weight: bold;">&times;</span>
-        </div>
-        <!-- Liste des articles du panier -->
-        <div id="cartSidebarItems" style="flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 15px;">
-            <!-- Généré dynamiquement par JavaScript -->
-        </div>
-        <!-- Sous-total et validation -->
-        <div style="padding: 20px; border-top: 1px solid #e7e7e7; background: #f7f8f8;">
-            <div style="display: flex; justify-content: space-between; font-size: 16px; font-weight: bold; margin-bottom: 15px; color: #111;">
-                <span>Sous-total :</span>
-                <span id="cartSidebarTotal" style="color: #B12704;">0 FCFA</span>
-            </div>
-            <button onclick="procederAuPaiementPanier()" style="width: 100%; background: #ffd814; border: 1px solid #fcd200; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 14px; margin-bottom: 8px; border-style: solid;">
-                Passer la commande
-            </button>
-            <button onclick="viderLePanierComplete()" style="width: 100%; background: #fff; border: 1px solid #adb1b8; padding: 8px; border-radius: 8px; cursor: pointer; font-size: 12px; color: #565959;">
-                Vider le panier
-            </button>
-        </div>
-    </div>
-
-    <!-- EN-TÊTE (HEADER NAV) -->
-    <header>
-        <!-- 1. VERSION POUR ORDINATEUR -->
-        <div class="nav-main hide-on-mobile">
-            <div class="nav-left">
-                <div class="nav-logo">
-                    <a href="#" onclick="filtrerProduits('Toutes')">Doux-Doux<span>.sn</span></a>
-                </div>
+    <!-- HEADER PRINCIPAL -->
+    <header class="header-main">
+        <div class="header-container">
+            <!-- Logo -->
+            <div class="logo">
+                <a href="index.html">Doux-Doux<span>.sn</span></a>
             </div>
 
-            <div class="nav-search">
-                <select class="nav-search-select" id="search-category" onchange="filtrerProduits(this.value)">
-                    <option value="Toutes">Toutes nos catégories</option>
-                    <option value="Textile-Mode">Mode & Textile</option>
-                    <option value="Accessoires">Accessoires & Bijoux</option>
-                    <option value="Beaute-Soins">Beauté & Soins</option>
-                    <option value="Doux-Doux-Haul">Doux-Doux Haul</option>
-                    <option value="Doux-Doux-Basics">Doux-Doux Basics</option>
+            <!-- Barre de recherche avec sélecteur des 3 catégories -->
+            <div class="search-bar">
+                <select id="search-category">
+                    <option value="Toutes">Toutes les catégories</option>
+                    <option value="Mode">Mode</option>
+                    <option value="Beauté">Beauté</option>
+                    <option value="Accessoires">Accessoires</option>
                 </select>
-
-                <input type="text" id="searchInput" class="nav-search-input" placeholder="Rechercher un vêtement, un sac, un soin..." onkeyup="if(event.key === 'Enter') searchProducts()">
-
-                <button class="nav-search-btn" onclick="searchProducts()">
-                    <i class="fas fa-search"></i>
-                </button>
+                <input type="text" id="searchInput" placeholder="Rechercher une robe, un soin, un sac...">
+                <button onclick="searchProducts()"><i class="fas fa-search"></i></button>
             </div>
 
-            <div class="nav-right">
-                <div class="nav-language">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/f/fd/Flag_of_Senegal.svg" class="nav-flag" alt="Sénégal" style="width: 20px; height: auto;">
-                    <span>SN</span>
+            <!-- Options à droite -->
+            <div class="header-right">
+                <div class="country-flag">
+                    <span class="flag-icon">🇸🇳</span> SN
                 </div>
-                <div class="nav-orders" onclick="ouvrirInfo('commandes')" style="cursor: pointer;">
-                    <span class="nav-line-1">Retours</span>
-                    <span class="nav-line-2">et Commandes</span>
+                <div class="header-option" onclick="ouvrirInfo('commandes')">
+                    <span class="option-line-1">Retours</span>
+                    <span class="option-line-2">& Commandes</span>
                 </div>
-
-                <div class="nav-cart" onclick="toggleCartSidebar()" style="cursor: pointer;">
-                    <div class="cart-icon-container">
-                        <i class="fas fa-shopping-cart"></i>
-                        <span id="cartCount">0</span>
-                    </div>
-                    <span class="nav-line-2">Panier</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- 2. VERSION POUR TÉLÉPHONE -->
-        <div class="header-top-row hide-on-desktop">
-            <div class="header-mobile-left">
-                <div class="mobile-menu-trigger" onclick="openNav()" style="cursor: pointer; color: #ffffff; font-size: 22px; margin-right: 10px;">
-                    <i class="fas fa-bars"></i>
-                </div>
-                <h1 class="brand-logo-mobile">Doux-Doux<span class="sn-accent">.sn</span></h1>
-            </div>
-
-            <div class="header-mobile-actions">
-                <a href="login.html" class="nav-connect-link-mobile">
-                    <i class="fas fa-user"></i> Se connecter
-                </a>
-                <div class="cart-container-top-mobile" onclick="toggleCartSidebar()">
+                <div class="cart-icon-container" onclick="toggleCartSidebar()">
                     <i class="fas fa-shopping-cart"></i>
-                    <span class="cart-badge-count">0</span>
+                    <span id="cartCount" class="cart-badge-count">0</span>
+                    <span class="cart-text">Panier</span>
                 </div>
-            </div>
-        </div>
-
-        <!-- Sous-barre de navigation -->
-        <div class="nav-sub hide-on-mobile">
-            <div class="nav-sub-left" onclick="openNav()">
-                <i class="fas fa-bars"></i>
-                <span>Toutes</span>
-            </div>
-            <div class="nav-sub-links">
-                <a href="#productGrid" class="nav-bold" onclick="filtrerProduits('Doux-Doux-Haul')">📦 Doux-Doux Haul</a>
-                <a href="#productGrid" onclick="filtrerProduits('Meilleures-ventes')">Meilleures ventes</a>
-                <a href="#productGrid" onclick="filtrerProduits('Ventes-Flash')">⚡ Ventes Flash</a>
-                <a href="#productGrid" onclick="filtrerProduits('Nouveautes')">Dernières Nouveautés</a>
-                <a href="#productGrid" onclick="filtrerProduits('Doux-Doux-Basics')">Doux-Doux Basics</a>
-                <a href="#" onclick="ouvrirInfo('vendre')">Vendre sur Doux-Doux</a>
-                <a href="#" onclick="ouvrirInfo('guide')">Guide de l'acheteur</a>
             </div>
         </div>
     </header>
 
-    <!-- SLIDER D'ACCUEIL PRINCIPAL -->
-    <div id="main-hero-slider" class="slider-container" style="position: relative; width: 100%; height: 320px !important; overflow: hidden; margin-bottom: -100px; z-index: 1; background-color: #eaeded;">
-        <div class="slides" style="display: flex; width: 400%; height: 100%; transition: transform 0.5s ease-in-out;" id="sliderSlides">
-            <!-- Slide 1: Beauté & Soins -->
-            <div class="slide" style="width: 25%; height: 100% !important; position: relative;">
-                <img src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&w=1600&h=500&q=80" alt="Beauté & Soins" style="width: 100% !important; height: 100% !important; object-fit: cover !important; object-position: center 20% !important;">
-                <div style="position: absolute; top: 40px; left: 8%; color: #0f172a; max-width: 450px; background: rgba(255,255,255,0.85); padding: 15px; border-radius: 6px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
-                    <h1 style="font-size: 30px; margin: 0 0 5px 0; font-weight: 800; color: #111827;">Soins, Beauté & Éclat</h1>
-                    <p style="font-size: 15px; margin: 0; color: #374151;">Découvrez notre gamme cosmétique exclusive.</p>
+    <!-- BARRE DE NAVIGATION SECONDAIRE -->
+    <nav class="sub-nav">
+        <ul>
+            <li><a href="javascript:void(0)" onclick="openNav()"><i class="fas fa-bars"></i> Toutes</a></li>
+            <li><a href="#productGrid" onclick="filtrerProduits('Mode')">👗 Mode</a></li>
+            <li><a href="#productGrid" onclick="filtrerProduits('Beauté')">✨ Beauté & Soins</a></li>
+            <li><a href="#productGrid" onclick="filtrerProduits('Accessoires')">💼 Accessoires</a></li>
+            <li><a href="javascript:void(0)" onclick="ouvrirInfo('vendre')">Vendre sur Doux-Doux</a></li>
+            <li><a href="javascript:void(0)" onclick="ouvrirInfo('guide')">Guide de l'acheteur</a></li>
+        </ul>
+    </nav>
+
+    <!-- BANNIÈRE SLIDER PRINCIPAL (Modèles de teint noir & produits) -->
+    <section class="banner-slider">
+        <div class="slides-container" id="sliderSlides">
+            <!-- Slide 1 : Mode -->
+            <div class="slide active">
+                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=1200" alt="Mode Africaine">
+                <div class="slide-content">
+                    <h2>Mode & Tendances</h2>
+                    <p>Sublimez votre style avec nos vêtements modernes et traditionnels.</p>
+                    <button onclick="filtrerProduits('Mode')">Découvrir la Mode</button>
                 </div>
             </div>
-            <!-- Slide 2: Mode -->
-            <div class="slide" style="width: 25%; height: 100% !important; position: relative;">
-                <img src="https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=1600&h=500&q=80" alt="Mode" style="width: 100% !important; height: 100% !important; object-fit: cover !important; object-position: center 30% !important;">
-                <div style="position: absolute; top: 40px; left: 8%; color: #0f172a; max-width: 450px; background: rgba(255,255,255,0.85); padding: 15px; border-radius: 6px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
-                    <h1 style="font-size: 30px; margin: 0 0 5px 0; font-weight: 800; color: #111827;">Tendances Mode & Style</h1>
-                    <p style="font-size: 15px; margin: 0; color: #374151;">Renouvelez votre garde-robe avec nos collections.</p>
+            <!-- Slide 2 : Beauté -->
+            <div class="slide">
+                <img src="https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?q=80&w=1200" alt="Beauté et Soins">
+                <div class="slide-content">
+                    <h2>Gamme Beauté & Soins</h2>
+                    <p>Des soins cosmétiques d'exception adaptés à votre peau.</p>
+                    <button onclick="filtrerProduits('Beauté')">Voir la Beauté</button>
                 </div>
             </div>
-            <!-- Slide 3: Accessoires -->
-            <div class="slide" style="width: 25%; height: 100% !important; position: relative;">
-                <img src="https://images.unsplash.com/photo-1509967419530-da38b4704bc6?auto=format&fit=crop&w=1600&h=500&q=80" alt="Accessoires" style="width: 100% !important; height: 100% !important; object-fit: cover !important; object-position: center 40% !important;">
-                <div style="position: absolute; top: 40px; left: 8%; color: #0f172a; max-width: 450px; background: rgba(255,255,255,0.85); padding: 15px; border-radius: 6px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
-                    <h1 style="font-size: 30px; margin: 0 0 5px 0; font-weight: 800; color: #111827;">Sacs, Bijoux & Accessoires</h1>
-                    <p style="font-size: 15px; margin: 0; color: #374151;">Sublimez vos tenues avec des détails élégants.</p>
-                </div>
-            </div>
-            <!-- Slide 4: Parfumerie -->
-            <div class="slide" style="width: 25%; height: 100% !important; position: relative;">
-                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=1600&h=500&q=80" alt="Parfums" style="width: 100% !important; height: 100% !important; object-fit: cover !important; object-position: center 30% !important;">
-                <div style="position: absolute; top: 40px; left: 8%; color: #0f172a; max-width: 450px; background: rgba(255,255,255,0.85); padding: 15px; border-radius: 6px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
-                    <h1 style="font-size: 30px; margin: 0 0 5px 0; font-weight: 800; color: #111827;">Fragrances & Parfums</h1>
-                    <p style="font-size: 15px; margin: 0; color: #374151;">Une sélection de senteurs raffinées.</p>
+            <!-- Slide 3 : Accessoires -->
+            <div class="slide">
+                <img src="https://images.unsplash.com/photo-1608256246200-53e635b5b65f?q=80&w=1200" alt="Sacs et Bijoux">
+                <div class="slide-content">
+                    <h2>Sacs, Bijoux & Accessoires</h2>
+                    <p>Elegance et détails uniques pour accompagner toutes vos tenues.</p>
+                    <button onclick="filtrerProduits('Accessoires')">Explorer les Accessoires</button>
                 </div>
             </div>
         </div>
-        <div style="position: absolute; bottom: 0; left: 0; width: 100%; height: 150px; background: linear-gradient(to bottom, transparent, #eaeded); pointer-events: none;"></div>
-        <button onclick="slidePrecedente()" style="position: absolute; top: 110px; left: 20px; background: transparent; color: #111; border: none; font-size: 35px; cursor: pointer; z-index: 10; padding: 10px;"><i class="fas fa-chevron-left"></i></button>
-        <button onclick="slideSuivante()" style="position: absolute; top: 110px; right: 20px; background: transparent; color: #111; border: none; font-size: 35px; cursor: pointer; z-index: 10; padding: 10px;"><i class="fas fa-chevron-right"></i></button>
-    </div>
+        <!-- Contrôles du slider -->
+        <button class="prev-slide" onclick="slidePrecedente()">&#10094;</button>
+        <button class="next-slide" onclick="slideSuivante()">&#10095;</button>
+    </section>
 
-    <!-- MAIN WRAPPER CONTENANT TOUTE LA STRUCTURE -->
-    <div class="amazon-layout-container" style="max-width: 1400px; margin: 0 auto; padding: 0 20px 20px 20px; background-color: #eaeded; position: relative; z-index: 2;">
-        
-        <!-- BLOCS CARTE DE DÉPART D'ACCUEIL -->
-        <div id="main-amazon-cards" class="amazon-grid-cards horizontal-scroll-section" style="max-width: 1400px; margin: 0 auto; padding: 0 20px 20px 20px; background-color: #eaeded; position: relative; z-index: 2;">
-            <div class="style-card product-card" style="background: #fff; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border-radius: 8px;">
-                <h3 style="font-size: 21px; margin-bottom: 15px; color: #111; font-weight: 700;">Doux-Doux Basics</h3>
-                <div style="background: #f7f8f8; height: 200px; margin-bottom: 15px; display: flex; align-items: center; justify-content: center; overflow: hidden; border-radius: 6px;">
-                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500&q=80" alt="T-shirts Basiques Doux-Doux" style="width: 100%; height: 100%; object-fit: cover;">
-                </div>
-                <a href="#productGrid" onclick="filtrerProduits('Doux-Doux-Basics')" style="color: #007185; text-decoration: none; font-size: 13px; font-weight: bold;">Voir plus</a>
-            </div>
-
-            <div class="style-card product-card" style="background: #fff; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border-radius: 8px;">
-                <h3 style="font-size: 21px; margin-bottom: 15px; color: #111; font-weight: 700;">Doux-Doux Haul</h3>
-                <div style="background: #f7f8f8; height: 200px; margin-bottom: 15px; display: flex; align-items: center; justify-content: center; overflow: hidden; border-radius: 6px;">
-                    <img src="https://images.unsplash.com/photo-1567532939604-b6b5b0db2604?w=500&q=80" alt="Packs Mode Doux-Doux Haul" style="width: 100%; height: 100%; object-fit: cover;">
-                </div>
-                <a href="#productGrid" onclick="filtrerProduits('Doux-Doux-Haul')" style="color: #007185; text-decoration: none; font-size: 13px; font-weight: bold;">Découvrir les packs</a>
-            </div>
-
-            <div class="style-card product-card" style="background: #fff; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border-radius: 8px;">
-                <h3 style="font-size: 21px; margin-bottom: 15px; color: #111; font-weight: 700;">Meilleures Ventes</h3>
-                <div style="background: #f7f8f8; height: 200px; margin-bottom: 15px; display: flex; align-items: center; justify-content: center; overflow: hidden; border-radius: 6px;">
-                    <img src="https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=500&q=80" alt="Meilleures Ventes Cosmétiques" style="width: 100%; height: 100%; object-fit: cover;">
-                </div>
-                <a href="#productGrid" onclick="filtrerProduits('Meilleures-ventes')" style="color: #007185; text-decoration: none; font-size: 13px; font-weight: bold;">Explorer</a>
-            </div>
-
-            <div class="style-card product-card" style="background: #fff; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border-radius: 8px;">
-                <h3 style="font-size: 21px; margin-bottom: 15px; color: #111; font-weight: 700;">Ventes Flash ⚡</h3>
-                <div style="background: #f7f8f8; height: 200px; margin-bottom: 15px; display: flex; align-items: center; justify-content: center; overflow: hidden; border-radius: 6px;">
-                    <img src="https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?w=500&q=80" alt="Ventes Flash Événement" style="width: 100%; height: 100%; object-fit: cover;">
-                </div>
-                <a href="#productGrid" onclick="filtrerProduits('Ventes-Flash')" style="color: #007185; text-decoration: none; font-size: 13px; font-weight: bold;">Profiter des offres</a>
+    <!-- GRILLE DES 3 CATÉGORIES VEDETTES -->
+    <section class="top-categories-grid">
+        <div class="category-card" onclick="filtrerProduits('Mode')">
+            <img src="https://images.unsplash.com/photo-1509631179647-0177331693ae?q=80&w=500" alt="Collection Mode">
+            <div class="category-card-info">
+                <h3>👗 Mode</h3>
+                <p>Robes, Tenues & Vêtements</p>
             </div>
         </div>
 
-        <!-- DEFILANT : MEILLEURES VENTES DU MOMENT -->
-        <div class="horizontal-scroll-section">
-            <h2 class="section-title">Meilleures ventes du moment</h2>
-            
-            <div class="scroll-container">
-                <div class="scroll-item">
-                    <img src="https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=300" alt="Sac à Main Cuir">
-                    <p class="product-name">Sac à Main Cuir</p>
-                    <p class="product-price"></p>
-                </div>
-                
-                <div class="scroll-item">
-                    <img src="https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=300" alt="Montre Elegance">
-                    <p class="product-name">Montre Elegance</p>
-                    <p class="product-price"></p>
-                </div>
-
-                <div class="scroll-item">
-                    <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=300" alt="Lunettes Polarisées">
-                    <p class="product-name">Lunettes Polarisées</p>
-                    <p class="product-price"></p>
-                </div>
-
-                <div class="scroll-item">
-                    <img src="https://images.unsplash.com/photo-1541643600914-78b084683601?w=300" alt="Parfum d'Exception">
-                    <p class="product-name">Parfum d'Exception</p>
-                    <p class="product-price"></p>
-                </div>
-                
-                <div class="scroll-item">
-                    <img src="https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?w=300" alt="Baskets Sport">
-                    <p class="product-name">Baskets Sport & Style</p>
-                    <p class="product-price"></p>
-                </div>
-
-                <div class="scroll-item">
-                    <img src="https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=300" alt="Beauté et bien-être">
-                    <p class="product-name">Gamme Soins Visage</p>
-                    <p class="product-price"></p>
-                </div>
+        <div class="category-card" onclick="filtrerProduits('Beauté')">
+            <img src="https://images.unsplash.com/photo-1567721913486-6585f069b332?q=80&w=500" alt="Gamme Beauté">
+            <div class="category-card-info">
+                <h3>✨ Beauté & Soins</h3>
+                <p>Cosmétiques & Huiles Naturelles</p>
             </div>
         </div>
 
-        <!-- ZONE COMPLÈTE D'AFFICHAGE DU CATALOGUE -->
-        <div style="background: #fff; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border-radius: 2px; margin-top: 20px;">
-            <h2 id="section-title" style="font-size: 22px; margin-bottom: 20px; border-bottom: 1px solid #e7e7e7; padding-bottom: 10px; color: #111; font-weight: 700;">Notre Catalogue Complet</h2>
-            <div id="productGrid" class="product-grid">
-                <!-- Chargement des articles dynamiques via script.js -->
+        <div class="category-card" onclick="filtrerProduits('Accessoires')">
+            <img src="https://images.unsplash.com/photo-1584917865442-de89df76afd3?q=80&w=500" alt="Sacs et Accessoires">
+            <div class="category-card-info">
+                <h3>💼 Accessoires</h3>
+                <p>Sacs, Bijoux & Montres</p>
             </div>
+        </div>
+    </section>
+
+    <!-- BANNIÈRE DYNAMIQUE (Injectée lors des filtres) -->
+    <div id="zone-banniere-speciale"></div>
+
+    <!-- MAIN CATALOGUE -->
+    <main class="main-content">
+        <h2 id="section-title" class="section-heading">Notre Catalogue</h2>
+        <div id="productGrid" class="product-grid">
+            <!-- Les produits seront chargés dynamiquement via le script.js -->
+        </div>
+    </main>
+
+    <!-- PANIER LATÉRAL COULISSANT -->
+    <div id="cartSidebar" class="cart-sidebar">
+        <div class="cart-sidebar-header">
+            <h3>Mon Panier (<span class="cart-badge-count">0</span>)</h3>
+            <button onclick="toggleCartSidebar()" class="close-sidebar">&times;</button>
+        </div>
+        <div id="cartSidebarItems" class="cart-sidebar-body">
+            <!-- Produits ajoutés au panier -->
+        </div>
+        <div class="cart-sidebar-footer">
+            <div class="total-row">
+                <span>Total :</span>
+                <strong id="cartSidebarTotal">0 FCFA</strong>
+            </div>
+            <button class="btn-checkout" onclick="procederAuPaiementPanier()">Passer la commande</button>
+            <button class="btn-empty-cart" onclick="viderLePanierComplete()">Vider le panier</button>
         </div>
     </div>
 
-    <!-- MODALE DE DÉTAIL DU PRODUIT -->
-    <div id="product-detail-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 4000; justify-content: center; align-items: center;">
-        <div style="background: #fff; width: 90%; max-width: 900px; padding: 30px; border-radius: 4px; position: relative; box-shadow: 0 5px 15px rgba(0,0,0,0.3); display: flex; gap: 30px; max-height: 85vh; overflow-y: auto; font-family: sans-serif;">
-            <button onclick="fermerDetailProduit()" style="position: absolute; top: 15px; right: 15px; background: none; border: none; font-size: 28px; cursor: pointer; color: #666;">&times;</button>
-            
-            <!-- Gauche : Image Principale -->
-            <div style="flex: 1; display: flex; flex-direction: column; gap: 10px;">
-                <div style="background: #f7f8f8; border-radius: 4px; padding: 15px; display: flex; align-items: center; justify-content: center; height: 350px;">
-                    <img id="modal-product-img" src="" alt="" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+    <!-- MODALE DETAIL PRODUIT -->
+    <div id="product-detail-modal" class="modal-overlay">
+        <div class="modal-content product-detail-box">
+            <span class="close-modal" onclick="fermerDetailProduit()">&times;</span>
+            <div class="modal-detail-wrapper">
+                <div class="modal-detail-img">
+                    <img id="modal-product-img" src="" alt="Produit">
                 </div>
-                <div id="modal-thumbnails-container" style="display: flex; gap: 10px; justify-content: center;"></div>
-            </div>
-            
-            <!-- Droite : Fiche Technique & Variantes -->
-            <div style="flex: 1.2; display: flex; flex-direction: column; justify-content: space-between;">
-                <div>
-                    <span id="modal-product-badge" style="background: #B12704; color: #fff; padding: 4px 8px; font-size: 11px; font-weight: bold; border-radius: 2px; text-transform: uppercase; display: inline-block; margin-bottom: 10px;">Best-Seller</span>
-                    <h2 id="modal-product-title" style="margin: 0 0 5px 0; font-size: 22px; color: #111; font-weight: 600;">Nom complet de l'article</h2>
-                    <p id="modal-product-category" style="color: #007185; font-size: 13px; margin-bottom: 10px; cursor: pointer;">Visiter la boutique</p>
+                <div class="modal-detail-info">
+                    <span id="modal-product-badge" class="badge">Nouveau</span>
+                    <h2 id="modal-product-title">Nom du produit</h2>
+                    <p id="modal-product-category" class="cat-text"></p>
+                    <h3 id="modal-product-price" class="price-text">0 FCFA</h3>
+                    <p id="modal-product-desc" class="desc-text"></p>
                     
-                    <!-- Étoiles Amazon -->
-                    <div style="color: #ffa41c; font-size: 14px; margin-bottom: 15px;">
-                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
-                        <span style="color: #007185; margin-left: 5px; font-size: 13px;">4.5 sur 5 (87 avis clients)</span>
+                    <div class="modal-actions">
+                        <button id="modal-add-to-cart-btn" class="btn-secondary"><i class="fas fa-shopping-cart"></i> Ajouter au panier</button>
+                        <button id="modal-direct-buy-btn" class="btn-primary"><i class="fas fa-bolt"></i> Acheter maintenant</button>
                     </div>
-
-                    <hr style="border: 0; border-top: 1px solid #e7e7e7; margin-bottom: 15px;">
-                    
-                    <div style="margin-bottom: 15px;">
-                        <span id="modal-product-price" style="font-size: 26px; color: #B12704; font-weight: 500;">0 FCFA</span>
-                        <span style="font-size: 13px; color: #565959; margin-left: 5px;">sans taxes additionnelles</span>
-                    </div>
-
-                    <!-- BLOC VARIANTES (TAILLES) -->
-                    <div style="margin-bottom: 15px;">
-                        <p style="font-size: 13px; font-weight: bold; margin-bottom: 5px; color: #111;">Taille : <span id="lbl-selected-size" style="font-weight: normal; color: #565959;">Standard</span></p>
-                        <div style="display: flex; gap: 8px;">
-                            <button onclick="document.getElementById('lbl-selected-size').innerText='S'" style="border: 1px solid #adb1b8; padding: 6px 12px; background: #fff; border-radius: 4px; cursor: pointer; font-size: 12px;">S</button>
-                            <button onclick="document.getElementById('lbl-selected-size').innerText='M'" style="border: 1px solid #111; padding: 6px 12px; background: #f7f8f8; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: bold;">M</button>
-                            <button onclick="document.getElementById('lbl-selected-size').innerText='L'" style="border: 1px solid #adb1b8; padding: 6px 12px; background: #fff; border-radius: 4px; cursor: pointer; font-size: 12px;">L</button>
-                            <button onclick="document.getElementById('lbl-selected-size').innerText='XL'" style="border: 1px solid #adb1b8; padding: 6px 12px; background: #fff; border-radius: 4px; cursor: pointer; font-size: 12px;">XL</button>
-                        </div>
-                    </div>
-
-                    <p id="modal-product-desc" style="font-size: 14px; color: #333; line-height: 1.5; margin-bottom: 20px;">Spécifications complètes...</p>
-                    <p style="color: #008a00; font-weight: bold; font-size: 14px; margin-bottom: 15px;"><i class="fas fa-check-circle"></i> En stock prêt à être expédié</p>
-                </div>
-                
-                <div style="display: flex; flex-direction: column; gap: 8px;">
-                    <button id="modal-add-to-cart-btn" style="background: #ffd814; border: 1px solid #fcd200; border-radius: 20px; padding: 12px; font-weight: bold; cursor: pointer; width: 100%; font-size: 14px;">
-                        Ajouter au panier
-                    </button>
-                    <button id="modal-direct-buy-btn" style="background: #ffa41c; border: 1px solid #ff8f00; border-radius: 20px; padding: 12px; font-weight: bold; cursor: pointer; width: 100%; font-size: 14px; color: #111;">
-                        Acheter maintenant (Paiement Direct)
-                    </button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- MODALE TUNNEL DE COMMANDE -->
-    <div id="payment-modal" class="modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 5000; justify-content: center; align-items: center;">
-        <div class="modal-content" style="font-family: sans-serif; background: #fff; width: 90%; max-width: 500px; padding: 25px; border-radius: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); position: relative;">
-            <span class="close" onclick="closePayment()" style="position: absolute; top: 15px; right: 15px; font-size: 24px; cursor: pointer; color: #666;">&times;</span>
-            <h2 style="font-size: 22px; border-bottom: 1px solid #e7e7e7; padding-bottom: 10px; margin-bottom: 15px; color: #111;"><i class="fas fa-shopping-bag"></i> Passer la commande</h2>
-            
-            <p style="font-size: 14px; color: #333;">Contenu : <span id="modal-product-name" style="font-weight: bold; color: #111;">--</span></p>
-            <p style="font-size: 15px; font-weight: bold; color: #B12704;">Total à régler : <span id="modal-order-total-price">0 FCFA</span></p>
+    <!-- MODALE DE PAIEMENT / TUNNEL DE COMMANDE -->
+    <div id="payment-modal" class="modal-overlay">
+        <div class="modal-content payment-box">
+            <span class="close-modal" onclick="closePayment()">&times;</span>
+            <h3>Finaliser ma commande</h3>
+            <p style="font-size: 13px; color: #555;">Article : <strong id="modal-product-name"></strong></p>
+            <p style="font-size: 15px; color: #B12704; font-weight: bold;">Total à payer : <span id="modal-order-total-price"></span></p>
 
-            <!-- Tunnel de livraison local SENEGAL -->
-            <div class="delivery-zone" style="margin: 20px 0; border: 1px solid #ddd; padding: 15px; border-radius: 4px; background: #fcfcfc;">
-                <h4 style="margin: 0 0 10px 0; font-size: 14px; color: #111;"><i class="fas fa-truck"></i> Informations de livraison</h4>
-                <input type="text" id="client-name" placeholder="Votre nom complet" style="width: 100%; padding: 10px; border: 1px solid #adb1b8; border-radius: 3px; margin-bottom: 8px; box-sizing: border-box;">
-                <input type="text" id="client-phone" placeholder="Numéro de téléphone (Wave/OM)" style="width: 100%; padding: 10px; border: 1px solid #adb1b8; border-radius: 3px; margin-bottom: 10px; box-sizing: border-box;">
+            <form id="orderForm" onsubmit="event.preventDefault();">
+                <label>Nom & Prénom *</label>
+                <input type="text" id="client-name" required placeholder="Ex: Fatou Sow">
 
-                <select id="select-region" onchange="chargerDepartements()" style="width: 100%; padding: 10px; border: 1px solid #adb1b8; border-radius: 3px; margin-bottom: 5px;">
-                    <option value="">-- Choisir une Région --</option>
+                <label>Téléphone WhatsApp *</label>
+                <input type="tel" id="client-phone" required placeholder="Ex: 77 000 00 00">
+
+                <label>Région de livraison *</label>
+                <select id="select-region" onchange="chargerDepartements()" required>
+                    <option value="">-- Sélectionnez une région --</option>
                     <option value="Dakar">Dakar</option>
                     <option value="Thiès">Thiès</option>
                     <option value="Diourbel">Diourbel</option>
@@ -379,39 +235,62 @@
                     <option value="Kédougou">Kédougou</option>
                 </select>
 
-                <select id="select-departement" onchange="chargerCommunes()" style="width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #adb1b8; border-radius: 3px; display: none;">
+                <select id="select-departement" onchange="chargerCommunes()" style="display:none; margin-top:10px;" required>
                     <option value="">-- Département --</option>
                 </select>
 
-                <select id="select-commune" style="width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #adb1b8; border-radius: 3px; display: none;">
+                <select id="select-commune" style="display:none; margin-top:10px;" required>
                     <option value="">-- Commune / Quartier --</option>
                 </select>
-            </div>
 
-            <!-- Boutons de règlements -->
-            <div class="payment-methods" style="display: flex; flex-direction: column; gap: 8px;">
-                <button onclick="finaliserEtEnvoyerCommande('Wave')" class="btn-wave-pay" style="width: 100%; padding: 14px; background-color: #1b9ce5; color: white; border: none; font-weight: bold; border-radius: 4px; cursor: pointer; font-size: 14px;">
-                    <i class="fas fa-mobile-alt"></i> Payer via l'application Wave
-                </button>
-                <button onclick="finaliserEtEnvoyerCommande('Orange Money')" class="btn-om-pay" style="width: 100%; padding: 14px; background-color: #ff6600; color: white; border: none; font-weight: bold; border-radius: 4px; cursor: pointer; font-size: 14px;">
-                    <i class="fas fa-phone"></i> Payer via Code Orange Money (#144#)
-                </button>
-                <button onclick="finaliserEtEnvoyerCommande('Paiement a la livraison')" class="btn-cod-pay" style="width: 100%; padding: 14px; background-color: #232f3e; color: white; border: none; font-weight: bold; border-radius: 4px; cursor: pointer; font-size: 14px;">
-                    <i class="fas fa-hand-holding-usd"></i> Payer cash à la livraison
-                </button>
-            </div>
+                <div class="payment-methods">
+                    <p style="margin-top:15px; font-weight:bold; font-size:13px;">Choisissez le moyen de paiement :</p>
+                    <button type="button" class="btn-wave" onclick="finaliserEtEnvoyerCommande('Wave')">Payer avec Wave</button>
+                    <button type="button" class="btn-om" onclick="finaliserEtEnvoyerCommande('Orange Money')">Payer avec Orange Money</button>
+                    <button type="button" class="btn-cod" onclick="finaliserEtEnvoyerCommande('Paiement à la livraison')">Payer à la livraison</button>
+                </div>
+            </form>
         </div>
     </div>
 
-    <!-- ENCART DE NOTIFICATION / MODALE INTERACTIVE SUPPORT -->
-    <div id="info-modal" class="custom-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 4500; justify-content: center; align-items: center;">
-        <div class="custom-modal-content" style="background: #fff; width: 90%; max-width: 500px; padding: 25px; border-radius: 4px; position: relative;">
-            <span class="custom-close" onclick="fermerInfo()" style="position: absolute; top: 15px; right: 15px; font-size: 24px; cursor: pointer; color: #666;">&times;</span>
+    <!-- MODALE INFORMATIONS GÉNÉRALES -->
+    <div id="info-modal" class="modal-overlay">
+        <div class="modal-content info-box">
+            <span class="close-modal" onclick="fermerInfo()">&times;</span>
             <div id="info-modal-body"></div>
         </div>
     </div>
 
-    <!-- Script de contrôle -->
+    <!-- FOOTER -->
+    <footer class="footer-main">
+        <div class="back-to-top" onclick="retournerEnHaut()">Retour en haut</div>
+        <div class="footer-links">
+            <div class="footer-col">
+                <h4>À propos de Doux-Doux</h4>
+                <p style="font-size: 12px; color: #ddd; line-height: 1.6;">Votre boutique en ligne de référence au Sénégal spécialisée dans la Mode, la Beauté et les Accessoires de qualité.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Nos Catégories</h4>
+                <ul>
+                    <li><a href="#productGrid" onclick="filtrerProduits('Mode')">👗 Mode</a></li>
+                    <li><a href="#productGrid" onclick="filtrerProduits('Beauté')">✨ Beauté & Soins</a></li>
+                    <li><a href="#productGrid" onclick="filtrerProduits('Accessoires')">💼 Accessoires</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Aide & Support</h4>
+                <ul>
+                    <li><a href="javascript:void(0)" onclick="ouvrirInfo('commandes')">Suivi de commande</a></li>
+                    <li><a href="javascript:void(0)" onclick="ouvrirInfo('vendre')">Vendre sur Doux-Doux</a></li>
+                    <li><a href="javascript:void(0)" onclick="ouvrirInfo('guide')">Guide d'achat</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Doux-Doux.sn - Tous droits réservés.</p>
+        </div>
+    </footer>
+
     <script src="script.js"></script>
 </body>
 </html>
