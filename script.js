@@ -95,7 +95,7 @@ async function filtrerProduits(categorie) {
         const uniqueId = p._id || p.id;
 
         const carte = document.createElement('div');
-        carte.className = "product-card";
+        carte.className = "product-card product-item";
         carte.setAttribute("data-name", nomProduit);
         carte.style.cursor = "pointer";
         carte.onclick = () => ouvrirDetailProduit(uniqueId);
@@ -108,6 +108,9 @@ async function filtrerProduits(categorie) {
                 <span class="category-tag">${categorieProduit}</span>
                 <h3 class="product-title">${nomProduit}</h3>
                 <p class="product-price"><strong>${Number(prixProduit).toLocaleString()} FCFA</strong></p>
+                <button class="btn-add-cart" onclick="event.stopPropagation(); ajouterAuPanier('${nomProduit.replace(/'/g, "\\'")}', ${prixProduit})">
+                    <i class="fas fa-shopping-cart"></i> Ajouter au panier
+                </button>
             </div>`;
             
         if (grille) {
@@ -202,8 +205,15 @@ function gererZoneBanniereSpeciale(boutique) {
 // ==========================================
 // 5. SYSTÈME DE VUE DÉTAILLÉE (MODALE PRODUIT)
 // ==========================================
-function ouvrirDetailProduit(id) {
-    const produit = produitsStockesLocale.find(p => (p._id === id || p.id === id));
+function ouvrirDetailProduit(idOrData) {
+    let produit = null;
+    
+    if (typeof idOrData === 'object' && idOrData !== null) {
+        produit = idOrData;
+    } else {
+        produit = produitsStockesLocale.find(p => (p._id === idOrData || p.id === idOrData));
+    }
+    
     if (!produit) return;
 
     const imageBrute = produit.imageUrl || produit.image || 'https://via.placeholder.com/400x400?text=Doux-Doux';
@@ -238,12 +248,18 @@ function ouvrirDetailProduit(id) {
     }
 
     const modalDetail = document.getElementById('product-detail-modal');
-    if (modalDetail) modalDetail.style.display = "flex";
+    if (modalDetail) {
+        modalDetail.style.display = "flex";
+        document.body.classList.add('modal-open');
+    }
 }
 
 function fermerDetailProduit() {
     const modalDetail = document.getElementById('product-detail-modal');
-    if (modalDetail) modalDetail.style.display = "none";
+    if (modalDetail) {
+        modalDetail.style.display = "none";
+        document.body.classList.remove('modal-open');
+    }
 }
 
 // ==========================================
@@ -290,7 +306,7 @@ function renderCartSidebar() {
     panier.forEach((item, index) => {
         total += item.prix;
         const row = document.createElement("div");
-        row.style.cssText = "display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #e7e7e7; padding-bottom:10px;";
+        row.style.cssText = "display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #e7e7e7; padding-bottom:10px; margin-bottom:10px;";
         row.innerHTML = `
             <div style="max-width:220px;">
                 <p style="margin:0; font-size:13px; font-weight:bold; color:#111; text-overflow:ellipsis; overflow:hidden; white-space:nowrap;">${item.titre}</p>
@@ -321,6 +337,14 @@ function viderLePanierComplete() {
 // ==========================================
 // 7. TUNNEL DE COMMANDE INTÉGRÉ
 // ==========================================
+function openPayment() {
+    const modal = document.getElementById('payment-modal');
+    if (modal) {
+        modal.style.display = 'flex';
+        document.body.classList.add('modal-open');
+    }
+}
+
 function ouvrirPaiementDirect(titre, prix) {
     modeAchatDirect = true;
     produitDirectEnCours = { titre, prix };
@@ -328,8 +352,9 @@ function ouvrirPaiementDirect(titre, prix) {
     const modal = document.getElementById('payment-modal');
     if (modal) {
         modal.style.display = 'flex';
-        document.getElementById('modal-product-name').innerText = titre;
-        document.getElementById('modal-order-total-price').innerText = `${Number(prix).toLocaleString()} FCFA`;
+        document.body.classList.add('modal-open');
+        if (document.getElementById('modal-product-name')) document.getElementById('modal-product-name').innerText = titre;
+        if (document.getElementById('modal-order-total-price')) document.getElementById('modal-order-total-price').innerText = `${Number(prix).toLocaleString()} FCFA`;
     }
 }
 
@@ -344,17 +369,21 @@ function procederAuPaiementPanier() {
     const modal = document.getElementById('payment-modal');
     if (modal) {
         modal.style.display = 'flex';
+        document.body.classList.add('modal-open');
         const listeTitres = panier.map(p => p.titre).join(', ');
         let totalPanier = panier.reduce((sum, item) => sum + item.prix, 0);
 
-        document.getElementById('modal-product-name').innerText = `Commande groupée (${panier.length} articles : ${listeTitres})`;
-        document.getElementById('modal-order-total-price').innerText = `${totalPanier.toLocaleString()} FCFA`;
+        if (document.getElementById('modal-product-name')) document.getElementById('modal-product-name').innerText = `Commande groupée (${panier.length} articles : ${listeTitres})`;
+        if (document.getElementById('modal-order-total-price')) document.getElementById('modal-order-total-price').innerText = `${totalPanier.toLocaleString()} FCFA`;
     }
 }
 
 function closePayment() {
     const modal = document.getElementById('payment-modal');
-    if (modal) modal.style.display = 'none';
+    if (modal) {
+        modal.style.display = 'none';
+        document.body.classList.remove('modal-open');
+    }
 }
 
 // ==========================================
@@ -366,6 +395,8 @@ async function searchProducts() {
     const saisie = input.value.toLowerCase().trim();
 
     const grille = document.getElementById("productGrid");
+    if (!grille) return;
+
     grille.innerHTML = "<p style='grid-column: 1/-1; text-align: center;'>Recherche en cours...</p>";
 
     try {
@@ -402,7 +433,7 @@ async function searchProducts() {
             const uniqueId = p._id || p.id;
 
             const carte = document.createElement('div');
-            carte.className = "product-card";
+            carte.className = "product-card product-item";
             carte.style.cursor = "pointer";
             carte.onclick = () => ouvrirDetailProduit(uniqueId);
 
@@ -420,7 +451,7 @@ async function searchProducts() {
 
     } catch (error) {
         console.error("Erreur lors de la recherche :", error);
-        grille.innerHTML = "<p style='grid-column: 1/-1; text-align: center; color: red;'>Une erreur est survenue.</p>";
+        grille.innerHTML = "<p style='grid-column: 1/-1; text-align: center; color: red;'>Une erreur est survenue lors de la recherche.</p>";
     }
 }
 
@@ -627,21 +658,21 @@ function closeNav() {
     if (overlay) overlay.style.display = "none";
 }
 
-function ouvrirInfo(type) {
+function ouvrirInfo(titleOrType = '', message = '') {
     const modal = document.getElementById('info-modal');
     const modalBody = document.getElementById('info-modal-body');
-    if (!modal || !modalBody) return;
-    
+    if (!modal) return;
+
     let contenu = '';  
 
-    if (type === 'commandes') {
+    if (titleOrType === 'commandes') {
         contenu = `
             <div style="text-align:center;">
                 <i class="fas fa-box-open" style="font-size: 40px; color: #f97316; margin-bottom: 15px;"></i>
                 <h3>Suivi des commandes & Retours</h3>
                 <p style="font-size: 13px; color: #4b5563; margin-bottom: 15px;">Suivez vos livraisons en cours partout au Sénégal.</p>
             </div>`;
-    } else if (type === 'vendre') {
+    } else if (titleOrType === 'vendre') {
         contenu = `
             <div>
                 <h3 style="text-align: center;">Devenir Vendeur Doux-Doux</h3>
@@ -653,31 +684,41 @@ function ouvrirInfo(type) {
                     <button type="submit" style="width:100%; background:#ffd814; border:none; padding:10px; font-weight:bold; cursor:pointer; border-radius:4px;">Envoyer</button>
                 </form>
             </div>`;
-    } else if (type === 'guide') {
+    } else if (titleOrType === 'guide') {
         contenu = `
             <div style="text-align:center;">
                 <i class="fas fa-book-open" style="font-size:40px; color:#0066c0; margin-bottom:15px;"></i>
                 <h3>Guide de l'acheteur</h3>
                 <p style="font-size:13px; text-align:left; color:#4b5563;">1. Sélectionnez vos articles (Mode, Beauté, Accessoires).<br>2. Validez le panier.<br>3. Payez via Wave, Orange Money ou à la livraison.</p>
             </div>`;
-    } else if (type === 'aide') {
+    } else if (titleOrType === 'aide') {
         contenu = `
             <div style="text-align:center;">
                 <i class="fas fa-headset" style="font-size: 40px; color: #007185; margin-bottom: 15px;"></i>
                 <h3>Besoin d'aide ?</h3>
                 <p style="font-size:13px; color:#4b5563;">Notre équipe est à votre disposition 7j/7 pour vous assister.</p>
             </div>`;
+    } else if (message) {
+        contenu = `
+            <div style="text-align:center;">
+                <h3>${titleOrType}</h3>
+                <p style="font-size:13px; color:#4b5563;">${message}</p>
+            </div>`;
     } else {
         contenu = `<p style="text-align:center;">Information non disponible.</p>`;
     }
 
-    modalBody.innerHTML = contenu;
+    if (modalBody) modalBody.innerHTML = contenu;
     modal.style.display = "flex";
+    document.body.classList.add('modal-open');
 }
 
 function fermerInfo() {
     const modal = document.getElementById('info-modal');
-    if (modal) modal.style.display = "none";
+    if (modal) {
+        modal.style.display = "none";
+        document.body.classList.remove('modal-open');
+    }
 }
 
 // ==========================================
@@ -691,17 +732,18 @@ function retournerEnHaut() {
 }
 
 // ==========================================
-// 14. INITIALISATION
+// 14. INITIALISATION ET ÉCOUTEURS D'ÉVÉNEMENTS
 // ==========================================
 document.addEventListener("DOMContentLoaded", () => {
-    // Chargement du catalogue restreint
+    // Initialisation du catalogue restreint
     filtrerProduits("Toutes");
 
-    // Touche Entrée sur la recherche
+    // Touche Entrée sur le champ de recherche
     const inputRecherche = document.getElementById('searchInput');
     if (inputRecherche) {
         inputRecherche.addEventListener('keyup', (event) => {
             if (event.key === 'Enter') {
+                event.preventDefault();
                 searchProducts();
             }
         });
@@ -719,4 +761,14 @@ document.addEventListener("DOMContentLoaded", () => {
         if (event.target === modalInfo) fermerInfo();
         if (event.target === overlaySide) closeNav();
     };
+
+    // Fermeture globale des modales et menus avec la touche Échap
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') {
+            closePayment();
+            fermerDetailProduit();
+            fermerInfo();
+            closeNav();
+        }
+    });
 });
