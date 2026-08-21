@@ -78,7 +78,6 @@ async function filtrerProduits(categorie) {
             return cat === cible || cat.includes(cible) || cible.includes(cat) || tag === cible || (p.tags && p.tags.includes(cible));
         });
 
-    // --- VARIABLES POUR LA STRUCTURATION EN BLOCS DE 4 ---
     let blockActuel = null;
     let compteurDansBlock = 0;
     let indexBlockGlobal = 0;
@@ -94,7 +93,6 @@ async function filtrerProduits(categorie) {
         const categorieProduit = p.category || p.cat || 'Général';
         const uniqueId = p._id || p.id;
 
-        // Création de la carte produit
         const carte = document.createElement('div');
         carte.className = "product-card";
         carte.setAttribute("data-name", nomProduit);
@@ -117,40 +115,33 @@ async function filtrerProduits(categorie) {
             if (grilleHaul) grilleHaul.appendChild(carte);
         } else {
             if (grille) {
-                // Si on commence un nouveau bloc de 4 produits, on crée son conteneur
                 if (compteurDansBlock === 0) {
                     blockActuel = document.createElement('div');
                     blockActuel.className = "product-block-4";
                     grille.appendChild(blockActuel);
                 }
 
-                // On ajoute le produit dans le bloc actuel
                 blockActuel.appendChild(carte);
                 compteurDansBlock++;
 
-                // Dès que le bloc contient 4 produits, on prépare l'élément intermédiaire
                 if (compteurDansBlock === 4) {
                     compteurDansBlock = 0;
                     indexBlockGlobal++;
 
-                    // Après le 1er bloc de 4 : On insère un produit sponsorisé cosmétique/textile
                     if (indexBlockGlobal === 1) {
                         const sponsorise = document.createElement('div');
                         sponsorise.className = "sponsored-block";
                         sponsorise.innerHTML = `
-                            <div class="sponsored-card" onclick="ouvrirDetailProduit('cosm-001')">
+                            <div class="sponsored-card" onclick="ouvrirDetailProduit('${uniqueId}')">
                                 <div class="sponsored-badge">Sponsorisé ℹ</div>
                                 <img src="https://images.weserv.nl/?url=https://images.unsplash.com/photo-1608248597279-f99d160bfcbc?q=80&w=600" alt="Huile de Baobab">
                                 <div class="sponsored-info">
                                     <h4>Huile de Baobab Purifiante - Doux-Doux</h4>
                                     <p class="sponsored-desc font-text">Soin naturel pressé à froid pour nourrir votre peau.</p>
-                                    <span class="sponsored-price"></span>
                                 </div>
                             </div>`;
                         grille.appendChild(sponsorise);
-                    } 
-                    // Après le 2ème bloc de 4 : On place la bannière de livraison aérée
-                    else if (indexBlockGlobal === 2) {
+                    } else if (indexBlockGlobal === 2) {
                         const infoBlock = document.createElement('div');
                         infoBlock.className = "info-block-separator";
                         infoBlock.innerHTML = `
@@ -159,9 +150,7 @@ async function filtrerProduits(categorie) {
                                 <p><strong>Paiement à la livraison :</strong> Commandez en toute sécurité et payez une fois votre colis entre vos mains !</p>
                             </div>`;
                         grille.appendChild(infoBlock);
-                    } 
-                    // Après le 3ème bloc de 4 : On insère la bannière d'aide WhatsApp
-                    else if (indexBlockGlobal === 3) {
+                    } else if (indexBlockGlobal === 3) {
                         const infoBlock2 = document.createElement('div');
                         infoBlock2.className = "info-block-separator";
                         infoBlock2.innerHTML = `
@@ -170,9 +159,7 @@ async function filtrerProduits(categorie) {
                                 <p><strong>Besoin d'aide ?</strong> Des questions sur un produit ? Écrivez-nous directement sur WhatsApp !</p>
                             </div>`;
                         grille.appendChild(infoBlock2);
-                    }
-                    // Pour les blocs suivants : Juste un espacement propre
-                    else {
+                    } else {
                         const espaceur = document.createElement('div');
                         espaceur.className = "block-spacer";
                         grille.appendChild(espaceur);
@@ -196,7 +183,7 @@ function gererZoneBanniereSpeciale(boutique) {
                 <h2 style="margin: 0 0 8px 0; font-size: 24px;">👕 Boutique Doux-Doux Basics</h2>
                 <p style="margin: 0 0 15px 0; font-size: 14px; color: #f0f4f8;">Vos vêtements essentiels de tous les jours au meilleur prix au Sénégal.</p>
                 <div style="display: flex; gap: 15px; font-size: 13px;">
-                    <span style="font-weight: bold; cursor: pointer; border-bottom: 2px solid white;">Tout voir</span>
+                    <span style="font-weight: bold; cursor: pointer; border-bottom: 2px solid white;" onclick="filtrerProduits('basics')">Tout voir</span>
                     <span style="cursor: pointer; opacity: 0.8;" onclick="filtrerProduits('Hommes')">Hommes</span>
                     <span style="cursor: pointer; opacity: 0.8;" onclick="filtrerProduits('Femmes')">Femmes</span>
                     <span style="cursor: pointer; opacity: 0.8;" onclick="filtrerProduits('Enfants')">Enfants</span>
@@ -208,7 +195,7 @@ function gererZoneBanniereSpeciale(boutique) {
                 <h2 style="margin: 0 0 8px 0; font-size: 24px;">📦 Doux-Doux Haul - Super Packs</h2>
                 <p style="margin: 0 0 15px 0; font-size: 14px; color: #fff3e0;">Achetez en gros volumes et faites d'immenses économies sur vos cartons de livraison.</p>
                 <div style="display: flex; gap: 15px; font-size: 13px;">
-                    <span style="font-weight: bold; cursor: pointer; border-bottom: 2px solid white;">Packs Populaires</span>
+                    <span style="font-weight: bold; cursor: pointer; border-bottom: 2px solid white;" onclick="filtrerProduits('haul')">Packs Populaires</span>
                     <span style="cursor: pointer; opacity: 0.8;" onclick="filtrerProduits('Alimentation')">Packs Épicerie</span>
                     <span style="cursor: pointer; opacity: 0.8;" onclick="filtrerProduits('Equipement')">Packs Maison</span>
                 </div>
@@ -296,6 +283,12 @@ function toggleCartSidebar() {
 
 function ajouterAuPanier(titre, prix) {
     panier.push({ titre: titre, prix: Number(prix) });
+    moteurMettreAJourBadgesPanier();
+    renderCartSidebar();
+    alert(`${titre} ajouté au panier ! 🛒`);
+}
+
+function moteurMettreAJourBadgesPanier() {
     const compteur = document.getElementById('cartCount');
     if (compteur) compteur.innerText = panier.length;
 
@@ -303,8 +296,6 @@ function ajouterAuPanier(titre, prix) {
     tousLesCompteurs.forEach(badge => {
         badge.innerText = panier.length;
     });
-    renderCartSidebar();
-    alert(`${titre} ajouté au panier ! 🛒`);
 }
 
 function renderCartSidebar() {
@@ -340,15 +331,13 @@ function renderCartSidebar() {
 
 function retirerDuPanier(index) {
     panier.splice(index, 1);
-    const compteur = document.getElementById('cartCount');
-    if (compteur) compteur.innerText = panier.length;
+    moteurMettreAJourBadgesPanier();
     renderCartSidebar();
 }
 
 function viderLePanierComplete() {
     panier = [];
-    const compteur = document.getElementById('cartCount');
-    if (compteur) compteur.innerText = "0";
+    moteurMettreAJourBadgesPanier();
     renderCartSidebar();
 }
 
@@ -392,110 +381,7 @@ function closePayment() {
 }
 
 // ==========================================
-// 8. MOTEUR DE RECHERCHE
-// ==========================================
-async function searchProducts() {
-    const input = document.getElementById('searchInput');
-    if (!input) return;
-    const saisie = input.value.toLowerCase().trim();
-
-    const grille = document.getElementById("productGrid");
-    grille.innerHTML = "<p style='grid-column: 1/-1; text-align: center;'>Recherche en cours...</p>";
-
-    try {
-        const catalogueBackend = await fetchProductsFromBackend();
-        const selectCategorie = document.getElementById("search-category");
-        const categorieSelectionnee = selectCategorie ? selectCategorie.value : "Toutes";
-
-        const resultats = catalogueBackend.filter(p => {
-            const nom = (p.name || p.Nom || p.titre || "").toLowerCase();
-            const desc = (p.desc || p.description || "").toLowerCase();
-            const categorieProduit = (p.category || p.cat || p.categorie || "").toLowerCase();
-
-            const correspondCategorie = (categorieSelectionnee === "Toutes") || (categorieProduit === categorieSelectionnee.toLowerCase()) || categorieProduit.includes(categorieSelectionnee.toLowerCase());
-            const correspondMotCle = (saisie === "") || nom.includes(saisie) || desc.includes(saisie);
-
-            return correspondCategorie && correspondMotCle;
-        });
-
-        grille.innerHTML = "";
-        
-        if (resultats.length === 0) {
-            grille.innerHTML = "<p style='grid-column: 1/-1; text-align: center;'>Aucun produit ne correspond à votre recherche.</p>";
-            return;
-        }
-
-        resultats.forEach(p => {
-            const imageBrute = p.imageUrl || p.image || 'https://via.placeholder.com/400x400?text=Doux-Doux';
-            const imageAffichage = (imageBrute.includes('pinterest.com') || imageBrute.includes('pinimg.com')) 
-                ? `https://images.weserv.nl/?url=${encodeURIComponent(imageBrute)}` 
-                : imageBrute;
-
-            const nomProduit = p.name || p.titre || "Produit sans nom";
-            const prixProduit = p.price || p.prix || 0;
-            const uniqueId = p._id || p.id;
-
-            const carte = document.createElement('div');
-            carte.className = "product-card";
-            carte.style.cursor = "pointer";
-            carte.onclick = () => ouvrirDetailProduit(uniqueId);
-
-            carte.innerHTML = `
-                <div class="product-image"><img src="${imageAffichage}" alt="${nomProduit}"></div>
-                <div class="product-info">
-                    <h3 class="product-title">${nomProduit}</h3>
-                    <p class="product-price"><strong>${Number(prixProduit).toLocaleString()} FCFA</strong></p>
-                    <button class="btn-add-cart" onclick="event.stopPropagation(); ajouterAuPanier('${nomProduit.replace(/'/g, "\\'")}', ${prixProduit})">
-                        <i class="fas fa-shopping-cart"></i> Ajouter au panier
-                    </button>
-                </div>`;
-            grille.appendChild(carte);
-        });
-
-    } catch (error) {
-        console.error("Erreur lors de la recherche :", error);
-        grille.innerHTML = "<p style='grid-column: 1/-1; text-align: center; color: red;'>Une erreur est survenue.</p>";
-    }
-}
-
-// ==========================================
-// 9. GESTION DES REQUÊTES / ENVOI DE COMMANDE
-// ==========================================
-async function finaliserEtEnvoyerCommande(methodePaiement) {
-    const nom = document.getElementById('client-name').value.trim();
-    const telephone = document.getElementById('client-phone').value.trim();
-    const region = document.getElementById('select-region').value;
-    const departement = document.getElementById('select-departement').value;
-    const commune = document.getElementById('select-commune').value;
-
-    if (!nom || !telephone || !region || !departement || !commune) {
-        alert("Veuillez remplir l'intégralité des informations de livraison locale.");
-        return;
-    }
-
-    const articleLabel = modeAchatDirect ? produitDirectEnCours.titre : panier.map(x => x.titre).join(" + ");
-    const totalFacture = modeAchatDirect ? produitDirectEnCours.prix : panier.reduce((a, b) => a + b.prix, 0);
-    const adresseLivraison = `${region}, Dept: ${departement}, Quartier: ${commune}`;
-
-    // Préparation du message WhatsApp sécurisé
-    const texteWhatsApp = encodeURIComponent(`Bonjour Doux-Doux.sn ! Je souhaite commander :\n\n• Articles : ${articleLabel}\n• Total : ${totalFacture.toLocaleString()} F CFA\n• Mode de paiement : ${methodePaiement}\n\n👉 Infos de livraison :\n- Nom : ${nom}\n- Tél : ${telephone}\n- Localisation : ${adresseLivraison}`);
-    const lienWhatsApp = `https://wa.me/221777226359?text=${texteWhatsApp}`; 
-
-    if (methodePaiement === 'Wave') {
-        window.open(lienWhatsApp, '_blank');
-        window.location.href = "https://pay.wave.com/m/M_sn_oPpmOm67pxb4/c/sn/";
-    } else if (methodePaiement === 'Orange Money') {
-        window.open(lienWhatsApp, '_blank');
-        window.location.href = "tel:#144#";
-    } else {
-        window.location.href = lienWhatsApp;
-    }
-    
-    if (typeof closePayment === "function") closePayment();
-}
-
-// ==========================================
-// 10. CARTE ET LOCALISATION DU SÉNÉGAL (14 RÉGIONS)
+// 8. CARTE ET LOCALISATION DU SÉNÉGAL (14 RÉGIONS)
 // ==========================================
 const senegalMap = {
     "Dakar": {
@@ -573,12 +459,13 @@ const senegalMap = {
 };
 
 function chargerDepartements() {
-    const region = document.getElementById('select-region').value;
+    const regionSelect = document.getElementById('select-region');
     const deptSelect = document.getElementById('select-departement');
     const commSelect = document.getElementById('select-commune');
 
-    if(!deptSelect || !commSelect) return;
+    if (!regionSelect || !deptSelect || !commSelect) return;
 
+    const region = regionSelect.value;
     deptSelect.innerHTML = '<option value="">-- Département --</option>';
     commSelect.innerHTML = '<option value="">-- Commune --</option>';
     commSelect.style.display = "none";
@@ -597,14 +484,18 @@ function chargerDepartements() {
 }
 
 function chargerCommunes() {
-    const region = document.getElementById('select-region').value;
-    const dept = document.getElementById('select-departement').value;
+    const regionSelect = document.getElementById('select-region');
+    const deptSelect = document.getElementById('select-departement');
     const commSelect = document.getElementById('select-commune');
 
-    if(!commSelect) return;
+    if (!regionSelect || !deptSelect || !commSelect) return;
+
+    const region = regionSelect.value;
+    const dept = deptSelect.value;
+
     commSelect.innerHTML = '<option value="">-- Commune / Quartier --</option>';
 
-    if (dept && senegalMap[region][dept]) {
+    if (dept && senegalMap[region] && senegalMap[region][dept]) {
         commSelect.style.display = "inline-block";
         senegalMap[region][dept].forEach(commune => {
             let opt = document.createElement("option");
@@ -618,7 +509,7 @@ function chargerCommunes() {
 }
 
 // ==========================================
-// 11. SLIDERS D'ACCUEIL
+// 9. SLIDERS D'ACCUEIL
 // ==========================================
 function moveSlide(n) {
     const slidesContainer = document.querySelector('.slides');
@@ -636,7 +527,7 @@ function afficherSlide(index) {
     const slidesContainer = document.getElementById("sliderSlides");
     if (!slidesContainer) return;
 
-    const totalSlides = 3; // Modifié à 3 catégories
+    const totalSlides = 3; 
     if (index >= totalSlides) indexSlide = 0;
     if (index < 0) indexSlide = totalSlides - 1;
 
@@ -658,7 +549,7 @@ function slidePrecedente() {
 setInterval(() => { slideSuivante(); }, 5000);
 
 // ==========================================
-// 12. MENUS BURGER ET CONFIGURATION MODALES
+// 10. MENUS BURGER ET CONFIGURATION MODALES
 // ==========================================
 function openNav() {
     const nav = document.getElementById("mySidenav");
@@ -706,7 +597,7 @@ function ouvrirInfo(type) {
             <div style="text-align:center;">
                 <i class="fas fa-book-open" style="font-size:40px; color:#0066c0; margin-bottom:15px;"></i>
                 <h3>Guide de l'acheteur</h3>
-                <p style="font-size:13px; text-align:left; color:#4b5563;">1. Sélectionnez vos articles.\n2. Validez le panier.\n3. Payez via Wave ou Orange Money.</p>
+                <p style="font-size:13px; text-align:left; color:#4b5563;">1. Sélectionnez vos articles.<br>2. Validez le panier.<br>3. Payez via Wave ou Orange Money.</p>
             </div>`;
     }
     modalBody.innerHTML = contenu;
@@ -719,9 +610,142 @@ function fermerInfo() {
 }
 
 // ==========================================
-// 13. ÉCOUTEURS D'ÉVÉNEMENTS INITIALISATION
+// 11. GESTION DES REQUÊTES ET COMMANDE
+// ==========================================
+async function finaliserEtEnvoyerCommande(methodePaiement) {
+    const nom = document.getElementById('client-name')?.value.trim();
+    const telephone = document.getElementById('client-phone')?.value.trim();
+    const region = document.getElementById('select-region')?.value;
+    const departement = document.getElementById('select-departement')?.value;
+    const commune = document.getElementById('select-commune')?.value;
+
+    if (!nom || !telephone || !region || !departement || !commune) {
+        alert("Veuillez remplir l'intégralité des informations de livraison locale.");
+        return;
+    }
+
+    const articleLabel = modeAchatDirect ? produitDirectEnCours.titre : panier.map(x => x.titre).join(" + ");
+    const totalFacture = modeAchatDirect ? produitDirectEnCours.prix : panier.reduce((a, b) => a + b.prix, 0);
+    const adresseLivraison = `${region}, Dept: ${departement}, Quartier: ${commune}`;
+
+    const texteWhatsApp = encodeURIComponent(
+        `Bonjour Doux-Doux.sn ! Je souhaite commander :\n\n` +
+        `• Articles : ${articleLabel}\n` +
+        `• Total : ${totalFacture.toLocaleString()} F CFA\n` +
+        `• Mode de paiement : ${methodePaiement}\n\n` +
+        `👉 Infos de livraison :\n` +
+        `- Nom : ${nom}\n` +
+        `- Tél : ${telephone}\n` +
+        `- Localisation : ${adresseLivraison}`
+    );
+    
+    const lienWhatsApp = `https://wa.me/221777226359?text=${texteWhatsApp}`; 
+
+    if (methodePaiement === 'Wave') {
+        window.open(lienWhatsApp, '_blank');
+        window.location.href = "https://pay.wave.com/m/M_sn_oPpmOm67pxb4/c/sn/";
+    } else if (methodePaiement === 'Orange Money') {
+        window.open(lienWhatsApp, '_blank');
+        window.location.href = "tel:#144#";
+    } else {
+        window.location.href = lienWhatsApp;
+    }
+    
+    fermerInfo();
+    if (typeof closePayment === "function") closePayment();
+}
+
+// ==========================================
+// 12. MOTEUR DE RECHERCHE DYNAMIQUE
+// ==========================================
+async function searchProducts() {
+    const input = document.getElementById('searchInput');
+    if (!input) return;
+    const saisie = input.value.toLowerCase().trim();
+
+    const grille = document.getElementById("productGrid");
+    if (!grille) return;
+    
+    grille.innerHTML = "<p style='grid-column: 1/-1; text-align: center;'>Recherche en cours...</p>";
+
+    try {
+        const catalogueBackend = await fetchProductsFromBackend();
+        const selectCategorie = document.getElementById("search-category");
+        const categorieSelectionnee = selectCategorie ? selectCategorie.value : "Toutes";
+
+        const resultats = catalogueBackend.filter(p => {
+            const nom = (p.name || p.Nom || p.titre || "").toLowerCase();
+            const desc = (p.desc || p.description || "").toLowerCase();
+            const categorieProduit = (p.category || p.cat || p.categorie || "").toLowerCase();
+
+            const correspondCategorie = (categorieSelectionnee === "Toutes") || 
+                                        (categorieProduit === categorieSelectionnee.toLowerCase()) || 
+                                        categorieProduit.includes(categorieSelectionnee.toLowerCase());
+                                        
+            const correspondMotCle = (saisie === "") || nom.includes(saisie) || desc.includes(saisie);
+
+            return correspondCategorie && correspondMotCle;
+        });
+
+        grille.innerHTML = "";
+        
+        if (resultats.length === 0) {
+            grille.innerHTML = "<p style='grid-column: 1/-1; text-align: center;'>Aucun produit ne correspond à votre recherche.</p>";
+            return;
+        }
+
+        resultats.forEach(p => {
+            const imageBrute = p.imageUrl || p.image || 'https://via.placeholder.com/400x400?text=Doux-Doux';
+            const imageAffichage = (imageBrute.includes('pinterest.com') || imageBrute.includes('pinimg.com')) 
+                ? `https://images.weserv.nl/?url=${encodeURIComponent(imageBrute)}` 
+                : imageBrute;
+
+            const nomProduit = p.name || p.titre || "Produit sans nom";
+            const prixProduit = p.price || p.prix || 0;
+            const uniqueId = p._id || p.id;
+
+            const carte = document.createElement('div');
+            carte.className = "product-card";
+            carte.style.cursor = "pointer";
+            carte.onclick = () => ouvrirDetailProduit(uniqueId);
+
+            carte.innerHTML = `
+                <div class="product-image"><img src="${imageAffichage}" alt="${nomProduit}"></div>
+                <div class="product-info">
+                    <h3 class="product-title">${nomProduit}</h3>
+                    <p class="product-price"><strong>${Number(prixProduit).toLocaleString()} FCFA</strong></p>
+                    <button class="btn-add-cart" onclick="event.stopPropagation(); ajouterAuPanier('${nomProduit.replace(/'/g, "\\'")}', ${prixProduit})">
+                        <i class="fas fa-shopping-cart"></i> Ajouter au panier
+                    </button>
+                </div>`;
+            grille.appendChild(carte);
+        });
+
+    } catch (error) {
+        console.error("Erreur lors de la recherche :", error);
+        grille.innerHTML = "<p style='grid-column: 1/-1; text-align: center; color: red;'>Une erreur est survenue lors de la recherche.</p>";
+    }
+}
+
+// ==========================================
+// 13. INITIALISATION ET ÉCOUTEURS D'ÉVÉNEMENTS
 // ==========================================
 document.addEventListener("DOMContentLoaded", () => {
-    // Lancement automatique du catalogue au chargement
+    // Initialisation du catalogue
     filtrerProduits("Toutes");
+
+    // Liaison des sélecteurs de géolocalisation
+    const selectRegion = document.getElementById('select-region');
+    const selectDept = document.getElementById('select-departement');
+    
+    if (selectRegion) selectRegion.addEventListener('change', chargerDepartements);
+    if (selectDept) selectDept.addEventListener('change', chargerCommunes);
+    
+    // Écouteur pour la recherche clavier
+    const searchInput = document.getElementById('searchInput');
+    if (searchInput) {
+        searchInput.addEventListener('keyup', (e) => {
+            if (e.key === 'Enter') searchProducts();
+        });
+    }
 });
