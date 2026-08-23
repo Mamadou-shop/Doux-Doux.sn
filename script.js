@@ -74,8 +74,13 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function afficherProduits(liste) {
-    const grille = document.getElementById("grid-produits");
-    if (!grille) return;
+    // Vérifie si l'ID est 'productGrid' ou 'grid-produits'
+    const grille = document.getElementById("productGrid") || document.getElementById("grid-produits");
+    
+    if (!grille) {
+        console.error("Erreur : Aucun conteneur trouvé pour afficher le catalogue ! Vérifiez vos ID HTML.");
+        return;
+    }
     
     grille.innerHTML = "";
 
