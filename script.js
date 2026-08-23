@@ -1,5 +1,5 @@
 // ==========================================
-// 0. CATALOGUE DE PRODUITS PAR DÉFAUT (LOCAL)
+// 1. BASE DE DONNÉES PRODUITS (PRODUITS_LOCAUX)
 // ==========================================
 const PRODUITS_LOCAUX = [
     // --- TEXTILE / MODE (18 Articles) ---
@@ -7,7 +7,7 @@ const PRODUITS_LOCAUX = [
     { id: 2, name: "Robe de Soirée Élégante Chic", category: "Textile-Mode", tag: "Tendance", price: 18500, desc: "Robe longue fluide portée par notre mannequin, idéale pour vos événements.", imageUrl: "https://images.unsplash.com/photo-1566174053879-31528523f8ae?auto=format&fit=crop&w=600&q=80" },
     { id: 3, name: "Jean Slim Stretch Quotidien", category: "Textile-Mode", tag: "meilleures-ventes", price: 7500, desc: "Coupe moderne et ajustée, idéal pour les sorties décontractées.", imageUrl: "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?auto=format&fit=crop&w=600&q=80" },
     { id: 4, name: "Costume 3 Pièces Homme Modern Fit", category: "Textile-Mode", tag: "Premium", price: 35000, desc: "Costume complet porté par notre mannequin, une coupe impeccable pour grandes occasions.", imageUrl: "https://i.pinimg.com/736x/cb/a1/38/cba138e3a241680a653ddbc7d1fa8b88.jpg" },
-    { id: 5, name: "Chemise Bleue Classique Homme", category: "Textile-Mode", tag: "Bas Prix", price: 5000, desc: "Chemise repassage facile, coupe droite idéale pour le bureau ou événements.", imageUrl: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=600&q=80" },
+    { id: 5, name: "Chemise Bleue Classique Homme", category: "Textile-Mode", tag: "Bas Prix", price: 5000, desc: "Chemise bleu ciel repassage facile, coupe ajustée idéale pour le bureau ou événements.", imageUrl: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=600&q=80" },
     { id: 6, name: "Veste en Cuir Style Biker", category: "Textile-Mode", tag: "Tendance", price: 19000, desc: "Blouson en cuir de qualité sur cintre avec finitions métalliques soignées.", imageUrl: "https://images.unsplash.com/photo-1551028719-00167b16eac5?auto=format&fit=crop&w=600&q=80" },
     { id: 7, name: "Robe d'Été Fleurie Légère", category: "Textile-Mode", tag: "Tendance", price: 6500, desc: "Robe fluide avec imprimé floral coloré, parfaite pour le quotidien.", imageUrl: "https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?auto=format&fit=crop&w=600&q=80" },
     { id: 8, name: "Manteau Veste Légère Laine", category: "Textile-Mode", tag: "Tendance", price: 16000, desc: "Veste courte élégante offrant confort et raffinement.", imageUrl: "https://images.unsplash.com/photo-1539533018447-63fcce2678e3?auto=format&fit=crop&w=600&q=80" },
@@ -58,622 +58,192 @@ const PRODUITS_LOCAUX = [
     { id: 49, name: "Gants Souples en Cuir Fin", category: "Equipement", tag: "Accessoire", price: 6000, desc: "Accessoire élégant au toucher doux et finitions soignées.", imageUrl: "https://images.unsplash.com/photo-1516762689617-e1cffffd478d?auto=format&fit=crop&w=600&q=80" },
     { id: 50, name: "Bracelet Perles Pierres Naturelles", category: "Equipement", tag: "Bas Prix", price: 2000, desc: "Bracelet élastique mixte très tendance.", imageUrl: "https://i.pinimg.com/736x/b6/e0/9e/b6e09e5c7f64645d63effe981b5e2732.jpg" }
 ];
-   
 
-// ==========================================
-// VARIABLES GLOBALES ET ÉTAT DE L'APPLICATION
-// ==========================================
+// Variable globale du panier
 let panier = [];
-let slideIndex = 0;
-let indexSlide = 0;
-let modeAchatDirect = false;
-let produitDirectEnCours = null;
 
-// URL de votre API backend Node.js / Express
-const API_URL = "http://localhost:5000/api/products";
+// Numéro Marchand / Téléphone du Service Client Doux-Doux
+const MON_NUMERO_TEL = "771234567"; // À remplacer par votre numéro réel
 
 // ==========================================
-// 1. INITIALISATION AU CHARGEMENT DE LA PAGE
+// 2. AFFICHAGE DES PRODUITS SUR LA PAGE
 // ==========================================
 document.addEventListener("DOMContentLoaded", () => {
-    chargerProduits();
-    moteurMettreAJourBadgesPanier();
-
-    const inputRecherche = document.getElementById('searchInput');
-    if (inputRecherche) {
-        inputRecherche.addEventListener('input', searchProducts);
-    }
+    afficherProduits(PRODUITS_LOCAUX);
+    creerStructureModal();
 });
 
-// ==========================================
-// 2. RÉCUPÉRATION DES PRODUITS (BACKEND OU SECOURS LOCAL)
-// ==========================================
-async function fetchProductsFromBackend() {
-    try {
-        const response = await fetch(API_URL);
-        if (!response.ok) {
-            throw new Error(`Erreur HTTP: ${response.status}`);
-        }
-        const data = await response.json();
-        // Si le serveur renvoie un tableau non vide, on l'utilise
-        if (Array.isArray(data) && data.length > 0) {
-            return data;
-        }
-        return PRODUITS_LOCAUX;
-    } catch (error) {
-        console.warn("API non disponible, chargement des produits locaux de secours :", error);
-        return PRODUITS_LOCAUX;
-    }
-}
-
-// ==========================================
-// 3. AFFICHAGE DES PRODUITS SUR LA GRILLE D'ACCUEIL
-// ==========================================
-async function chargerProduits() {
-    const grille = document.getElementById("productGrid");
+function afficherProduits(liste) {
+    const grille = document.getElementById("grid-produits");
     if (!grille) return;
-
-    grille.innerHTML = "<p style='grid-column: 1/-1; text-align: center;'>Chargement du catalogue Doux-Doux...</p>";
-
-    const produits = await fetchProductsFromBackend();
+    
     grille.innerHTML = "";
 
-    if (produits.length === 0) {
-        grille.innerHTML = "<p style='grid-column: 1/-1; text-align: center;'>Aucun produit disponible pour le moment.</p>";
-        return;
-    }
-
-    produits.forEach(p => {
-        const imageBrute = p.imageUrl || p.image || 'https://via.placeholder.com/400x400?text=Doux-Doux';
-        const imageAffichage = (imageBrute.includes('pinterest.com') || imageBrute.includes('pinimg.com')) 
-            ? `https://images.weserv.nl/?url=${encodeURIComponent(imageBrute)}` 
-            : imageBrute;
-
-        const nomProduit = p.name || p.nom || p.titre || "Produit sans nom";
-        const prixProduit = p.price || p.prix || 0;
-        const categorieProduit = p.category || p.cat || p.categorie || 'Général';
-        const uniqueId = p._id || p.id;
-
-        const carte = document.createElement('div');
-        carte.className = "product-card";
-        carte.setAttribute("data-name", nomProduit);
-        carte.style.cursor = "pointer";
-        carte.onclick = () => ouvrirDetailProduit(uniqueId);
+    liste.forEach(prod => {
+        const carte = document.createElement("div");
+        carte.className = "carte-produit";
+        carte.setAttribute("data-id", prod.id);
 
         carte.innerHTML = `
-            <div class="product-image">
-                <img src="${imageAffichage}" alt="${nomProduit}">
+            <div class="image-box">
+                <span class="tag-badge">${prod.tag}</span>
+                <img src="${prod.imageUrl}" alt="${prod.name}" loading="lazy">
             </div>
-            <div class="product-info">
-                <span class="category-tag">${categorieProduit}</span>
-                <h3 class="product-title">${nomProduit}</h3>
-                <p class="product-price"><strong>${Number(prixProduit).toLocaleString('fr-FR')} FCFA</strong></p>
-            </div>`;
+            <div class="info-box">
+                <small class="categorie">${prod.category}</small>
+                <h3 class="titre-produit">${prod.name}</h3>
+                <p class="prix">${prod.price.toLocaleString('fr-FR')} FCFA</p>
+                <button class="btn-voir-produit" onclick="ouvrirModalProduit(${prod.id})">Voir l'article</button>
+            </div>
+        `;
+
+        // Rendre toute la carte cliquable
+        carte.addEventListener('click', (e) => {
+            if (!e.target.classList.contains('btn-voir-produit')) {
+                ouvrirModalProduit(prod.id);
+            }
+        });
 
         grille.appendChild(carte);
     });
 }
 
 // ==========================================
-// 4. AFFICHAGE DE LA MODALE DÉTAIL PRODUIT
+// 3. CRÉATION DYNAMIQUE DE LA MODALE
 // ==========================================
-async function ouvrirDetailProduit(id) {
-    const produits = await fetchProductsFromBackend();
-    const produit = produits.find(p => (p._id || p.id) == id);
-
-    if (!produit) {
-        alert("Produit introuvable.");
-        return;
-    }
-
-    const nom = produit.name || produit.nom || produit.titre;
-    const prix = produit.price || produit.prix;
-    const desc = produit.description || produit.desc || "Aucune description disponible.";
-    const imageBrute = produit.imageUrl || produit.image || 'https://via.placeholder.com/400x400?text=Doux-Doux';
-    const imageAffichage = (imageBrute.includes('pinterest.com') || imageBrute.includes('pinimg.com')) 
-        ? `https://images.weserv.nl/?url=${encodeURIComponent(imageBrute)}` 
-        : imageBrute;
-
-    const modal = document.getElementById('product-detail-modal');
-    if (!modal) return;
-
-    document.getElementById('detail-image').src = imageAffichage;
-    document.getElementById('detail-title').innerText = nom;
-    document.getElementById('detail-price').innerText = `${Number(prix).toLocaleString('fr-FR')} FCFA`;
-    document.getElementById('detail-description').innerText = desc;
-
-    const btnAjouter = document.getElementById('btn-add-cart-modal');
-    const btnAcheter = document.getElementById('btn-buy-now-modal');
-
-    if (btnAjouter) {
-        btnAjouter.onclick = () => {
-            ajouterAuPanier(nom, prix);
-            fermerDetailProduit();
-        };
-    }
-
-    if (btnAcheter) {
-        btnAcheter.onclick = () => {
-            fermerDetailProduit();
-            ouvrirPaiementDirect(nom, prix);
-        };
-    }
-
-    modal.style.display = "flex";
-}
-
-function fermerDetailProduit() {
-    const modal = document.getElementById('product-detail-modal');
-    if (modal) modal.style.display = "none";
-}
-
-// ==========================================
-// 5. FILTRAGE PAR CATÉGORIE
-// ==========================================
-function filtrerParCategorie(categorie) {
-    const selectCat = document.getElementById("search-category");
-    if (selectCat) selectCat.value = categorie;
-    searchProducts();
-}
-
-// ==========================================
-// 6. PANIER LATÉRAL COULISSANT
-// ==========================================
-function toggleCartSidebar() {
-    const sidebar = document.getElementById("cartSidebar");
-    if (!sidebar) return;
-    if (sidebar.style.right === "0px") {
-        sidebar.style.right = "-400px";
-    } else {
-        sidebar.style.right = "0px";
-        renderCartSidebar();
-    }
-}
-
-function ajouterAuPanier(titre, prix) {
-    panier.push({ titre: titre, prix: Number(prix) });
-    moteurMettreAJourBadgesPanier();
-    renderCartSidebar();
-    alert(`${titre} ajouté au panier ! 🛒`);
-}
-
-function moteurMettreAJourBadgesPanier() {
-    const compteur = document.getElementById('cartCount');
-    if (compteur) compteur.innerText = panier.length;
-
-    const tousLesCompteurs = document.querySelectorAll('.cart-badge-count');
-    tousLesCompteurs.forEach(badge => {
-        badge.innerText = panier.length;
-    });
-}
-
-function renderCartSidebar() {
-    const container = document.getElementById("cartSidebarItems");
-    const totalLabel = document.getElementById("cartSidebarTotal");
-    if (!container) return;
-
-    container.innerHTML = "";
-    let total = 0;
-
-    if (panier.length === 0) {
-        container.innerHTML = "<p style='text-align:center; color:#565959; margin-top:40px;'>Votre panier Doux-Doux est vide.</p>";
-        if (totalLabel) totalLabel.innerText = "0 FCFA";
-        return;
-    }
-
-    panier.forEach((item, index) => {
-        total += item.prix;
-        const row = document.createElement("div");
-        row.style.cssText = "display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #e7e7e7; padding-bottom:10px; margin-bottom:10px;";
-        row.innerHTML = `
-            <div style="max-width:220px;">
-                <p style="margin:0; font-size:13px; font-weight:bold; color:#111; text-overflow:ellipsis; overflow:hidden; white-space:nowrap;">${item.titre}</p>
-                <p style="margin:3px 0 0 0; font-size:13px; color:#B12704; font-weight:bold;">${item.prix.toLocaleString('fr-FR')} FCFA</p>
-            </div>
-            <button onclick="retirerDuPanier(${index})" style="background:none; border:none; color:#007185; cursor:pointer; font-size:12px;"><i class="fas fa-trash"></i> Supprimer</button>
-        `;
-        container.appendChild(row);
-    });
-
-    if (totalLabel) totalLabel.innerText = `${total.toLocaleString('fr-FR')} FCFA`;
-}
-
-function retirerDuPanier(index) {
-    panier.splice(index, 1);
-    moteurMettreAJourBadgesPanier();
-    renderCartSidebar();
-}
-
-function viderLePanierComplete() {
-    panier = [];
-    moteurMettreAJourBadgesPanier();
-    renderCartSidebar();
-}
-
-// ==========================================
-// 7. TUNNEL DE COMMANDE INTÉGRÉ
-// ==========================================
-function ouvrirPaiementDirect(titre, prix) {
-    modeAchatDirect = true;
-    produitDirectEnCours = { titre, prix };
-    
-    const modal = document.getElementById('payment-modal');
-    if (modal) {
-        modal.style.display = 'flex';
-        if (document.getElementById('modal-product-name')) document.getElementById('modal-product-name').innerText = titre;
-        if (document.getElementById('modal-order-total-price')) document.getElementById('modal-order-total-price').innerText = `${Number(prix).toLocaleString('fr-FR')} FCFA`;
-    }
-}
-
-function procederAuPaiementPanier() {
-    if (panier.length === 0) {
-        alert("Votre panier est vide.");
-        return;
-    }
-    modeAchatDirect = false;
-    toggleCartSidebar(); 
-    
-    const modal = document.getElementById('payment-modal');
-    if (modal) {
-        modal.style.display = 'flex';
-        const listeTitres = panier.map(p => p.titre).join(', ');
-        let totalPanier = panier.reduce((sum, item) => sum + item.prix, 0);
-
-        if (document.getElementById('modal-product-name')) document.getElementById('modal-product-name').innerText = `Commande groupée (${panier.length} articles : ${listeTitres})`;
-        if (document.getElementById('modal-order-total-price')) document.getElementById('modal-order-total-price').innerText = `${totalPanier.toLocaleString('fr-FR')} FCFA`;
-    }
-}
-
-function closePayment() {
-    const modal = document.getElementById('payment-modal');
-    if (modal) modal.style.display = 'none';
-}
-
-// ==========================================
-// 8. CARTE ET LOCALISATION DU SÉNÉGAL (14 RÉGIONS)
-// ==========================================
-const senegalMap = {
-    "Dakar": {
-        "Dakar": ["Plateau", "Médina", "Fass-Colobane", "Fann-Point E", "Gorée", "Grand Dakar", "Biscuiterie", "HLM", "Hann Bel-Air", "Sicap Liberté", "Dieuppeul-Derklé", "Grand Yoff", "Patte d'Oie", "Parcelles Assainies", "Cambérène", "Ngor", "Ouakam", "Yoff", "Mermoz-Sacré-Cœur"],
-        "Guédiawaye": ["Golf Sud", "Sam Notaire", "Ndiarème Limamoulaye", "Wakhinane Nimzatt", "Médina Gounass"],
-        "Pikine": ["Pikine Est", "Pikine Nord", "Pikine Ouest", "Dalifort", "Djidah Thiaroye Kao", "Guinaw Rail Nord", "Guinaw Rail Sud", "Tivaouane Diacksao", "Diamaguène Sicap Mbao", "Mbao", "Thiaroye-sur-Mer", "Thiaroye Gare"],
-        "Rufisque": ["Rufisque Est", "Rufisque Nord", "Rufisque Ouest", "Bargny", "Sendou", "Diamniadio", "Sébikotane", "Sangalkam", "Bambylor", "Yène", "Tivaouane Peulh-Niaga"],
-        "Keur Massar": ["Keur Massar Nord", "Keur Massar Sud", "Malika", "Yeumbeul Nord", "Yeumbeul Sud", "Jaxaay-Parcelles"]
-    },
-    "Thiès": {
-        "Thiès": ["Thiès Est", "Thiès Nord", "Thiès Ouest", "Khombole", "Pout", "Keur Moussa", "Fandène"],
-        "Mbour": ["Mbour", "Joal-Fadiouth", "Saly Portudal", "Ngaparou", "Somone", "Nguékhokh", "Diass", "Sindia", "Malicounda"],
-        "Tivaouane": ["Tivaouane", "Mékhé", "Mboro", "Darou Khoudoss", "Taïba Ndiaye"]
-    },
-    "Diourbel": {
-        "Diourbel": ["Diourbel", "Ndindy", "Ndoulo", "Tocky Gare"],
-        "Bambey": ["Bambey", "Baba Garage", "Lambaye", "Ngogom", "Réfane"],
-        "Mbacké": ["Mbacké", "Touba Mosquée", "Touba Fall", "Taïf", "Sadio"]
-    },
-    "Saint-Louis": {
-        "Saint-Louis": ["Saint-Louis", "Mpal", "Gandon", "Fass Ngom"],
-        "Dagana": ["Dagana", "Richard-Toll", "Rosso Sénégal", "Ross Béthio", "Mbane"],
-        "Podor": ["Podor", "Ndioum", "Mboumba", "Guédé Chantier", "Aéré Lao"]
-    },
-    "Fatick": {
-        "Fatick": ["Fatick", "Diofior", "Niakhar", "Fimela", "Tattaguine"],
-        "Foundiougne": ["Foundiougne", "Passy", "Sokone", "Karang Poste", "Toubacouta"],
-        "Gossas": ["Gossas", "Colobane", "Mbar"]
-    },
-    "Kaolack": {
-        "Kaolack": ["Kaolack", "Gandiaye", "Kahone", "Ndoffane"],
-        "Nioro du Rip": ["Nioro du Rip", "Keur Madiabel", "Porokhane", "Médina Sabakh"],
-        "Guinguinéo": ["Guinguinéo", "Mboss", "Fass"]
-    },
-    "Ziguinchor": {
-        "Ziguinchor": ["Ziguinchor", "Niaguis", "Adéane", "Enampore"],
-        "Bignona": ["Bignona", "Thionck-Essyl", "Diouloulou", "Kafountine", "Abéné"],
-        "Oussouye": ["Oussouye", "Cap Skirring", "Mlomp"]
-    },
-    "Louga": {
-        "Louga": ["Louga", "Coki", "Sakal", "Léona"],
-        "Kébémer": ["Kébémer", "Guéoul", "Ndande", "Sagatta Gueth"],
-        "Linguère": ["Linguère", "Dahra", "Barkédji", "Yang-Yang"]
-    },
-    "Tambacounda": {
-        "Tambacounda": ["Tambacounda", "Missirah", "Sinthiou Malème"],
-        "Bakel": ["Bakel", "Kidira", "Diawara"],
-        "Goudiry": ["Goudiry", "Bala", "Koussan"],
-        "Koumpentoum": ["Koumpentoum", "Malem Niani"]
-    },
-    "Matam": {
-        "Matam": ["Matam", "Ourossogui", "Thilogne", "Agnam Civol"],
-        "Kanel": ["Kanel", "Waoundé", "Semmé", "Orkadiéré"],
-        "Ranérou": ["Ranérou", "Vélingara Ferlo"]
-    },
-    "Kolda": {
-        "Kolda": ["Kolda", "Dabo", "Salikégné", "Saré Bidji"],
-        "Vélingara": ["Vélingara", "Kounkané", "Diaobé-Kabendou", "Médina Gounass"],
-        "Médina Yoro Foulah": ["Médina Yoro Foulah", "Pata"]
-    },
-    "Kaffrine": {
-        "Kaffrine": ["Kaffrine", "Nganda", "Birkelane"],
-        "Koungheul": ["Koungheul", "Missirah Wadène"],
-        "Malem Hodar": ["Malem Hodar", "Sagna"]
-    },
-    "Sédhiou": {
-        "Sédhiou": ["Sédhiou", "Marsassoum", "Bambali"],
-        "Bounkiling": ["Bounkiling", "Madina Wandifa"],
-        "Goudomp": ["Goudomp", "Tanaff"]
-    },
-    "Kédougou": {
-        "Kédougou": ["Kédougou", "Bandafassi", "Salémata"],
-        "Saraya": ["Saraya", "Sabodala", "Bembou"]
-    }
-};
-
-function chargerDepartements() {
-    const regionSelect = document.getElementById('select-region');
-    const deptSelect = document.getElementById('select-departement');
-    const commSelect = document.getElementById('select-commune');
-
-    if (!regionSelect || !deptSelect || !commSelect) return;
-
-    const region = regionSelect.value;
-    deptSelect.innerHTML = '<option value="">-- Département --</option>';
-    commSelect.innerHTML = '<option value="">-- Commune --</option>';
-    commSelect.style.display = "none";
-
-    if (region && senegalMap[region]) {
-        deptSelect.style.display = "inline-block"; 
-        for (let dept in senegalMap[region]) {
-            let opt = document.createElement("option");
-            opt.value = dept;
-            opt.textContent = dept;
-            deptSelect.appendChild(opt);
-        }
-    } else {
-        deptSelect.style.display = "none";
-    }
-}
-
-function chargerCommunes() {
-    const regionSelect = document.getElementById('select-region');
-    const deptSelect = document.getElementById('select-departement');
-    const commSelect = document.getElementById('select-commune');
-
-    if (!regionSelect || !deptSelect || !commSelect) return;
-
-    const region = regionSelect.value;
-    const dept = deptSelect.value;
-
-    commSelect.innerHTML = '<option value="">-- Commune / Quartier --</option>';
-
-    if (dept && senegalMap[region] && senegalMap[region][dept]) {
-        commSelect.style.display = "inline-block";
-        senegalMap[region][dept].forEach(commune => {
-            let opt = document.createElement("option");
-            opt.value = commune;
-            opt.textContent = commune;
-            commSelect.appendChild(opt);
-        });
-    } else {
-        commSelect.style.display = "none";
-    }
-}
-
-// ==========================================
-// 9. SLIDERS D'ACCUEIL
-// ==========================================
-function moveSlide(n) {
-    const slidesContainer = document.querySelector('.slides');
-    const allSlides = document.querySelectorAll('.slide');
-    if (!slidesContainer || allSlides.length === 0) return;
-
-    slideIndex += n;
-    if (slideIndex >= allSlides.length) slideIndex = 0;
-    if (slideIndex < 0) slideIndex = allSlides.length - 1;
-
-    slidesContainer.style.transform = `translateX(${-slideIndex * 100}%)`;
-}
-
-function afficherSlide(index) {
-    const slidesContainer = document.getElementById("sliderSlides");
-    if (!slidesContainer) return;
-
-    const totalSlides = 3; 
-    if (index >= totalSlides) indexSlide = 0;
-    if (index < 0) indexSlide = totalSlides - 1;
-
-    slidesContainer.style.transform = `translateX(-${indexSlide * (100 / totalSlides)}%)`;
-}
-
-function slideSuivante() {
-    if (!document.getElementById("sliderSlides")) return;
-    indexSlide++;
-    afficherSlide(indexSlide);
-}
-
-function slidePrecedente() {
-    if (!document.getElementById("sliderSlides")) return;
-    indexSlide--;
-    afficherSlide(indexSlide);
-}
-
-setInterval(() => { slideSuivante(); }, 5000);
-
-// ==========================================
-// 10. MENUS BURGER ET CONFIGURATION MODALES
-// ==========================================
-function openNav() {
-    const nav = document.getElementById("mySidenav");
-    const overlay = document.getElementById("side-overlay");
-    if (nav) nav.style.width = "350px";
-    if (overlay) overlay.style.display = "block";
-}
-
-function closeNav() {
-    const nav = document.getElementById("mySidenav");
-    const overlay = document.getElementById("side-overlay");
-    if (nav) nav.style.width = "0";
-    if (overlay) overlay.style.display = "none";
-}
-
-function ouvrirInfo(type) {
-    const modal = document.getElementById('info-modal');
-    const modalBody = document.getElementById('info-modal-body');
-    if (!modal || !modalBody) return;
-    
-    let contenu = '';
-
-    if (type === 'commandes') {
-        contenu = `
-            <div style="text-align:center;">
-                <i class="fas fa-box-open" style="font-size: 40px; color: #f97316; margin-bottom: 15px;"></i>
-                <h3>Suivi des commandes & Retours</h3>
-                <p>Connectez-vous à votre espace client pour gérer vos livraisons en cours au Sénégal.</p>
-                <button style="background:#ffd814; border:1px solid #fcd200; padding:10px 20px; border-radius:4px; font-weight:bold; cursor:pointer;" onclick="window.location.href='login.html'">Accéder à mon espace</button>
-            </div>`;
-    } else if (type === 'vendre') {
-        contenu = `
-            <div>
-                <h3 style="text-align: center;">Devenir Vendeur Doux-Doux</h3>
-                <form id="sellerForm" onsubmit="event.preventDefault(); alert('Demande reçue ! Nos équipes vous contacteront.'); fermerInfo();">
-                    <label style="font-size:12px; font-weight:bold; display:block; margin-bottom:5px;">Nom de la boutique</label>
-                    <input type="text" required style="width:100%; padding:8px; margin-bottom:12px; box-sizing:border-box;">
-                    <label style="font-size:12px; font-weight:bold; display:block; margin-bottom:5px;">Téléphone (WhatsApp)</label>
-                    <input type="tel" required style="width:100%; padding:8px; margin-bottom:15px; box-sizing:border-box;">
-                    <button type="submit" style="width:100%; background:#ffd814; border:none; padding:10px; font-weight:bold; cursor:pointer; border-radius:4px;">Envoyer ma demande</button>
-                </form>
-            </div>`;
-    } else if (type === 'guide') {
-        contenu = `
-            <div style="text-align:center;">
-                <i class="fas fa-book-open" style="font-size:40px; color:#0066c0; margin-bottom:15px;"></i>
-                <h3>Guide d'achat Doux-Doux</h3>
-                <p style="font-size:13px; text-align:left; color:#4b5563;">1. Parcourez nos catalogues et ajoutez vos articles.<br>2. Validez votre panier et renseignez votre commune de livraison.<br>3. Payez en toute sécurité à la livraison, via Wave ou Orange Money.</p>
-            </div>`;
-    }
-    modalBody.innerHTML = contenu;
-    modal.style.display = "flex";
-}
-
-function fermerInfo() {
-    const modal = document.getElementById('info-modal');
-    if (modal) modal.style.display = "none";
-}
-
-// ==========================================
-// 11. GESTION DES REQUÊTES ET COMMANDE WHATSAPP / PAIEMENT
-// ==========================================
-async function finaliserEtEnvoyerCommande(methodePaiement) {
-    const nom = document.getElementById('client-name')?.value.trim();
-    const telephone = document.getElementById('client-phone')?.value.trim();
-    const region = document.getElementById('select-region')?.value;
-    const departement = document.getElementById('select-departement')?.value;
-    const commune = document.getElementById('select-commune')?.value;
-
-    if (!nom || !telephone || !region || !departement || !commune) {
-        alert("Veuillez remplir l'intégralité des informations de livraison locale.");
-        return;
-    }
-
-    const articleLabel = modeAchatDirect ? produitDirectEnCours.titre : panier.map(x => x.titre).join(" + ");
-    const totalFacture = modeAchatDirect ? produitDirectEnCours.prix : panier.reduce((a, b) => a + b.prix, 0);
-    const adresseLivraison = `${region}, Dept: ${departement}, Quartier: ${commune}`;
-
-    const texteWhatsApp = encodeURIComponent(
-        `Bonjour Doux-Doux.sn ! Je souhaite commander :\n\n` +
-        `• Articles : ${articleLabel}\n` +
-        `• Total : ${totalFacture.toLocaleString('fr-FR')} FCFA\n` +
-        `• Mode de paiement : ${methodePaiement}\n\n` +
-        `👉 Infos de livraison :\n` +
-        `- Nom : ${nom}\n` +
-        `- Tél : ${telephone}\n` +
-        `- Localisation : ${adresseLivraison}`
-    );
-    
-    const lienWhatsApp = `https://wa.me/221777226359?text=${texteWhatsApp}`; 
-
-    if (methodePaiement === 'Wave') {
-        window.open(lienWhatsApp, '_blank');
-        window.location.href = "https://pay.wave.com/m/M_sn_oPpmOm67pxb4/c/sn/";
-    } else if (methodePaiement === 'Orange Money') {
-        window.open(lienWhatsApp, '_blank');
-        window.location.href = "tel:#144#";
-    } else {
-        window.location.href = lienWhatsApp;
-    }
-    
-    fermerInfo();
-    if (typeof closePayment === "function") closePayment();
-}
-
-// ==========================================
-// 12. MOTEUR DE RECHERCHE DYNAMIQUE
-// ==========================================
-async function searchProducts() {
-    const input = document.getElementById('searchInput');
-    if (!input) return;
-    const saisie = input.value.toLowerCase().trim();
-
-    const grille = document.getElementById("productGrid");
-    if (!grille) return;
-    
-    grille.innerHTML = "<p style='grid-column: 1/-1; text-align: center;'>Recherche en cours...</p>";
-
-    try {
-        const catalogueBackend = await fetchProductsFromBackend();
-        const selectCategorie = document.getElementById("search-category");
-        const categorieSelectionnee = selectCategorie ? selectCategorie.value : "Toutes";
-
-        const resultats = catalogueBackend.filter(p => {
-            const nom = (p.name || p.nom || p.titre || "").toLowerCase();
-            const desc = (p.desc || p.description || "").toLowerCase();
-            const categorieProduit = (p.category || p.cat || p.categorie || "").toLowerCase();
-
-            const correspondCategorie = (categorieSelectionnee === "Toutes") || 
-                                        (categorieProduit === categorieSelectionnee.toLowerCase()) || 
-                                        categorieProduit.includes(categorieSelectionnee.toLowerCase());
-                                        
-            const correspondMotCle = (saisie === "") || nom.includes(saisie) || desc.includes(saisie);
-
-            return correspondCategorie && correspondMotCle;
-        });
-
-        grille.innerHTML = "";
-        
-        if (resultats.length === 0) {
-            grille.innerHTML = "<p style='grid-column: 1/-1; text-align: center;'>Aucun produit ne correspond à votre recherche.</p>";
-            return;
-        }
-
-        resultats.forEach(p => {
-            const imageBrute = p.imageUrl || p.image || 'https://via.placeholder.com/400x400?text=Doux-Doux';
-            const imageAffichage = (imageBrute.includes('pinterest.com') || imageBrute.includes('pinimg.com')) 
-                ? `https://images.weserv.nl/?url=${encodeURIComponent(imageBrute)}` 
-                : imageBrute;
-
-            const nomProduit = p.name || p.nom || p.titre || "Produit sans nom";
-            const prixProduit = p.price || p.prix || 0;
-            const categorieProduit = p.category || p.cat || p.categorie || 'Général';
-            const uniqueId = p._id || p.id;
-
-            const carte = document.createElement('div');
-            carte.className = "product-card";
-            carte.setAttribute("data-name", nomProduit);
-            carte.style.cursor = "pointer";
-            carte.onclick = () => ouvrirDetailProduit(uniqueId);
-
-            carte.innerHTML = `
-                <div class="product-image">
-                    <img src="${imageAffichage}" alt="${nomProduit}">
+function creerStructureModal() {
+    if (document.getElementById("modal-produit-container")) return;
+
+    const modalHTML = `
+    <div id="modal-produit-container" class="modal-backdrop" onclick="fermerModalProduit(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <button class="modal-close" onclick="fermerModalProduit()">&times;</button>
+            <div class="modal-body">
+                <div class="modal-img-col">
+                    <img id="modal-img" src="" alt="Produit">
                 </div>
-                <div class="product-info">
-                    <span class="category-tag">${categorieProduit}</span>
-                    <h3 class="product-title">${nomProduit}</h3>
-                    <p class="product-price"><strong>${Number(prixProduit).toLocaleString('fr-FR')} FCFA</strong></p>
-                </div>`;
+                <div class="modal-info-col">
+                    <span id="modal-tag" class="tag-badge"></span>
+                    <h2 id="modal-titre"></h2>
+                    <p id="modal-prix" class="prix-modal"></p>
+                    <p id="modal-desc" class="desc-modal"></p>
+                    
+                    <div class="quantite-selector">
+                        <label for="modal-qte">Quantité :</label>
+                        <div class="qte-controls">
+                            <button onclick="changerQuantite(-1)">-</button>
+                            <input type="number" id="modal-qte" value="1" min="1" readonly>
+                            <button onclick="changerQuantite(1)">+</button>
+                        </div>
+                    </div>
 
-            grille.appendChild(carte);
-        });
-    } catch (err) {
-        console.error("Erreur lors de la recherche :", err);
-        grille.innerHTML = "<p style='grid-column: 1/-1; text-align: center; color: red;'>Erreur lors de la recherche.</p>";
+                    <div class="modal-actions">
+                        <button class="btn-ajouter-panier" onclick="ajouterAuPanierDepuisModal()">
+                            🛒 Ajouter au Panier
+                        </button>
+                        <hr class="separateur">
+                        <p class="texte-achat-rapide">Achat rapide via mobile money :</p>
+                        <div class="btn-group-mobile">
+                            <button class="btn-wave" onclick="payerPaiementDirect('Wave')">
+                                Payer avec Wave
+                            </button>
+                            <button class="btn-om" onclick="payerPaiementDirect('Orange Money')">
+                                Payer avec Orange Money
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    `;
+
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
+}
+
+// ==========================================
+// 4. GESTION DE LA MODALE ET DU CLIC
+// ==========================================
+let produitActuelModal = null;
+
+function ouvrirModalProduit(id) {
+    const produit = PRODUITS_LOCAUX.find(p => p.id === id);
+    if (!produit) return;
+
+    produitActuelModal = produit;
+
+    document.getElementById("modal-img").src = produit.imageUrl;
+    document.getElementById("modal-tag").textContent = produit.tag;
+    document.getElementById("modal-titre").textContent = produit.name;
+    document.getElementById("modal-prix").textContent = `${produit.price.toLocaleString('fr-FR')} FCFA`;
+    document.getElementById("modal-desc").textContent = produit.desc;
+    document.getElementById("modal-qte").value = 1;
+
+    document.getElementById("modal-produit-container").classList.add("active");
+}
+
+function fermerModalProduit(event) {
+    const container = document.getElementById("modal-produit-container");
+    if (container) {
+        container.classList.remove("active");
     }
+}
+
+function changerQuantite(valeur) {
+    const input = document.getElementById("modal-qte");
+    let nouvelleValeur = parseInt(input.value) + valeur;
+    if (nouvelleValeur >= 1) {
+        input.value = nouvelleValeur;
+    }
+}
+
+// ==========================================
+// 5. ACHAT & PANIER
+// ==========================================
+function ajouterAuPanierDepuisModal() {
+    if (!produitActuelModal) return;
+
+    const quantite = parseInt(document.getElementById("modal-qte").value) || 1;
+    
+    // Vérifier si déjà dans le panier
+    const existant = panier.find(item => item.id === produitActuelModal.id);
+    if (existant) {
+        existant.quantite += quantite;
+    } else {
+        panier.push({
+            ...produitActuelModal,
+            quantite: quantite
+        });
+    }
+
+    alert(`✅ ${quantite} x "${produitActuelModal.name}" ajouté(s) au panier !`);
+    fermerModalProduit();
+    mettreAJourBadgePanier();
+}
+
+function mettreAJourBadgePanier() {
+    const badge = document.getElementById("panier-count");
+    if (badge) {
+        const totalArticles = panier.reduce((sum, item) => sum + item.quantite, 0);
+        badge.textContent = totalArticles;
+    }
+}
+
+// Paiement direct via Wave ou Orange Money (Redirection / WhatsApp)
+function payerPaiementDirect(moyenPaiement) {
+    if (!produitActuelModal) return;
+
+    const qte = parseInt(document.getElementById("modal-qte").value) || 1;
+    const total = produitActuelModal.price * qte;
+
+    const message = `Bonjour Doux-Doux 👋, je souhaite commander :
+- *Produit* : ${produitActuelModal.name}
+- *Quantité* : ${qte}
+- *Prix Total* : ${total.toLocaleString('fr-FR')} FCFA
+- *Moyen de Paiement* : ${moyenPaiement}
+
+Merci de me fournir les instructions pour valider la commande.`;
+
+    const urlWhatsApp = `https://wa.me/221${MON_NUMERO_TEL}?text=${encodeURIComponent(message)}`;
+    window.open(urlWhatsApp, "_blank");
 }
