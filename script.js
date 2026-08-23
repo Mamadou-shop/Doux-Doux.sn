@@ -10,7 +10,7 @@ let modeAchatDirect = false;
 let produitDirectEnCours = null;
 
 // ==========================================
-// BASE DE DONNÉES LOCALE (50 PRODUITS - MANNEQUINS NOIRS/AFRICAINS)
+// BASE DE DONNÉES LOCALE (50 PRODUITS AVEC NOMS & PRIX RÉELS)
 // ==========================================
 const PRODUITS_LOCAUX = [
     // --- TEXTILE / MODE (18 Articles) ---
@@ -83,7 +83,7 @@ async function fetchProductsFromBackend() {
             produitsStockesLocale = products; 
             return products;
         } else {
-            console.warn("Backend vide ou indisponible. Utilisation du catalogue local de secours (50 produits).");
+            console.warn("Backend vide ou indisponible. Activation du catalogue local de secours.");
             produitsStockesLocale = PRODUITS_LOCAUX;
             return PRODUITS_LOCAUX;
         }
@@ -95,7 +95,7 @@ async function fetchProductsFromBackend() {
 }
 
 // ==========================================
-// 3. FONCTIONS D'AFFICHAGE ET FILTRAGE
+// 3. FONCTIONS D'AFFICHAGE ET FILTRAGE (AVEC SÉCURISATION DES NOMS ET PRIX)
 // ==========================================
 async function filtrerProduits(categorie) {
     const grille = document.getElementById("productGrid");
@@ -109,7 +109,7 @@ async function filtrerProduits(categorie) {
     const catalogue = await fetchProductsFromBackend();
 
     if (!catalogue || catalogue.length === 0) {
-        if (grille) grille.innerHTML = "<p style='color: red; grid-column: 1/-1; text-align: center;'>Impossible de charger les produits. Vérifiez le serveur backend.</p>";
+        if (grille) grille.innerHTML = "<p style='color: red; grid-column: 1/-1; text-align: center;'>Impossible de charger les produits.</p>";
         return;
     }
 
@@ -153,13 +153,15 @@ async function filtrerProduits(categorie) {
     let indexBlockGlobal = 0;
 
     produitsAffiches.forEach(p => {
+        // Extraction sécurisée des images, noms et prix réels
         const imageBrute = p.imageUrl || p.image || 'https://via.placeholder.com/400x400?text=Doux-Doux';
         const imageAffichage = (imageBrute.includes('pinterest.com') || imageBrute.includes('pinimg.com')) 
             ? `https://images.weserv.nl/?url=${encodeURIComponent(imageBrute)}` 
             : imageBrute;
 
-        const nomProduit = p.name || p.nom || p.titre || "Produit sans nom";
-        const prixProduit = p.price || p.prix || 0;
+        // VÉRIFICATION CORRIGÉE : Évite l'affichage d'un numéro d'index ou d'un 0
+        const nomProduit = p.name || p.nom || p.title || p.titre || "Article Doux-Doux";
+        const prixProduit = p.price || p.prix || p.tarif || 0;
         const categorieProduit = p.category || p.cat || p.categorie || 'Général';
         const uniqueId = p._id || p.id;
 
@@ -287,8 +289,8 @@ function ouvrirDetailProduit(id) {
         ? `https://images.weserv.nl/?url=${encodeURIComponent(imageBrute)}` 
         : imageBrute;
 
-    const nomProduit = produit.name || produit.nom || produit.titre || "Produit sans nom";
-    const prixProduit = produit.price || produit.prix || 0;
+    const nomProduit = produit.name || produit.nom || produit.title || produit.titre || "Article Doux-Doux";
+    const prixProduit = produit.price || produit.prix || produit.tarif || 0;
     const descProduit = produit.desc || produit.description || "Aucune description disponible pour cet article Doux-Doux.";
     const tagProduit = (produit.tag || "").toLowerCase();
 
@@ -744,7 +746,7 @@ async function searchProducts() {
         const categorieSelectionnee = selectCategorie ? selectCategorie.value : "Toutes";
 
         const resultats = catalogueBackend.filter(p => {
-            const nom = (p.name || p.nom || p.titre || "").toLowerCase();
+            const nom = (p.name || p.nom || p.title || p.titre || "").toLowerCase();
             const desc = (p.desc || p.description || "").toLowerCase();
             const categorieProduit = (p.category || p.cat || p.categorie || "").toLowerCase();
 
@@ -770,8 +772,8 @@ async function searchProducts() {
                 ? `https://images.weserv.nl/?url=${encodeURIComponent(imageBrute)}` 
                 : imageBrute;
 
-            const nomProduit = p.name || p.nom || p.titre || "Produit sans nom";
-            const prixProduit = p.price || p.prix || 0;
+            const nomProduit = p.name || p.nom || p.title || p.titre || "Article Doux-Doux";
+            const prixProduit = p.price || p.prix || p.tarif || 0;
             const categorieProduit = p.category || p.cat || p.categorie || 'Général';
             const uniqueId = p._id || p.id;
 
