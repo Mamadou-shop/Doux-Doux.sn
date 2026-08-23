@@ -1,7 +1,6 @@
 // ==========================================
-// 1. VARIABLES, ÉTAT GLOBAL ET CONFIGURATION API
+// 1. VARIABLES, ÉTAT GLOBAL ET CONFIGURATION
 // ==========================================
-const API_URL = "http://localhost:5000/api";
 let panier = [];
 let indexSlide = 0;
 let modeAchatDirect = false;
@@ -604,7 +603,7 @@ function filtrerProduits(tagFiltre, elementClique) {
     grille.innerHTML = '';
 
     let produitsFiltres = produitsStockesLocale;
-    if (tagFiltre !== 'toutes') {
+    if (tagFiltre && tagFiltre !== 'toutes') {
         produitsFiltres = produitsStockesLocale.filter(p => 
             (p.tag && p.tag.toLowerCase() === tagFiltre.toLowerCase()) || 
             (p.category && p.category.toLowerCase() === tagFiltre.toLowerCase())
@@ -839,7 +838,7 @@ function calculerFraisLivraison() {
     if (reg && dept && senegalMap[reg] && senegalMap[reg].tarifs[dept]) {
         return senegalMap[reg].tarifs[dept];
     }
-    return 2000; // Tarif forfaitaire par défaut
+    return 2000;
 }
 
 function mettreAjourRecapitulatifCommande() {
@@ -871,9 +870,9 @@ function mettreAjourRecapitulatifCommande() {
 }
 
 // ==========================================
-// 7. SOUMISSION ET PAIEMENT (WAVE / OM / WHATSAPP)
+// 7. SOUMISSION ET COMMANDES WHATSAPP
 // ==========================================
-async function traiterSoumissionCommande(event) {
+function traiterSoumissionCommande(event) {
     event.preventDefault();
 
     const nom = document.getElementById('checkout-name')?.value;
@@ -892,31 +891,14 @@ async function traiterSoumissionCommande(event) {
         client: { nom, telephone, region, departement: dept, commune },
         articles: itemsAchetes,
         tarification: { sousTotal, fraisLivraison, totalGeneral },
-        modePaiement,
-        dateCommande: new Date().toISOString()
+        modePaiement
     };
 
-    try {
-        const response = await fetch(`${API_URL}/commandes`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payloadCommande)
-        });
-
-        if (response.ok) {
-            afficherNotification("Commande enregistrée avec succès !");
-            reinitialiserApresCommande();
-        } else {
-            throw new Error("Erreur serveur lors de la validation.");
-        }
-    } catch (err) {
-        // Redirection de secours vers WhatsApp si le serveur backend est injoignable
-        envoyerViaWhatsApp(payloadCommande);
-    }
+    envoyerViaWhatsApp(payloadCommande);
 }
 
 function envoyerViaWhatsApp(commande) {
-    const numeroWhatsApp = "221770000000"; // Remplacez par votre numéro officiel Doux-Doux
+    const numeroWhatsApp = "221770000000";
     let texteWhatsApp = `*NOUVELLE COMMANDE DOUX-DOUX*\n\n`;
     texteWhatsApp += `*Client :* ${commande.client.nom}\n`;
     texteWhatsApp += `*Téléphone :* ${commande.client.telephone}\n`;
@@ -930,7 +912,7 @@ function envoyerViaWhatsApp(commande) {
     texteWhatsApp += `\n*Sous-total :* ${Number(commande.tarification.sousTotal).toLocaleString('fr-FR')} FCFA\n`;
     texteWhatsApp += `*Frais livraison :* ${Number(commande.tarification.fraisLivraison).toLocaleString('fr-FR')} FCFA\n`;
     texteWhatsApp += `*TOTAL À PAYER :* ${Number(commande.tarification.totalGeneral).toLocaleString('fr-FR')} FCFA\n`;
-    texteWhatsApp += `*Mode de paiement choisi :* ${commande.modePaiement}\n`;
+    texteWhatsApp += `*Mode de paiement :* ${commande.modePaiement}\n`;
 
     const urlFinale = `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(texteWhatsApp)}`;
     window.open(urlFinale, '_blank');
@@ -949,7 +931,7 @@ function reinitialiserApresCommande() {
 }
 
 // ==========================================
-// 8. MENUS BURGER & MODALES D'INFORMATION
+// 8. MODALES D'INFORMATION ET MENUS
 // ==========================================
 function ouvrirInfo(type) {
     const modal = document.getElementById('info-modal');
@@ -980,7 +962,7 @@ function ouvrirInfo(type) {
                         <option value="pret-a-porter">Prêt-à-porter & Accessoires</option>
                         <option value="grossiste">Vente en Gros / Haul</option>
                     </select>
-                    <button type="button" onclick="alert('Demande d\\'inscription vendeur reçue ! Notre équipe commerciale prendra contact avec vous sous 24h.')" style="background:#11998e; color:white; border:none; padding:12px; border-radius:4px; font-weight:bold; cursor:pointer;">Soumettre ma candidature</button>
+                    <button type="button" onclick="alert('Demande envoyée ! Notre équipe vous contactera.')" style="background:#11998e; color:white; border:none; padding:12px; border-radius:4px; font-weight:bold; cursor:pointer;">Soumettre ma candidature</button>
                 </form>
             </div>`;
     } else if (type === 'aide') {
@@ -990,7 +972,7 @@ function ouvrirInfo(type) {
                 <p style="font-size:14px; color:#444; line-height:1.5;">Besoin d'assistance pour passer commande ou suivre une livraison ?</p>
                 <ul style="font-size:13px; color:#333; padding-left:20px; line-height:1.8;">
                     <li><strong>Paiements acceptés :</strong> Wave & Orange Money (OM).</li>
-                    <li><strong>Délais Dakar :</strong> Livraison en 24h (Rufisque, Sébikotane, Banlieue & Centre-ville).</li>
+                    <li><strong>Délais Dakar :</strong> Livraison en 24h.</li>
                     <li><strong>Délais Régions :</strong> 48h à 72h via nos réseaux de transport partenaires.</li>
                 </ul>
             </div>`;
@@ -1005,7 +987,7 @@ function fermerInfoModal() {
     if (modal) modal.style.display = 'none';
 }
 
-// Initialisation globale au chargement du document DOM
+// Initialisation globale
 document.addEventListener('DOMContentLoaded', () => {
     filtrerProduits('toutes');
 });
