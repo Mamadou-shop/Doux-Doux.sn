@@ -152,7 +152,6 @@ async function filtrerProduits(categorie) {
     // Génération et affichage des cartes produits
     if (grille) {
         dataAffichee.forEach(p => {
-            // Lecture sécurisée pour éviter les chiffres à la place des noms et 0 FCFA
             let nomProduit = p.titre || p.nom || p.name || "Article Doux-Doux";
             let prixProduit = Number(p.prix || p.price || 5000);
             const categorieProduit = p.categorie || p.category || p.cat || 'Général';
@@ -180,7 +179,6 @@ async function filtrerProduits(categorie) {
         });
     }
 }
-
     const produitsAffiches = (categorie === 'Toutes' || categorie === 'Toutes les catégories' || categorie === 'all' || !categorie) 
         ? catalogue 
         : catalogue.filter(p => {
