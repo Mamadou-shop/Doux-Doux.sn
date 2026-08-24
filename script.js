@@ -98,87 +98,46 @@ async function fetchProductsFromBackend() {
 // 3. FONCTIONS D'AFFICHAGE ET FILTRAGE
 // ==========================================
 async function filtrerProduits(categorie) {
-    const grille = document.getElementById("productGrid");
-    const grilleVenteFlash = document.getElementById("venteFlashGrid");
-    const grilleHaul = document.getElementById("haulGrid");
+    const grille = document.getElementById("productGrid");
+    const grilleVenteFlash = document.getElementById("venteFlashGrid");
+    const grilleHaul = document.getElementById("haulGrid");
 
-    if (grille) grille.innerHTML = "<p style='grid-column: 1/-1; text-align: center;'>Chargement du catalogue Doux-Doux...</p>";
-    if (grilleVenteFlash) grilleVenteFlash.innerHTML = "";
-    if (grilleHaul) grilleHaul.innerHTML = "";
+    if (grille) grille.innerHTML = "<p style='grid-column: 1/-1; text-align: center;'>Chargement du catalogue Doux-Doux...</p>";
+    if (grilleVenteFlash) grilleVenteFlash.innerHTML = "";
+    if (grilleHaul) grilleHaul.innerHTML = "";
 
-    const catalogue = await fetchProductsFromBackend();
+    const catalogue = await fetchProductsFromBackend();
 
-    if (!catalogue || catalogue.length === 0) {
-        if (grille) grille.innerHTML = "<p style='color: red; grid-column: 1/-1; text-align: center;'>Impossible de charger les produits. Vérifiez le serveur backend.</p>";
-        return;
-    }
+    if (!catalogue || catalogue.length === 0) {
+        if (grille) grille.innerHTML = "<p style='color: red; grid-column: 1/-1; text-align: center;'>Impossible de charger les produits. Vérifiez le serveur backend.</p>";
+        return;
+    }
 
-    if (grille) grille.innerHTML = ""; 
+    if (grille) grille.innerHTML = ""; 
 
-    const titreSection = document.getElementById('section-title');
-    if (titreSection) {
-        titreSection.scrollIntoView({ behavior: 'smooth' });
-        if (categorie === 'Toutes' || categorie === 'all' || !categorie) {
-            titreSection.innerText = "Notre Catalogue Complet";
-            if (typeof gererZoneBanniereSpeciale === 'function') gererZoneBanniereSpeciale(null);
-        } else if (categorie.toLowerCase() === 'doux-doux-basics' || categorie.toLowerCase() === 'basics') {
-            titreSection.innerText = "✨ Gamme Doux-Doux Basics";
-            if (typeof gererZoneBanniereSpeciale === 'function') gererZoneBanniereSpeciale('basics');
-        } else if (categorie.toLowerCase() === 'doux-doux-haul' || categorie.toLowerCase() === 'haul') {
-            titreSection.innerText = "📦 Collection Doux-Doux Haul";
-            if (typeof gererZoneBanniereSpeciale === 'function') gererZoneBanniereSpeciale('haul');
-        } else if (categorie.toLowerCase() === 'ventes-flash' || categorie.toLowerCase() === 'flash') {
-            titreSection.innerText = "⚡ Ventes Flash (Offres limitées)";
-            if (typeof gererZoneBanniereSpeciale === 'function') gererZoneBanniereSpeciale(null);
-        } else if (categorie.toLowerCase() === 'meilleures-ventes' || categorie.toLowerCase() === 'meilleures') {
-            titreSection.innerText = "🔥 Meilleures Ventes";
-            if (typeof gererZoneBanniereSpeciale === 'function') gererZoneBanniereSpeciale(null);
-        } else {
-            titreSection.innerText = `Catégorie : ${categorie}`;
-            if (typeof gererZoneBanniereSpeciale === 'function') gererZoneBanniereSpeciale(null);
-        }
-    }
-
-    // Filtrage des produits selon la catégorie sélectionnée
-    const produitsFiltres = catalogue.filter(p => {
-        const cat = (p.categorie || p.category || p.cat || "").toLowerCase();
-        const catRecherchee = categorie.toLowerCase();
-        if (catRecherchee === 'toutes' || catRecherchee === 'all') return true;
-        return cat === catRecherchee || cat.includes(catRecherchee);
-    });
-
-    const dataAffichee = produitsFiltres.length > 0 ? produitsFiltres : catalogue;
-
-    // Génération et affichage des cartes produits
-    if (grille) {
-        dataAffichee.forEach(p => {
-            let nomProduit = p.titre || p.nom || p.name || "Article Doux-Doux";
-            let prixProduit = Number(p.prix || p.price || 5000);
-            const categorieProduit = p.categorie || p.category || p.cat || 'Général';
-            const imageBrute = p.image || p.imageUrl || 'https://via.placeholder.com/400x400?text=Doux-Doux';
-            
-            const imageAffichage = imageBrute.includes('pinterest.com') || imageBrute.includes('pinimg.com')
-                ? `https://images.weserv.nl/?url=${encodeURIComponent(imageBrute)}` 
-                : imageBrute;
-
-            const carte = document.createElement('div');
-            carte.className = "product-card";
-            carte.style.cssText = "background:#fff; border:1px solid #e7e7e7; border-radius:8px; overflow:hidden; transition:transform 0.2s;";
-            
-            carte.innerHTML = `
-                <div class="product-image" style="background:#f8f9fa;">
-                    <img src="${imageAffichage}" alt="${nomProduit}" style="width:100%; height:220px; object-fit:cover;">
-                </div>
-                <div class="product-info" style="padding: 15px;">
-                    <span class="category-tag" style="font-size: 11px; color: #565959; text-transform: uppercase;">${categorieProduit}</span>
-                    <h3 class="product-title" style="font-size: 14px; margin: 5px 0; color: #111; height: 36px; overflow: hidden;">${nomProduit}</h3>
-                    <p class="product-price" style="color: #B12704; font-weight: bold; margin: 5px 0 10px 0; font-size:16px;">${prixProduit.toLocaleString()} FCFA</p>
-                    <button onclick="event.stopPropagation(); ajouterAuPanier('${nomProduit.replace(/'/g, "\\'")}', ${prixProduit})" style="width:100%; background:#ffd814; border:1px solid #fcd200; padding:10px; border-radius:4px; cursor:pointer; font-weight:bold;">Ajouter au panier</button>
-                </div>`;
-            grille.appendChild(carte);
-        });
-    }
-}
+    const titreSection = document.getElementById('section-title');
+    if (titreSection) {
+        titreSection.scrollIntoView({ behavior: 'smooth' });
+        if (categorie === 'Toutes' || categorie === 'all' || !categorie) {
+            titreSection.innerText = "Notre Catalogue Complet";
+            gererZoneBanniereSpeciale(null);
+        } else if (categorie.toLowerCase() === 'doux-doux-basics' || categorie.toLowerCase() === 'basics') {
+            titreSection.innerText = "✨ Gamme Doux-Doux Basics";
+            gererZoneBanniereSpeciale('basics');
+        } else if (categorie.toLowerCase() === 'doux-doux-haul' || categorie.toLowerCase() === 'haul') {
+            titreSection.innerText = "📦 Collection Doux-Doux Haul";
+            gererZoneBanniereSpeciale('haul');
+        } else if (categorie.toLowerCase() === 'ventes-flash' || categorie.toLowerCase() === 'flash') {
+            titreSection.innerText = "⚡ Ventes Flash (Offres limitées)";
+            gererZoneBanniereSpeciale(null);
+        } else if (categorie.toLowerCase() === 'meilleures-ventes' || categorie.toLowerCase() === 'meilleures') {
+            titreSection.innerText = "🔥 Meilleures Ventes";
+            gererZoneBanniereSpeciale(null);
+        } else {
+            titreSection.innerText = `Catégorie : ${categorie}`;
+            gererZoneBanniereSpeciale(null);
+        }
+    }
     const produitsAffiches = (categorie === 'Toutes' || categorie === 'Toutes les catégories' || categorie === 'all' || !categorie) 
         ? catalogue 
         : catalogue.filter(p => {
@@ -238,7 +197,7 @@ async function filtrerProduits(categorie) {
                     compteurDansBlock = 0;
                     indexBlockGlobal++;
 
-                    if (indexBlockGlobal === 1) {
+                    if (indexBlockGlobal === ) {
                         const sponsorise = document.createElement('div');
                         sponsorise.className = "sponsored-block";
                         sponsorise.innerHTML = `
