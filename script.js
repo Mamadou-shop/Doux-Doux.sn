@@ -1,7 +1,7 @@
 // ==========================================
 // 1. VARIABLES, ÉTAT GLOBAL ET CONFIGURATION API
 // ==========================================
-const API_URL = "https://doux-doux-backend.onrender.com/api";
+const const API_URL = "https://doux-doux.onrender.com/api";
 let panier = [];
 let slideIndex = 0;
 let indexSlide = 0;
